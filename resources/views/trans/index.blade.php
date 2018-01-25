@@ -51,7 +51,7 @@
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
-            {!! Form::open(array('action' => $form_action, 'class' => 'form-inline', 'method' => 'get')) !!}
+            {!! Form::open(array('action' => [$form_action, '@'.$account], 'class' => 'form-inline', 'method' => 'get')) !!}
             <div class="modal fade" id="myModal" role="dialog">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
