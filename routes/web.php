@@ -11,8 +11,17 @@
 |
 */
 
+
+use Illuminate\Http\Request;
+
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/_form_submit', function (Request $request){
+
+    return redirect()->action($request->get('controller'),['acc'=>'@'.$request->get('acc')]);
+
 });
 
 
@@ -22,3 +31,4 @@ Route::get('/{acc}/by_weeks', 'TransAccController@indexByWeek')->name('trans_by_
 Route::get('/{acc}/transaction_history', 'TransHistoryController@show')->name('trans_history');
 Route::get('/{acc}/_transaction_history', 'TransHistoryController@dt_show')->name('trans_history_dt_show');
 Route::get('/{acc}/sg', 'TransAccController@indexSg')->name('trans_sg');
+

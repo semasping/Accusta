@@ -520,6 +520,11 @@ class TransAccController extends Controller
                 'form_action' => 'TransAccController@indexSg',]);
         }
     }
+
+    public function formSubmit(Request $request){
+
+        return redirect()->action($request->get('controller'),['acc'=> '@'.$request->get('acc')]);
+    }
 }
 
 
