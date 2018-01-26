@@ -1,6 +1,7 @@
 @extends ('layouts.tra')
 
-@section('title')Статистика аккаунта  -  @endsection
+@section('title')Accusta  -  {{ '@'.$account }}: статистика понижения СГ @endsection
+
 
 @section('style')
     <link rel="shortcut icon" href="/golos_icon.png">

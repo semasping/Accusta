@@ -1,6 +1,7 @@
 @extends ('layouts.tra')
 
-@section('title')Транзакции аккаунта -  @endsection
+@section('title')Accusta  -  {{ '@'.$account }}: фильтр истории @endsection
+
 
 @section('style')
     <link rel="shortcut icon" href="/golos_icon.png">
