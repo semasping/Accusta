@@ -20,7 +20,7 @@
 </div>
 <div class="form-group">
     {!! Form::label('Account Name: @') !!}
-    {!! Form::text('acc', null,
+    {!! Form::text('acc', $account,
         array('required','class'=>'form-control','placeholder'=>'Account name')) !!}
     {!! Form::hidden('controller', $form_action) !!}
 
