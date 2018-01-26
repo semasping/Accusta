@@ -72,10 +72,10 @@ class TransAccController extends Controller
                 $posts_trans = $posts_trans->filter(function ($item) use ($acc){
                     if ($item['parent_author']==''&&$item['author']==$acc) return true;
                 });
-                dump($posts_trans);
+                //dump($posts_trans);
 
                 $posts_trans = $posts_trans->unique('permlink');
-                dump($posts_trans);
+                //dump($posts_trans);
                 //$transfer_out_trans = collect([]);//collect(GolosApi::getTransaction($acc, 'transfer'));//collect($trans['transfer_out_data']);
                 //dump($author_trans);
 
