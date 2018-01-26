@@ -38,17 +38,45 @@ class TransAccController extends Controller
         if ($request->has('vp')) {
             $vp_calc = $request->get('vp');
         }
+        if ($date==false){
+            $date = Date::now()->subMonths(2)->startOfMonth();
+        }
+        //dd($date);
         try {
             if (!empty($acc)) {
                 $textnotify = 'Старт Запроса на сбор #статситики для аккаунта #' . $acc;
                 AdminNotify::send($textnotify);
                 $max = GolosApi::getHistoryAccountLast($acc);
 
-                $trans = GolosApi::getData($acc, $max);
-                $author_trans = collect($trans['author_reward']);
-                $curation_trans = collect($trans['curation_reward']);
-                $posts_trans = collect($trans['posts']);
-                $transfer_out_trans = collect($trans['transfer_out_data']);
+                //$trans = GolosApi::getData($acc, $max);
+                //dd($trans);
+                //$data = collect(GolosApi::getTransaction($acc, 'transfer'));
+
+                $author_trans = collect(GolosApi::getTransaction($acc, 'author_reward'));//collect($trans['author_reward']);
+                $author_trans = $author_trans->map(function ($item, $key) {
+                    $author_data = $item;
+                    $author_data['GBG'] = str_replace(' GBG', '', $item['sbd_payout']);
+                    $author_data['GOLOS'] = str_replace(' GOLOS', '', $item['steem_payout']);
+                    $author_data['GESTS'] = str_replace(' GESTS', '', $item['vesting_payout']);
+                    return $author_data;
+                });
+                $curation_trans = collect(GolosApi::getTransaction($acc, 'curation_reward'));//collect($trans['curation_reward']);
+                $curation_trans = $curation_trans->map(function ($item, $key) {
+                    $curation_data = $item;
+                    $curation_data['author'] = $item['comment_author'];
+                    $curation_data['permlink'] = $item['comment_permlink'];
+                    $curation_data['GESTS'] = str_replace(' GESTS', '', $item['reward']);
+                    return $curation_data;
+                });
+                $posts_trans = collect(GolosApi::getTransaction($acc, 'comment'));//collect($trans['posts']);
+                $posts_trans = $posts_trans->filter(function ($item) use ($acc){
+                    if ($item['parent_author']==''&&$item['author']==$acc) return true;
+                });
+                dump($posts_trans);
+
+                $posts_trans = $posts_trans->unique('permlink');
+                dump($posts_trans);
+                //$transfer_out_trans = collect([]);//collect(GolosApi::getTransaction($acc, 'transfer'));//collect($trans['transfer_out_data']);
                 //dump($author_trans);
 
                 if ($date) {
@@ -58,7 +86,7 @@ class TransAccController extends Controller
                     $author_trans = $author_trans->where('timestamp', '>=', Carbon::parse($date)->toAtomString());
                     $curation_trans = $curation_trans->where('timestamp', '>=', Carbon::parse($date)->toAtomString());
                     $posts_trans = $posts_trans->where('timestamp', '>=', Carbon::parse($date)->toAtomString());
-                    $transfer_out_trans = $transfer_out_trans->where('timestamp', '>=', Carbon::parse($date)->toAtomString());
+                    //$transfer_out_trans = $transfer_out_trans->where('timestamp', '>=', Carbon::parse($date)->toAtomString());
                 }
                 //dump($author_trans);
 
@@ -104,12 +132,12 @@ class TransAccController extends Controller
                     $month[$key] = $key;
                 }
 
-                $transfer_out_by_month = ($transfer_out_trans->sortByDesc('timestamp')->groupBy(function ($item) {
+                /*$transfer_out_by_month = ($transfer_out_trans->sortByDesc('timestamp')->groupBy(function ($item) {
                     return Carbon::parse($item['timestamp'])->format('Y-m');
                 }));
                 foreach ($transfer_out_by_month as $key => $item) {
                     $month[$key] = $key;
-                }
+                }*/
                 krsort($month);
                 //dump($trans['author_reward']);
                 return view('trans.index', [
@@ -124,7 +152,7 @@ class TransAccController extends Controller
                     'date' => $date,
                     'vp_calc' => $vp_calc,
                     'month' => $month,
-                    'transfer_out_by_month' => $transfer_out_by_month,
+                    'transfer_out_by_month' => [],//$transfer_out_by_month,
                 ]);
             }
         } catch (Exception $e) {
