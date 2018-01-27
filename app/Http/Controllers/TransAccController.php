@@ -521,10 +521,6 @@ class TransAccController extends Controller
         }
     }
 
-    public function formSubmit(Request $request){
-
-        return redirect()->action($request->get('controller'),['acc'=> '@'.$request->get('acc')]);
-    }
 
     public function checkCacheTranz(){
 
