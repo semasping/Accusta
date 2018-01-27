@@ -47,6 +47,7 @@
 
         .content {
             text-align: center;
+            margin-top: -20%;
         }
 
         .text {
