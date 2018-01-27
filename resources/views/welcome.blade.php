@@ -134,8 +134,6 @@
 
                         Проголосовать за <b>Делегата Semasping</b> вы можете <a href="https://golos.io/~witnesses">https://golos.io/~witnesses</a> или <a href="https://goldvoice.club/witnesses/">https://goldvoice.club/witnesses/</a>
 
-                        <img src="https://i.imgur.com/NtLQsSa.png">
-
                 </center>
             </row>
         </div>
