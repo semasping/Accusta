@@ -31,7 +31,8 @@ class GetHistoryAccountFullInCache implements ShouldQueue
      */
     public function handle()
     {
-
+        dump('Start getting '. $this->acc);
         GolosApi::getHistoryAccountFullInCache($this->acc);
+        dump('-------done--');
     }
 }
