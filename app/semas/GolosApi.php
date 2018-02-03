@@ -32,30 +32,40 @@ class GolosApi
 
     public static function getHistoryAccount($acc, $from, $limit = 2000)
     {
-        if ($from % 2000 == 0) {
-            //AdminNotify::send("to set cache getHistoryAccount($acc, $from, $limit)");
-            //if ($acc==' vp-bodyform')
-            //Cache::forget("2golos_getacchistory.vp-bodyform.$from");
-            $history = Cache::rememberForever("2golos_getacchistory.$acc.$from",
-                function () use ($acc, $from, $limit) {
-                    AdminNotify::send("to set cache getHistoryAccount($acc, $from, $limit) in function");
+        $key = "2golos_getacchistory.$acc.$from";
+        if (Cache::get($key.'_status')!='working') {
+            Cache::put($key . '_status', 'working');
+            if ($from % 2000 == 0) {
+                //AdminNotify::send("to set cache getHistoryAccount($acc, $from, $limit)");
+                //if ($acc==' vp-bodyform')
+                //Cache::forget("2golos_getacchistory.vp-bodyform.$from");
 
-                    return self::_getAccHistory($acc, $from, $limit);
-                });
-            if (!$history){
-                Cache::forget("2golos_getacchistory.$acc.$from");
-                //dump($acc,$history);
+                $history = Cache::rememberForever($key,
+                    function () use ($acc, $from, $limit) {
+                        AdminNotify::send("to set cache getHistoryAccount($acc, $from, $limit) in function");
+
+                        return self::_getAccHistory($acc, $from, $limit);
+                    });
+                if (!$history) {
+                    Cache::forget("2golos_getacchistory.$acc.$from");
+                    //dump($acc,$history);
+                }
+                //
+                self::setCurrentCachedTransactionId($acc, $from);
+                Cache::put($key . '_status', 'done');
+                return $history;
+
+
             }
-            //
+            else {
+                //AdminNotify::send("without cache getHistoryAccount($acc, $from, $limit)");
 
-            return $history;
+                return self::_getAccHistory($acc, $from, $limit);
+            }
+        }else{
+            sleep(1);
+            return self::getHistoryAccount($acc, $from, $limit);
         }
-        else {
-            //AdminNotify::send("without cache getHistoryAccount($acc, $from, $limit)");
-
-            return self::_getAccHistory($acc, $from, $limit);
-        }
-
     }
 
     private static function _getAccHistory($acc, $from, $limit)
@@ -129,13 +139,56 @@ class GolosApi
                         break;
                     }
                     $qq++;
-                    if ($qq > 500) {
-                        //AdminNotify::send('exit');
+                    if ($qq > 5000) {
+                        AdminNotify::send('$qq > 5000 in GolosApi.php:133');
                         break;
                     }
                 }
 
                 return $history;
+            });
+    }
+
+    public static function getHistoryAccountFullInCache($acc)
+    {
+        $max = self::getHistoryAccountLast($acc);
+
+        return Cache::rememberForever('golos_resulthistory' . $acc . $max,
+            function () use ($max, $acc) {
+                $history = [];
+                $qq = 0;
+                $h = 0;
+                $i = 2000;
+                $limit = 2000;
+                if ($i > $max) {
+                    $i = $max;
+                    $limit = $max;
+                }
+                while ($i <= $max) {
+                    if ($his = self::getHistoryAccount($acc, $i, $limit)){
+                        self::setCurrentCachedTransactionId($acc,$i);
+                    }
+
+
+                    $i = $i + 2000;
+                    if ($i > $max) {
+                        //AdminNotify::send('i' . $i);
+                        $i = $i - 2000;
+                        $limit = $max - $i;
+                        $i = $max;
+                    }
+                    if ($limit == 0) {
+                        //AdminNotify::send('limit =0 exit');
+                        break;
+                    }
+                    $qq++;
+                    if ($qq > 5000) {
+                        AdminNotify::send('$qq > 5000 in GolosApi.php:133');
+                        break;
+                    }
+                }
+                //self::setCurrentCachedTransactionId($acc,$max);
+                return true;
             });
     }
 
@@ -653,5 +706,26 @@ class GolosApi
             }
         }
         return $posts;
+    }
+
+    public static function getCurrentProcessedHistoryTranzId($acc)
+    {
+        $current = 0;
+        $key = self::getKeyCurrentCachedTransaction($acc);
+        if (Cache::has($key)) {
+            $current = Cache::get($key);
+        }
+        return $current;
+    }
+
+    public static function getKeyCurrentCachedTransaction($acc)
+    {
+        return  '1current_cache_transactions_' . $acc;
+    }
+
+    private static function setCurrentCachedTransactionId($acc, $from)
+    {
+        $key = self::getKeyCurrentCachedTransaction($acc);
+        Cache::forever($key,$from);
     }
 }

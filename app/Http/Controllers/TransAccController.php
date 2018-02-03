@@ -9,12 +9,23 @@ use App\Swi\CurrencyOperations;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use DataTables;
 use Jenssegers\Date\Date;
 
 class TransAccController extends Controller
 {
+    public function __construct()
+    {
+
+        $this->middleware(function($request,$next)
+        {
+
+            return $next($request);
+        });
+    }
+
     public function index(Request $request, $_acc = '')
     {
         //dump($request->all());
@@ -519,6 +530,16 @@ class TransAccController extends Controller
             return view('trans.notfound', ['account' => $acc,
                 'form_action' => 'TransAccController@indexSg',]);
         }
+    }
+
+    public function showProcessTranz(Request $request, $acc){
+
+        //$acc = ($request->acc);
+        $max = GolosApi::getHistoryAccountLast($acc);
+        $current = GolosApi::getCurrentProcessedHistoryTranzId($acc);
+
+
+
     }
 
 

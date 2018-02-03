@@ -83,16 +83,16 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        <a class="navbar-brand" href="{{ route('trans_by_month',['@'.$account]) }}">
+                        <a class="navbar-brand" href="{{ route('trans_by_month',[''.$account]) }}">
                             Статистика аккаунта по месяцам
                         </a>
-                        <a class="navbar-brand" href="{{ route('trans_by_week',['@'.$account]) }}">
+                        <a class="navbar-brand" href="{{ route('trans_by_week',[''.$account]) }}">
                             Статистика аккаунта по неделям
                         </a>
-                        <a class="navbar-brand" href="{{ route('trans_history',['@'.$account]) }}">
+                        <a class="navbar-brand" href="{{ route('trans_history',[''.$account]) }}">
                             История транзакций
                         </a>
-                        <a class="navbar-brand" href="{{ route('trans_sg',['@'.$account]) }}">
+                        <a class="navbar-brand" href="{{ route('trans_sg',[''.$account]) }}">
                             Статистика понижения СГ <span class="glyphicon glyphicon-star-empty " style="color: red"></span>
                         </a>
                     </ul>

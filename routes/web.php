@@ -12,23 +12,40 @@
 */
 
 
+use App\Http\Middleware\CheckHistoryAcc;
+use App\semas\GolosApi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/_form_submit', function (Request $request){
+Route::get('/_form_submit', function (Request $request) {
+    dump('in form');
+    /*if ($request->has('acc')) {
+        $acc = ($request['acc']);
+        $max = GolosApi::getHistoryAccountLast($acc);
+        $current = GolosApi::getCurrentProcessedHistoryTranzId($acc);
 
-    return redirect()->action($request->get('controller'),$request->all());
+        if ($current < $max - 2000){
+
+            GolosApi::getHistoryAccountFullInCache($acc);
+            return redirect()->action('TransAccController@showProcessTranz',$request->all());
+        }
+        dump($current, $max);
+
+    }*/
+    return redirect()->action($request->get('controller'), $request->all());
 
 });
 
 
-Route::get('/@{acc}', 'TransAccController@index');
-Route::get('/@{acc}/by_month', 'TransAccController@index')->name('trans_by_month');
-Route::get('/@{acc}/by_weeks', 'TransAccController@indexByWeek')->name('trans_by_week');
-Route::get('/@{acc}/transaction_history', 'TransHistoryController@show')->name('trans_history');
-Route::get('/@{acc}/_transaction_history', 'TransHistoryController@dt_show')->name('trans_history_dt_show');
-Route::get('/@{acc}/sg', 'TransAccController@indexSg')->name('trans_sg');
+Route::get('/@{acc}', 'TransAccController@index')->middleware(CheckHistoryAcc::class);
+Route::get('/@{acc}/by_month', 'TransAccController@index')->name('trans_by_month')->middleware(CheckHistoryAcc::class);
+Route::get('/@{acc}/by_weeks', 'TransAccController@indexByWeek')->name('trans_by_week')->middleware(CheckHistoryAcc::class);
+Route::get('/@{acc}/transaction_history', 'TransHistoryController@show')->name('trans_history')->middleware(CheckHistoryAcc::class);
+Route::get('/@{acc}/_transaction_history', 'TransHistoryController@dt_show')->name('trans_history_dt_show')->middleware(CheckHistoryAcc::class);
+Route::get('/@{acc}/sg', 'TransAccController@indexSg')->name('trans_sg')->middleware(CheckHistoryAcc::class);
+Route::get('/@{acc}/process_tranz', 'TransAccController@showProcessTranz');
 
