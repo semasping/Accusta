@@ -22,7 +22,7 @@ Route::get('/', function () {
 });
 
 Route::get('/_form_submit', function (Request $request) {
-    dump('in form');
+    //dump('in form');
     /*if ($request->has('acc')) {
         $acc = ($request['acc']);
         $max = GolosApi::getHistoryAccountLast($acc);
@@ -36,9 +36,13 @@ Route::get('/_form_submit', function (Request $request) {
         dump($current, $max);
 
     }*/
-    return redirect()->action($request->get('controller'), $request->all());
+    $params = $request->all();
+    $params['acc']=$request['acc'];
+    return redirect()->action($request->get('controller'), $params);
 
 });
+
+//Route::get('/test/', function (){ \App\semas\BchApi::getBlock('111111111');});
 
 
 Route::get('/@{acc}', 'TransAccController@index')->middleware(CheckHistoryAcc::class);

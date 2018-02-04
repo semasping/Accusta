@@ -44,7 +44,7 @@
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
-            {!! Form::open(array('action' => $form_action, 'class' => 'form-inline', 'method' => 'get')) !!}
+            {!! Form::open(array('action' => [$form_action,'@'.$account], 'class' => 'form-inline', 'method' => 'get')) !!}
             <div class="form-group">
                 {!! Form::label('Account Name: @') !!}
                 {!! Form::text('acc', null,
