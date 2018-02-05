@@ -77,6 +77,10 @@
             position: absolute;
             bottom: 0px;
         }
+
+        .form-control {
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
