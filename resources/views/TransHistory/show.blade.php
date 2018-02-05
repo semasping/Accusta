@@ -168,7 +168,7 @@
                 @endforeach
             </ul>
             <div class="col-md-12">
-                {!! Form::open(array('action' => [$form_action, '@'.$account], 'class' => 'form-horizontal', 'method' => 'get')) !!}
+                {!! Form::open(array('url' => url('_form_submit'), 'class' => 'form-horizontal', 'method' => 'get')) !!}
                 <div class="form-group">
                     {!! Form::label('account','Account Name: @', ['class'=>'control-label']) !!}
                     {!! Form::text('account', $acc,
@@ -193,6 +193,7 @@
                     {!! Form::label('exclude_sum','Исключить суммы больше', ['class'=>'control-label']) !!}
                     {!! Form::text('exclude_sum_more', null,
                         array('class'=>'form-control','placeholder'=>'>', '')) !!}
+
                 </div>
                 {{--<div class="form-group">
                     {!! Form::label('exclude_acc_from','Исключить аккаунты от', ['class'=>'control-label']) !!}
@@ -210,6 +211,7 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    {!! Form::hidden('controller', $form_action) !!}
                     {!! Form::submit('Посмотреть транзакции',  array('class'=>'btn btn-primary', 'data-after-submit-value'=>"Собираю транзакции. Это может занять некоторое время. Ждите&hellip;")) !!}
                     {{--{!! Form::label('','*Возможность выбора параметров будет в течении дня', ['class'=>'control-label']) !!}--}}
                 </div>

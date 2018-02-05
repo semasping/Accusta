@@ -34,7 +34,7 @@
             bottom: 0;
             width: 100%;
             /* Set the fixed height of the footer here */
-            height: 60px;
+            height: 70px;
             background-color: #f5f5f5;
         }
 
@@ -48,8 +48,11 @@
             padding: 0 15px;
         }
         .container .text-muted {
-            margin: 20px 0;
+            margin: 10px 0;
             text-align: center;
+        }
+        img.logo {
+            margin-top: -5px;
         }
     </style>
 
@@ -83,6 +86,9 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
+                        <a class="navbar-brand" href="{{ route('welcome') }}">
+                            <img class="logo" src="/images/accusta_logo_line_170.png">
+                        </a>
                         <a class="navbar-brand" href="{{ route('trans_by_month',[''.$account]) }}">
                             Статистика аккаунта по месяцам
                         </a>
@@ -138,17 +144,13 @@
 <br>
 <footer class="footer">
     <div class="container">
-        <row>
+        <div class="row links ">
             <center>
-                <p class="text-muted">Скрипт писал <a href="https://golos.io/@semasping">@semasping</a>. </p>
+                <p class="text-muted links">Разработкой сервиса занят:<a href="https://golos.io/@semasping">@semasping</a>. </p>
+                <p class="links"> Проголосовать за <b>Делегата Semasping</b> вы можете <a href="https://golos.io/~witnesses">https://golos.io/~witnesses</a> или <a href="https://goldvoice.club/witnesses/">https://goldvoice.club/witnesses/</a></p>
 
-                <a href="https://golos.io/~witnesses">
-                    Проголосовать за <b>Делегата Semasping</b> вы можете по ссылке https://golos.io/~witnesses.
-
-                    <img src="https://i.imgur.com/NtLQsSa.png">
-                </a>
             </center>
-        </row>
+        </div>
     </div>
 </footer>
 <!-- Scripts -->

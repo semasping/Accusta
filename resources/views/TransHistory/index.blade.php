@@ -71,7 +71,7 @@
                 @endforeach
             </ul>
             <div class="col-md-12">
-                {!! Form::open(array('action' => [$form_action, '@'.$account], 'class' => 'form-horizontal', 'method' => 'post')) !!}
+                {!! Form::open(array('url' => url('_form_submit'), 'class' => 'form-horizontal', 'method' => 'post')) !!}
                 <div class="form-group">
                     {!! Form::label('account','Account Name: @', ['class'=>'control-label']) !!}
                     {!! Form::text('account', $account,

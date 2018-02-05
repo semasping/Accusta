@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Cache;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::get('/_form_submit', function (Request $request) {
     //dump('in form');
@@ -45,7 +45,7 @@ Route::get('/_form_submit', function (Request $request) {
 //Route::get('/test/', function (){ \App\semas\BchApi::getBlock('111111111');});
 
 
-Route::get('/@{acc}', 'TransAccController@index')->middleware(CheckHistoryAcc::class);
+Route::get('/@{acc}', 'TransAccController@index')->middleware(CheckHistoryAcc::class)->name('home');
 Route::get('/@{acc}/by_month', 'TransAccController@index')->name('trans_by_month')->middleware(CheckHistoryAcc::class);
 Route::get('/@{acc}/by_weeks', 'TransAccController@indexByWeek')->name('trans_by_week')->middleware(CheckHistoryAcc::class);
 Route::get('/@{acc}/transaction_history', 'TransHistoryController@show')->name('trans_history')->middleware(CheckHistoryAcc::class);
