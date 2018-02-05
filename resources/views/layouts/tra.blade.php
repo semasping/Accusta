@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
 
     @yield('style')
+    <link rel="shortcut icon" href="/favicon.ico">
+
     <style>
         /* Sticky footer styles
         -------------------------------------------------- */

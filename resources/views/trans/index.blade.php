@@ -3,7 +3,7 @@
 @section('title')Accusta  -  {{ '@'.$account }}: статистика по месяцам @endsection
 
 @section('style')
-    <link rel="shortcut icon" href="/golos_icon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
     <style>
         form.form-inline {
             text-align: center;
