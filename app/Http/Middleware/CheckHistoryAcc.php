@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Jobs\GetHistoryAccountFullInCache;
+use App\semas\BchApi;
 use App\semas\GolosApi;
 use Closure;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -22,16 +23,18 @@ class CheckHistoryAcc
     {
         if ($request->acc) {
             $acc = ($request->acc);
-            $max = GolosApi::getHistoryAccountLast($acc);
-            $current = GolosApi::getCurrentProcessedHistoryTranzId($acc);
+            $max = BchApi::getHistoryAccountLast($acc);
+            $current = BchApi::getCurrentProcessedHistoryTranzId($acc);
             if ($current < $max - 2000){
                 //Artisan::call('BchApi:GetHistoryAccountFullInCache',['api'=>'golos','acc'=>$acc]);
                 //GolosApi::getHistoryAccountFullInCache($acc);
-                dispatch(new GetHistoryAccountFullInCache($acc))->onQueue('CheckHistoryAcc');
+
+                dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue('CheckHistoryAcc');
                 $params = $request->all();
                 $params['acc']=$acc;
                 //return redirect()->action('TransAccController@showProcessTranz',$params);
-                return response(view('trans.process-tranz', ['account' => $acc,'total'=>$max,'current'=>$current ]));
+
+                return response(view(getenv('BCH_API').'.process-tranz', ['account' => $acc,'total'=>$max,'current'=>$current ]));
             }
 
 

@@ -1,10 +1,9 @@
 @extends ('layouts.tra')
 
-@section('title')Accusta  -  {{ '@'.$account }}: статистика понижения СГ @endsection
-
+@section('title')Accusta  -  {{ '@'.$account }}: статистика по месяцам @endsection
 
 @section('style')
-    <link rel="shortcut icon" href="/golos_icon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
     <style>
         form.form-inline {
             text-align: center;
@@ -52,10 +51,11 @@
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
-           @include('form')
+
+            @include('form')
         </div>
     </div>
-    @include('trans.data-sg')
+    @include('golos.trans.data')
 
 
 

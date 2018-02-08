@@ -1,16 +1,14 @@
 @extends ('layouts.tra')
 
-@section('title')Accusta  -  {{ '@'.$account }}: статистика по месяцам @endsection
+@section('title')Транзакции аккаунта  -  @endsection
 
 @section('style')
-    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/golos_icon.png">
     <style>
         form.form-inline {
             text-align: center;
         }
     </style>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker3.min.css">
 @endsection
 
 @section('js')
@@ -18,7 +16,6 @@
           rel="stylesheet"/>
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/locales/bootstrap-datepicker.ru.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
 
     <script>
         jQuery(function ($) {
@@ -36,29 +33,40 @@
                 });
             });
         });
-
-        /*        jQuery(function ($) {
-         $('.datepicker').datepicker();
-         });*/
     </script>
 @endsection
 
 @section ('content')
     <div class="container">
-        <div class="row">
+        < class="row">
             <ul>
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
+            {!! Form::open(array('action' => [$form_action, '@'.$account], 'class' => 'form-inline', 'method' => 'get')) !!}
+            <div class="form-group">
+                {!! Form::label('Account Name: @') !!}
+                {!! Form::text('acc', null,
+                    array('required','class'=>'form-control','placeholder'=>'Account name')) !!}
+            </div>
+            {!! Form::submit('Посмотреть транзакции',  array('class'=>'btn btn-primary', 'data-after-submit-value'=>"Собираю транзакции. Это может занять некоторое время. Ждите&hellip;")) !!}
+            {!! Form::close() !!}
+            @if($account=='')
+                @include('trans.description')
 
-            @include('form')
+
+            @else
+                <div class="page-header">
+                    <h1>
+                        Аккаунт не найден. Или возникла ошибка обработки данных. Введите другой аккаунт или попробуйте
+                        этот же через некоторое время..
+                    </h1>
+                </div>
+
+            @endif
+
         </div>
     </div>
-    @include('trans.data')
-
-
-
-
 
 @endsection

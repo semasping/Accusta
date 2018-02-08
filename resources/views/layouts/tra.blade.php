@@ -27,10 +27,12 @@
             position: relative;
             min-height: 100%;
         }
+
         body {
             /* Margin bottom by footer height */
             margin-bottom: 60px;
         }
+
         .footer {
             position: absolute;
             bottom: 0;
@@ -40,7 +42,6 @@
             background-color: #f5f5f5;
         }
 
-
         /* Custom page CSS
         -------------------------------------------------- */
         /* Not required for template or sticky footer method. */
@@ -49,10 +50,12 @@
 
             padding: 0 15px;
         }
+
         .container .text-muted {
             margin: 10px 0;
             text-align: center;
         }
+
         img.logo {
             margin-top: -5px;
         }
@@ -66,7 +69,7 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body >
+<body>
 <div id="app" class=" ">
     <div class="">
         <nav class="navbar navbar-default navbar-fixed-top">
@@ -91,18 +94,27 @@
                         <a class="navbar-brand" href="{{ route('welcome') }}">
                             <img class="logo" src="/images/accusta_logo_line_170.png">
                         </a>
-                        <a class="navbar-brand" href="{{ route('trans_by_month',[''.$account]) }}">
-                            Статистика аккаунта по месяцам
-                        </a>
-                        <a class="navbar-brand" href="{{ route('trans_by_week',[''.$account]) }}">
-                            Статистика аккаунта по неделям
-                        </a>
-                        <a class="navbar-brand" href="{{ route('trans_history',[''.$account]) }}">
-                            История транзакций
-                        </a>
-                        <a class="navbar-brand" href="{{ route('trans_sg',[''.$account]) }}">
-                            Статистика понижения СГ <span class="glyphicon glyphicon-star-empty " style="color: red"></span>
-                        </a>
+                        @if(Route::has('trans_by_month'))
+                            <a class="navbar-brand" href="{{ route('trans_by_month',[''.$account]) }}">
+                                Статистика аккаунта по месяцам
+                            </a>
+                        @endif
+                        @if(Route::has('trans_by_week'))
+                            <a class="navbar-brand" href="{{ route('trans_by_week',[''.$account]) }}">
+                                Статистика аккаунта по неделям
+                            </a>
+                        @endif
+                        @if(Route::has('trans_history'))
+                            <a class="navbar-brand" href="{{ route('trans_history',[''.$account]) }}">
+                                История транзакций
+                            </a>
+                        @endif
+                        @if(Route::has('trans_sg'))
+                            <a class="navbar-brand" href="{{ route('trans_sg',[''.$account]) }}">
+                                Статистика понижения СГ <span class="glyphicon glyphicon-star-empty "
+                                                              style="color: red"></span>
+                            </a>
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -136,8 +148,8 @@
                 </div>
             </div>
         </nav>
-<br>
-<br>
+        <br>
+        <br>
         @yield('content')
     </div>
 </div>
@@ -148,8 +160,11 @@
     <div class="container">
         <div class="row links ">
             <center>
-                <p class="text-muted links">Разработкой сервиса занят:<a href="https://golos.io/@semasping">@semasping</a>. </p>
-                <p class="links"> Проголосовать за <b>Делегата Semasping</b> вы можете <a href="https://golos.io/~witnesses">https://golos.io/~witnesses</a> или <a href="https://goldvoice.club/witnesses/">https://goldvoice.club/witnesses/</a></p>
+                <p class="text-muted links">Разработкой сервиса занят:<a
+                            href="https://golos.io/@semasping">@semasping</a>. </p>
+                <p class="links"> Проголосовать за <b>Делегата Semasping</b> вы можете <a
+                            href="https://golos.io/~witnesses">https://golos.io/~witnesses</a> или <a
+                            href="https://goldvoice.club/witnesses/">https://goldvoice.club/witnesses/</a></p>
 
             </center>
         </div>

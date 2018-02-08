@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\semas\AdminNotify;
+use App\semas\BchApi;
 use App\semas\GolosApi;
 use App\Swi\CurrencyOperations;
 use Exception;
@@ -16,15 +17,6 @@ use Jenssegers\Date\Date;
 
 class TransAccController extends Controller
 {
-    public function __construct()
-    {
-
-        $this->middleware(function($request,$next)
-        {
-
-            return $next($request);
-        });
-    }
 
     public function index(Request $request, $_acc = '')
     {
@@ -32,7 +24,7 @@ class TransAccController extends Controller
         $acc = $request->get('acc');
         if (empty($acc)) {
             if (empty($_acc)) {
-                return view('trans.notfound', ['account' => $_acc,
+                return view(getenv('BCH_API').'.trans.notfound', ['account' => $_acc,
                     'form_action' => 'TransAccController@index',]);
             }
             $acc = $_acc;
@@ -57,29 +49,35 @@ class TransAccController extends Controller
             if (!empty($acc)) {
                 $textnotify = 'Старт Запроса на сбор #статситики для аккаунта #' . $acc;
                 AdminNotify::send($textnotify);
-                $max = GolosApi::getHistoryAccountLast($acc);
+                //$max = GolosApi::getHistoryAccountLast($acc);
 
                 //$trans = GolosApi::getData($acc, $max);
                 //dd($trans);
                 //$data = collect(GolosApi::getTransaction($acc, 'transfer'));
 
-                $author_trans = collect(GolosApi::getTransaction($acc, 'author_reward'));//collect($trans['author_reward']);
+                $author_trans = collect(BchApi::getTransaction($acc, 'author_reward'));//collect($trans['author_reward']);
                 $author_trans = $author_trans->map(function ($item, $key) {
                     $author_data = $item;
                     $author_data['GBG'] = str_replace(' GBG', '', $item['sbd_payout']);
                     $author_data['GOLOS'] = str_replace(' GOLOS', '', $item['steem_payout']);
                     $author_data['GESTS'] = str_replace(' GESTS', '', $item['vesting_payout']);
+                    $author_data['SBD'] = str_replace(' SBD', '', $item['sbd_payout']);
+                    $author_data['STEEM'] = str_replace(' STEEM', '', $item['steem_payout']);
+                    $author_data['VESTS'] = str_replace(' VESTS', '', $item['vesting_payout']);
                     return $author_data;
                 });
-                $curation_trans = collect(GolosApi::getTransaction($acc, 'curation_reward'));//collect($trans['curation_reward']);
+                $curation_trans = collect(BchApi::getTransaction($acc, 'curation_reward'));//collect($trans['curation_reward']);
+
                 $curation_trans = $curation_trans->map(function ($item, $key) {
                     $curation_data = $item;
                     $curation_data['author'] = $item['comment_author'];
                     $curation_data['permlink'] = $item['comment_permlink'];
                     $curation_data['GESTS'] = str_replace(' GESTS', '', $item['reward']);
+                    $curation_data['VESTS'] = str_replace(' VESTS', '', $item['reward']);
                     return $curation_data;
                 });
-                $posts_trans = collect(GolosApi::getTransaction($acc, 'comment'));//collect($trans['posts']);
+                $posts_trans = collect(BchApi::getTransaction($acc, 'comment'));//collect($trans['posts']);
+
                 $posts_trans = $posts_trans->filter(function ($item) use ($acc){
                     if ($item['parent_author']==''&&$item['author']==$acc) return true;
                 });
@@ -111,15 +109,24 @@ class TransAccController extends Controller
                 }
                 //dump($author_trans);
                 //dump($author_trans);
+if (getenv('BCH_API')=='golos') {
+    $all_author_rew['GESTS'] = $author_trans->sum('GESTS');
+    $all_author_rew['GBG'] = $author_trans->sum('GBG');
+    $all_author_rew['GOLOS'] = $author_trans->sum('GOLOS');
 
-                $all_author_rew['GESTS'] = $author_trans->sum('GESTS');
-                $all_author_rew['GBG'] = $author_trans->sum('GBG');
-                $all_author_rew['GOLOS'] = $author_trans->sum('GOLOS');
+    $all_curation_rew['GESTS'] = $curation_trans->sum("GESTS");
 
-                $all_curation_rew['GESTS'] = $curation_trans->sum("GESTS");
+    $all_gests = $all_author_rew['GESTS'] + $all_curation_rew['GESTS'];
+}
+if (getenv('BCH_API')=='steemit') {
+    $all_author_rew['VESTS'] = $author_trans->sum('VESTS');
+    $all_author_rew['SBD'] = $author_trans->sum('SBD');
+    $all_author_rew['STEEM'] = $author_trans->sum('STEEM');
 
-                $all_gests = $all_author_rew['GESTS'] + $all_curation_rew['GESTS'];
+    $all_curation_rew['VESTS'] = $curation_trans->sum("VESTS");
 
+    $all_gests = $all_author_rew['VESTS'] + $all_curation_rew['VESTS'];
+}
                 $posts_count_all = $posts_trans->count();
 
                 $author_by_month = ($author_trans->sortByDesc('timestamp')->groupBy(function ($item) {
@@ -151,7 +158,7 @@ class TransAccController extends Controller
                 }*/
                 krsort($month);
                 //dump($trans['author_reward']);
-                return view('trans.index', [
+                return view(getenv('BCH_API').'.trans.index', [
                     'account' => $acc,
                     'form_action' => 'TransAccController@index',
                     'author_by_month' => $author_by_month,
@@ -167,11 +174,11 @@ class TransAccController extends Controller
                 ]);
             }
         } catch (Exception $e) {
-            echo $e->getMessage();
+            echo $e->getMessage().'|'.$e->getLine().'|'.$e->getFile();
             $textnotify = 'Ошибка запроса в сборе #статистики. Запрашиваемый аккаунт #' . $acc . $e->getMessage();;
             AdminNotify::send($textnotify);
             GolosApi::disconnect();
-            return view('trans.notfound', ['account' => $acc,
+            return view(getenv('BCH_API').'.trans.notfound', ['account' => $acc,
                 'form_action' => 'TransAccController@index',]);
         }
     }
@@ -182,7 +189,7 @@ class TransAccController extends Controller
         $acc = $request->get('acc');
         if (empty($acc)) {
             if (empty($_acc)) {
-                return view('trans.notfound', ['account' => $_acc,
+                return view(getenv('BCH_API').'.trans.notfound', ['account' => $_acc,
                     'form_action' => 'TransAccController@indexByWeek',]);
             }
             $acc = $_acc;
@@ -276,7 +283,7 @@ class TransAccController extends Controller
                 //dump($trans['author_reward']);
                 //if (!$date) $date =
                 //dd($curator_by_month['2017W48']);
-                return view('trans.index-by-week', [
+                return view(getenv('BCH_API').'.trans.index-by-week', [
                     'account' => $acc,
                     'form_action' => 'TransAccController@indexByWeek',
                     'author_by_month' => $author_by_month,
@@ -297,7 +304,7 @@ class TransAccController extends Controller
             $textnotify = 'Ошибка запроса в сборе #статистики по неделям. Запрашиваемый аккаунт #' . $acc . $e->getMessage();;
             AdminNotify::send($textnotify);
             GolosApi::disconnect();
-            return view('trans.notfound', ['account' => $acc,
+            return view(getenv('BCH_API').'.trans.notfound', ['account' => $acc,
                 'form_action' => 'TransAccController@indexByWeek',]);
         }
     }
@@ -465,7 +472,7 @@ class TransAccController extends Controller
         $month = [];
         if (empty($acc)) {
             if (empty($_acc)) {
-                return view('trans.notfound', ['account' => $_acc,
+                return view(getenv('BCH_API').'.trans.notfound', ['account' => $_acc,
                     'form_action' => 'TransAccController@indexSg',]);
             }
             $acc = $_acc;
@@ -487,7 +494,7 @@ class TransAccController extends Controller
                 $textnotify = 'Старт Запроса на сбор #статситики по #sg для аккаунта #' . $acc;
                 AdminNotify::send($textnotify);
 
-                $data_withdraw_vesting = collect(GolosApi::getTransaction($acc, 'fill_vesting_withdraw'));
+                $data_withdraw_vesting = collect(BchApi::getTransaction($acc, 'fill_vesting_withdraw'));
 
                 $data_withdraw_vesting = $data_withdraw_vesting->where('timestamp', '>=', Carbon::parse($date)->toAtomString());
                 //dump($data_withdraw_vesting);
@@ -512,7 +519,7 @@ class TransAccController extends Controller
                 }
                 krsort($wv_by_month);
                 //dump($wv_by_month,$month);
-                return view('trans.index-sg', [
+                return view(getenv('BCH_API').'.trans.index-sg', [
                     'account' => $acc,
                     'acc' => $acc,
                     'form_action' => 'TransAccController@indexSg',
@@ -527,7 +534,7 @@ class TransAccController extends Controller
             $textnotify = 'Ошибка запроса в сборе #статистики по #sg. Запрашиваемый аккаунт #' . $acc . $e->getMessage();;
             AdminNotify::send($textnotify);
             GolosApi::disconnect();
-            return view('trans.notfound', ['account' => $acc,
+            return view(getenv('BCH_API').'.trans.notfound', ['account' => $acc,
                 'form_action' => 'TransAccController@indexSg',]);
         }
     }
@@ -543,8 +550,8 @@ class TransAccController extends Controller
     }
 
 
-    public function checkCacheTranz(){
-
+    public function inProcess($page){
+        return view(getenv('BCH_API').'.workInProcess');
     }
 }
 

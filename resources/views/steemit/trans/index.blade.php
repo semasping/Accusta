@@ -1,10 +1,9 @@
 @extends ('layouts.tra')
 
-@section('title')Accusta  -  {{ '@'.$account }}: статистика по неделям @endsection
-
+@section('title')Accusta  -  {{ '@'.$account }}: Statistics grouped by months @endsection
 
 @section('style')
-    <link rel="shortcut icon" href="/golos_icon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
     <style>
         form.form-inline {
             text-align: center;
@@ -56,7 +55,7 @@
             @include('form')
         </div>
     </div>
-    @include('trans.data')
+    @include('steemit.trans.data')
 
 
 

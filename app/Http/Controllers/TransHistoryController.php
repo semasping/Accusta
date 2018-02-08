@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 ini_set('max_execution_time', 60);
 
 use App\semas\AdminNotify;
+use App\semas\BchApi;
 use App\semas\GolosApi;
 use App\Swi\CurrencyOperations;
 use Exception;
@@ -38,7 +39,7 @@ class TransHistoryController extends Controller
             $acc = $request->get('acc', $_acc = 'semasping');
             if (empty($acc)) {
                 if (empty($_acc)) {
-                    return view('TransHistory.notfound', ['account' => $_acc,
+                    return view(getenv('BCH_API').'.TransHistory.notfound', ['account' => $_acc,
                         'form_action' => 'TransHistoryController@index',]);
                 }
                 $acc = $_acc;
@@ -49,7 +50,7 @@ class TransHistoryController extends Controller
             $acc = trim($acc);
             $textnotify = 'Старт Запроса на историю #транзакций для аккаунта #' . $acc . ' запрос ' . print_r($request->all(), true) . $request->fullUrl();
             AdminNotify::send($textnotify);
-            $data = collect(GolosApi::getTransaction($acc, 'transfer'));
+            $data = collect(BchApi::getTransaction($acc, 'transfer'));
             [
                 'date',
                 'from',
@@ -98,7 +99,7 @@ class TransHistoryController extends Controller
                     ]),
 
                     /*                    (new FilterControl('date', FilterOperation::OPERATOR_EQ, $input->option('d_from'),
-                                            new TemplateView('input', [
+                                            new Templateview(getenv('BCH_API').'.input', [
                                                 'label' => 'Дата',
                                                 'inputType' => 'date',
                                             ]))),*/
@@ -152,13 +153,13 @@ class TransHistoryController extends Controller
             $customization->apply($grid);
             $grid->getTileRow()->detach()->attachTo($grid->getTableHeading());
             //echo $grid;
-            return view('TransHistory.index', ['grid' => $grid, 'account' => $acc, 'form_action' => 'TransHistoryController@index']);
+            return view(getenv('BCH_API').'.TransHistory.index', ['grid' => $grid, 'account' => $acc, 'form_action' => 'TransHistoryController@index']);
         } catch (Exception $e) {
             echo $e->getMessage();
             $textnotify = 'Ошибка запроса в историю #транзакций. Запрашиваемый аккаунт #' . $acc . ' : ' . $e->getMessage();;
             AdminNotify::send($textnotify);
             GolosApi::disconnect();
-            return view('TransHistory.notfound', ['account' => 'vp',
+            return view(getenv('BCH_API').'.TransHistory.notfound', ['account' => 'vp',
                 'form_action' => 'TransHistoryController@index',]);
         }
     }
@@ -176,9 +177,9 @@ class TransHistoryController extends Controller
                     $textnotify = 'Старт Запроса на подсчет транзакций для аккаунта ' . $account . ' с датой ' . $date;
                     AdminNotify::send($textnotify);
 
-                    $max = GolosApi::getHistoryAccountLast($account);
+                    //$max = GolosApi::getHistoryAccountLast($account);
 
-                    $data = collect(GolosApi::getTransaction($account, 'transfer'));
+                    $data = collect(BchApi::getTransaction($account, 'transfer'));
 
                     $tr = $data->map(function ($item) {
                         $ni = $item;
@@ -229,7 +230,7 @@ class TransHistoryController extends Controller
         $form_action = 'TransHistoryController@show';
         if (empty($acc)) {
             if (empty($_acc)) {
-                return view('TransHistory.notfound', ['account' => '',
+                return view(getenv('BCH_API').'.TransHistory.notfound', ['account' => '',
                     'form_action' => $form_action,]);
             }
             $acc = $_acc;
@@ -242,7 +243,7 @@ class TransHistoryController extends Controller
         $textnotify = 'Старт Запроса на историю #транзакций_dt для аккаунта #' . $acc . ' запрос ' . print_r($request->all(), true) . $request->fullUrl();
         AdminNotify::send($textnotify);
 
-        $account_create = (GolosApi::getHistoryAccountFirst($acc));
+        $account_create = (BchApi::getHistoryAccountFirst($acc));
         //AdminNotify::send(print_r(($account_create),true));
 
         $date_acc_create = Date::parse($account_create['timestamp'])->format('d.m.Y');
@@ -264,7 +265,7 @@ class TransHistoryController extends Controller
             $tr['all'] = '';
         }
 
-        return view('TransHistory.show', compact('account', 'acc', 'form_action', 'request', 'date', 'tr', 'date_acc_create'));
+        return view(getenv('BCH_API').'.TransHistory.show', compact('account', 'acc', 'form_action', 'request', 'date', 'tr', 'date_acc_create'));
     }
 
     public function dt_show(Request $request, $_acc)
@@ -274,7 +275,7 @@ class TransHistoryController extends Controller
             $acc = $request->get('account', '');
             if (empty($acc)) {
                 if (empty($_acc)) {
-                    return view('TransHistory.notfound', ['account' => '',
+                    return view(getenv('BCH_API').'.TransHistory.notfound', ['account' => '',
                         'form_action' => 'TransHistoryController@show',]);
                 }
                 $acc = $_acc;
@@ -284,7 +285,7 @@ class TransHistoryController extends Controller
             $acc = mb_strtolower($acc);
             $acc = trim($acc);
 
-            $data = collect(GolosApi::getTransaction($acc, 'transfer'));
+            $data = collect(BchApi::getTransaction($acc, 'transfer'));
 
 
             $date_range = $request->get('d_from', false);
@@ -350,7 +351,7 @@ class TransHistoryController extends Controller
             $textnotify = 'Ошибка запроса в историю #транзакций_dt. Запрашиваемый аккаунт #' . $acc . ' : ' . $e->getMessage();;
             AdminNotify::send($textnotify);
             GolosApi::disconnect();
-            return view('TransHistory.notfound', ['account' => $acc,
+            return view(getenv('BCH_API').'.TransHistory.notfound', ['account' => $acc,
                 'form_action' => 'TransHistoryController@dt_show',]);
         }
     }
@@ -410,7 +411,7 @@ class TransHistoryController extends Controller
 
     public function grid()
     {
-        $data = collect(GolosApi::getTransaction('semasping', 'transfer'));
+        $data = collect(BchApi::getTransaction('semasping', 'transfer'));
 
     }
 
@@ -420,7 +421,7 @@ class TransHistoryController extends Controller
             $acc = $request->get('account', $_acc = '');
             if (empty($acc)) {
                 if (empty($_acc)) {
-                    return view('TransHistory.notfound', ['account' => $_acc,
+                    return view(getenv('BCH_API').'.TransHistory.notfound', ['account' => $_acc,
                         'form_action' => 'TransHistoryController@show_withdraw_example',]);
                 }
                 $acc = $_acc;
@@ -456,7 +457,7 @@ class TransHistoryController extends Controller
             $customization->apply($grid);
             $grid->getTileRow()->detach()->attachTo($grid->getTableHeading());
             //echo $grid;
-            return view('TransHistory.withdraw', ['grid' => $grid, 'account' => 'semasping']);
+            return view(getenv('BCH_API').'.TransHistory.withdraw', ['grid' => $grid, 'account' => 'semasping']);
         } catch (Exception $e) {
 
         }

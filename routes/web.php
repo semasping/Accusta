@@ -44,12 +44,26 @@ Route::get('/_form_submit', function (Request $request) {
 
 //Route::get('/test/', function (){ \App\semas\BchApi::getBlock('111111111');});
 
+if (getenv('BCH_API')=='golos'){
+    Route::get('/@{acc}', 'TransAccController@index')->middleware(CheckHistoryAcc::class)->name('home');
+    Route::get('/@{acc}/by_month', 'TransAccController@index')->name('trans_by_month')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/by_weeks', 'TransAccController@indexByWeek')->name('trans_by_week')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/transaction_history', 'TransHistoryController@show')->name('trans_history')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/_transaction_history', 'TransHistoryController@dt_show')->name('trans_history_dt_show')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/sg', 'TransAccController@indexSg')->name('trans_sg')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/process_tranz', 'TransAccController@showProcessTranz');
+}
 
-Route::get('/@{acc}', 'TransAccController@index')->middleware(CheckHistoryAcc::class)->name('home');
-Route::get('/@{acc}/by_month', 'TransAccController@index')->name('trans_by_month')->middleware(CheckHistoryAcc::class);
-Route::get('/@{acc}/by_weeks', 'TransAccController@indexByWeek')->name('trans_by_week')->middleware(CheckHistoryAcc::class);
-Route::get('/@{acc}/transaction_history', 'TransHistoryController@show')->name('trans_history')->middleware(CheckHistoryAcc::class);
-Route::get('/@{acc}/_transaction_history', 'TransHistoryController@dt_show')->name('trans_history_dt_show')->middleware(CheckHistoryAcc::class);
-Route::get('/@{acc}/sg', 'TransAccController@indexSg')->name('trans_sg')->middleware(CheckHistoryAcc::class);
-Route::get('/@{acc}/process_tranz', 'TransAccController@showProcessTranz');
+if (getenv('BCH_API')=='steemit'){
+    Route::get('/@{acc}', 'TransAccController@index')->middleware(CheckHistoryAcc::class)->name('home');
+    Route::get('/@{acc}/by_month', 'TransAccController@index')->name('trans_by_month')->middleware(CheckHistoryAcc::class);
+/*    Route::get('/@{acc}/by_weeks', 'TransAccController@indexByWeek')->name('trans_by_week')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/transaction_history', 'TransHistoryController@show')->name('trans_history')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/_transaction_history', 'TransHistoryController@dt_show')->name('trans_history_dt_show')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/sg', 'TransAccController@indexSg')->name('trans_sg')->middleware(CheckHistoryAcc::class);*/
+    Route::get('/@{acc}/process_tranz', 'TransAccController@showProcessTranz');
+    Route::get('/@{acc}/{page}', 'TransAccController@inProcess');
+
+}
+
 

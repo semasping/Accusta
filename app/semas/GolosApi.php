@@ -8,12 +8,11 @@
 
 namespace App\semas;
 
-ini_set('memory_limit', '512M');
+//ini_set('memory_limit', '512M');
 
 use GrapheneNodeClient\Commands\CommandQueryData;
 use GrapheneNodeClient\Commands\DataBase\GetAccountCommand;
 use GrapheneNodeClient\Commands\DataBase\GetAccountCountCommand;
-use GrapheneNodeClient\Commands\DataBase\GetAccountFullCommand;
 use GrapheneNodeClient\Commands\DataBase\GetAccountHistoryCommand;
 use GrapheneNodeClient\Commands\DataBase\GetAccountVotesCommand;
 use GrapheneNodeClient\Commands\DataBase\GetBlockCommand;
@@ -33,7 +32,7 @@ class GolosApi
     public static function getHistoryAccount($acc, $from, $limit = 2000)
     {
         $key = "2golos_getacchistory.$acc.$from";
-        if (Cache::get($key.'_status')!='working') {
+        if (Cache::get($key . '_status') != 'working') {
             Cache::put($key . '_status', 'working');
             if ($from % 2000 == 0) {
                 //AdminNotify::send("to set cache getHistoryAccount($acc, $from, $limit)");
@@ -42,7 +41,7 @@ class GolosApi
 
                 $history = Cache::rememberForever($key,
                     function () use ($acc, $from, $limit) {
-                        AdminNotify::send("to set cache getHistoryAccount($acc, $from, $limit) in function");
+                        AdminNotify::send("golos to set cache getHistoryAccount($acc, $from, $limit) in function");
 
                         return self::_getAccHistory($acc, $from, $limit);
                     });
@@ -62,7 +61,8 @@ class GolosApi
 
                 return self::_getAccHistory($acc, $from, $limit);
             }
-        }else{
+        }
+        else {
             sleep(1);
             return self::getHistoryAccount($acc, $from, $limit);
         }
@@ -84,7 +84,7 @@ class GolosApi
             $content = $command->execute($commandQuery);
             //dump($content);
         } catch (Exception $e) {
-            GolosApi::disconnect();
+            self::disconnect();
             return self::checkResult($content, '_getAccHistory', [$acc, $from, $limit]);
         }
 
@@ -95,7 +95,7 @@ class GolosApi
     {
         $res = self::_getAccHistory($acc, -1, 0);
 
-        //AdminNotify::send("max = getHistoryAccountLast($acc) = " . print_r($res, true));
+        AdminNotify::send("max = getHistoryAccountLast($acc) = " . print_r($res, true));
 //dump($res);
         return $res[0][0];
     }
@@ -165,8 +165,8 @@ class GolosApi
                     $limit = $max;
                 }
                 while ($i <= $max) {
-                    if ($his = self::getHistoryAccount($acc, $i, $limit)){
-                        self::setCurrentCachedTransactionId($acc,$i);
+                    if ($his = self::getHistoryAccount($acc, $i, $limit)) {
+                        self::setCurrentCachedTransactionId($acc, $i);
                     }
 
 
@@ -254,7 +254,7 @@ class GolosApi
             $commandQuery->setParamByKey('1', $permlink);
             $content = $command->execute($commandQuery);
         } catch (Exception $e) {
-            GolosApi::disconnect();
+            self::disconnect();
 
             return self::checkResult($content, 'getContent', [$author, $permlink]);
 
@@ -720,12 +720,12 @@ class GolosApi
 
     public static function getKeyCurrentCachedTransaction($acc)
     {
-        return  '1current_cache_transactions_' . $acc;
+        return '1current_cache_transactions_' . $acc;
     }
 
     private static function setCurrentCachedTransactionId($acc, $from)
     {
         $key = self::getKeyCurrentCachedTransaction($acc);
-        Cache::forever($key,$from);
+        Cache::forever($key, $from);
     }
 }
