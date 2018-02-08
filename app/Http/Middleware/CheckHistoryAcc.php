@@ -23,6 +23,10 @@ class CheckHistoryAcc
     {
         if ($request->acc) {
             $acc = ($request->acc);
+            $acc = str_replace('@', '', $acc);
+            $acc = mb_strtolower($acc);
+            $acc = trim($acc);
+            $request->acc = $acc;
             $max = BchApi::getHistoryAccountLast($acc);
             $current = BchApi::getCurrentProcessedHistoryTranzId($acc);
             if ($current < $max - 2000){

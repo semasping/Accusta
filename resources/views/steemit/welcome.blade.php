@@ -44,7 +44,7 @@
             {!! Form::hidden('controller', 'TransAccController@index') !!}
 
         </div>
-        {!! Form::submit('Начать просмотр',  array('class'=>'btn btn-primary', 'data-after-submit-value'=>"Собираю транзакции. Это может занять некоторое время. Ждите&hellip;")) !!}
+        {!! Form::submit('View statistics',  array('class'=>'btn btn-primary', 'data-after-submit-value'=>"Loading transactions. It`s takes for a while&hellip;")) !!}
         {!! Form::close() !!}
     </div>
 
