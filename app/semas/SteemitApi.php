@@ -153,7 +153,7 @@ class SteemitApi
     public static function getHistoryAccountFullInCache($acc)
     {
         $max = self::getHistoryAccountLast($acc);
-
+//@todo тут вот забивает диск лишними кешами. Надо переписать чтобы удаляло старые кеши которые уже ненужны
         return Cache::rememberForever('steemit_resulthistory' . $acc . $max,
             function () use ($max, $acc) {
                 $history = [];
@@ -438,9 +438,9 @@ class SteemitApi
 
     static function getPrice()
     {
-        return Cache::remember('steemit_getPrice_', 5, function () {
+        return Cache::remember('steemit_getPrice_', 10, function () {
             $resp = self::GetDynamicGlobalProperties();
-            AdminNotify::send(print_r($resp,true));
+            //AdminNotify::send(print_r($resp,true));
             if (is_array($resp)) {
                 $q1 = str_replace(' STEEM', '', $resp['total_vesting_fund_steem']);
                 $q2 = str_replace(' VESTS', '', $resp['total_vesting_shares']);
