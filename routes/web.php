@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 Route::get('/', function () {
-    return view(getenv('BCH_API').'.welcome');
+    return view('welcome');
 })->name('welcome');
 
 Route::get('/_form_submit', function (Request $request) {
