@@ -29,7 +29,7 @@ class CheckHistoryAcc
                 //Artisan::call('BchApi:GetHistoryAccountFullInCache',['api'=>'golos','acc'=>$acc]);
                 //GolosApi::getHistoryAccountFullInCache($acc);
 
-                dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue('CheckHistoryAcc');
+                dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue(getenv('BCH_API').'CheckHistoryAcc');
                 $params = $request->all();
                 $params['acc']=$acc;
                 //return redirect()->action('TransAccController@showProcessTranz',$params);
