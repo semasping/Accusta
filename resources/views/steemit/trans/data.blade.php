@@ -71,7 +71,7 @@
                     <div id="{{ $key }}" class="panel-collapse collapse">
                         <div class="panel-body">
 
-                            <h3>Author rewords from {{ $posts->count() }} posts:</h3>
+                            <h3>Author rewards from {{ $posts->count() }} posts:</h3>
                             SBD: {{$author->sum('SBD')}}
                             <br>STEEM: {{$author->sum('STEEM')}}
                             <br>SP: {{ \App\semas\SteemitApi::convertToSg($author->sum('VESTS')) }}
