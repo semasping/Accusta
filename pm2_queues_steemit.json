@@ -1,0 +1,13 @@
+
+{
+  // Application #2
+  "name": "SteemitCheckHistoryAcc",
+  "script": "artisan",
+  "args": ["queue:listen", "--queue=SteemitCheckHistoryAcc"],
+  "exec_interpreter": "php",
+  "exec_mode"  : "fork_mode",
+  "log_date_format" : "YYYY-MM-DD HH:mm Z",
+  "watch": false,
+  "merge_logs": true,
+  "cwd": "/home/admin/web/steemit.accusta.tk/public_html/"
+}
