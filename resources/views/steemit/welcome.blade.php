@@ -24,14 +24,15 @@
 
         <div class="text">
             <h3>In this service your can see:</h3>
-            <p>Steem Power down statistics</p>
-            <p>Full history of Account wallet with filters(In Process)</p>
-            <p>Weekly and monthly data grouping: (In Process)</p>
+            <p>Weekly and monthly data grouping: </p>
             <ul>
                 <li> * Posts</li>
                 <li> * Author Rewards</li>
                 <li> * Curations Rewards</li>
             </ul>
+
+            <p>Steem Power down statistics (In Developing)</p>
+            <p>Full history of Account wallet with filters(In Developing)</p>
 
 
         </div>
