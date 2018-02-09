@@ -64,7 +64,7 @@
                                 {{ Date::parse($key)->format("F Y") }} ...</a>
                             @endif
                             <br><br>
-                            SP:{{ \App\semas\SteemitApi::convertToSg($author->sum('VESTS')+$cur->sum('VESTS'))}}
+                            SP:{{ \App\semas\SteemitApi::convertToSg($author->sum('VESTS')+$cur->sum('VESTS'))}}; SBD:{{$author->sum('SBD')}}; STEEM:{{$author->sum('STEEM')}};
 
                         </h4>
                     </div>
@@ -95,20 +95,6 @@
             </div>
         @endforeach
 
-    </div>
-    <div class="row">
-        {{--            <table class="table table-bordered" id="users-table">
-                        <thead>
-                        <tr>
-                            <th>block</th>
-                            <th>timestamp</th>
-                            <th>permlink</th>
-                            <th>GBG</th>
-                            <th>GP</th>
-                            <th>GESTS</th>
-                        </tr>
-                        </thead>
-                    </table>--}}
     </div>
 </div>
 

@@ -202,7 +202,7 @@
                 </div>--}}
 
                 <div class="form-group">
-                    {!! Form::label('d_from','Считать с даты:', ['class'=>'control-label'] ) !!}
+                    {!! Form::label('d_from','Считать за период:', ['class'=>'control-label'] ) !!}
                     <div class='input-group' id='datetimepickerraw'>
                         <input type='text' class="form-control" name="d_from" id="datetimepicker1"/>
                         <span class="input-group-addon">

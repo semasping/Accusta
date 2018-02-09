@@ -24,7 +24,7 @@ class TransAccController extends Controller
         $acc = $request->get('acc');
         if (empty($acc)) {
             if (empty($_acc)) {
-                return view(getenv('BCH_API').'.trans.notfound', ['account' => $_acc,
+                return view(getenv('BCH_API') . '.trans.notfound', ['account' => $_acc,
                     'form_action' => 'TransAccController@index',]);
             }
             $acc = $_acc;
@@ -41,13 +41,13 @@ class TransAccController extends Controller
         if ($request->has('vp')) {
             $vp_calc = $request->get('vp');
         }
-        if ($date==false){
+        if ($date == false) {
             $date = Date::now()->subMonths(2)->startOfMonth();
         }
         //dd($date);
         try {
             if (!empty($acc)) {
-                $textnotify = 'Старт Запроса на сбор #статситики для аккаунта #' . $acc;
+                $textnotify = 'Старт Запроса на сбор #статистики для аккаунта #' . $acc;
                 AdminNotify::send($textnotify);
                 //$max = GolosApi::getHistoryAccountLast($acc);
 
@@ -78,8 +78,8 @@ class TransAccController extends Controller
                 });
                 $posts_trans = collect(BchApi::getTransaction($acc, 'comment'));//collect($trans['posts']);
 
-                $posts_trans = $posts_trans->filter(function ($item) use ($acc){
-                    if ($item['parent_author']==''&&$item['author']==$acc) return true;
+                $posts_trans = $posts_trans->filter(function ($item) use ($acc) {
+                    if ($item['parent_author'] == '' && $item['author'] == $acc) return true;
                 });
                 //dump($posts_trans);
 
@@ -109,24 +109,24 @@ class TransAccController extends Controller
                 }
                 //dump($author_trans);
                 //dump($author_trans);
-if (getenv('BCH_API')=='golos') {
-    $all_author_rew['GESTS'] = $author_trans->sum('GESTS');
-    $all_author_rew['GBG'] = $author_trans->sum('GBG');
-    $all_author_rew['GOLOS'] = $author_trans->sum('GOLOS');
+                if (getenv('BCH_API') == 'golos') {
+                    $all_author_rew['GESTS'] = $author_trans->sum('GESTS');
+                    $all_author_rew['GBG'] = $author_trans->sum('GBG');
+                    $all_author_rew['GOLOS'] = $author_trans->sum('GOLOS');
 
-    $all_curation_rew['GESTS'] = $curation_trans->sum("GESTS");
+                    $all_curation_rew['GESTS'] = $curation_trans->sum("GESTS");
 
-    $all_gests = $all_author_rew['GESTS'] + $all_curation_rew['GESTS'];
-}
-if (getenv('BCH_API')=='steemit') {
-    $all_author_rew['VESTS'] = $author_trans->sum('VESTS');
-    $all_author_rew['SBD'] = $author_trans->sum('SBD');
-    $all_author_rew['STEEM'] = $author_trans->sum('STEEM');
+                    $all_gests = $all_author_rew['GESTS'] + $all_curation_rew['GESTS'];
+                }
+                if (getenv('BCH_API') == 'steemit') {
+                    $all_author_rew['VESTS'] = $author_trans->sum('VESTS');
+                    $all_author_rew['SBD'] = $author_trans->sum('SBD');
+                    $all_author_rew['STEEM'] = $author_trans->sum('STEEM');
 
-    $all_curation_rew['VESTS'] = $curation_trans->sum("VESTS");
+                    $all_curation_rew['VESTS'] = $curation_trans->sum("VESTS");
 
-    $all_gests = $all_author_rew['VESTS'] + $all_curation_rew['VESTS'];
-}
+                    $all_gests = $all_author_rew['VESTS'] + $all_curation_rew['VESTS'];
+                }
                 $posts_count_all = $posts_trans->count();
 
                 $author_by_month = ($author_trans->sortByDesc('timestamp')->groupBy(function ($item) {
@@ -158,7 +158,7 @@ if (getenv('BCH_API')=='steemit') {
                 }*/
                 krsort($month);
                 //dump($trans['author_reward']);
-                return view(getenv('BCH_API').'.trans.index', [
+                return view(getenv('BCH_API') . '.trans.index', [
                     'account' => $acc,
                     'form_action' => 'TransAccController@index',
                     'author_by_month' => $author_by_month,
@@ -174,11 +174,11 @@ if (getenv('BCH_API')=='steemit') {
                 ]);
             }
         } catch (Exception $e) {
-            echo $e->getMessage().'|'.$e->getLine().'|'.$e->getFile();
+            echo $e->getMessage() . '|' . $e->getLine() . '|' . $e->getFile();
             $textnotify = 'Ошибка запроса в сборе #статистики. Запрашиваемый аккаунт #' . $acc . $e->getMessage();;
             AdminNotify::send($textnotify);
             GolosApi::disconnect();
-            return view(getenv('BCH_API').'.trans.notfound', ['account' => $acc,
+            return view(getenv('BCH_API') . '.trans.notfound', ['account' => $acc,
                 'form_action' => 'TransAccController@index',]);
         }
     }
@@ -189,7 +189,7 @@ if (getenv('BCH_API')=='steemit') {
         $acc = $request->get('acc');
         if (empty($acc)) {
             if (empty($_acc)) {
-                return view(getenv('BCH_API').'.trans.notfound', ['account' => $_acc,
+                return view(getenv('BCH_API') . '.trans.notfound', ['account' => $_acc,
                     'form_action' => 'TransAccController@indexByWeek',]);
             }
             $acc = $_acc;
@@ -210,13 +210,37 @@ if (getenv('BCH_API')=='steemit') {
             if (!empty($acc)) {
                 $textnotify = 'Старт Запроса на сбор #статситики по неделям для аккаунта #' . $acc;
                 AdminNotify::send($textnotify);
-                $max = GolosApi::getHistoryAccountLast($acc);
+                //$max = GolosApi::getHistoryAccountLast($acc);
 
-                $trans = GolosApi::getData($acc, $max);
-                $author_trans = collect($trans['author_reward']);
-                $curation_trans = collect($trans['curation_reward']);
-                $posts_trans = collect($trans['posts']);
-                $transfer_out_trans = collect($trans['transfer_out_data']);
+                $author_trans = collect(BchApi::getTransaction($acc, 'author_reward'));//collect($trans['author_reward']);
+                $author_trans = $author_trans->map(function ($item, $key) {
+                    $author_data = $item;
+                    $author_data['GBG'] = str_replace(' GBG', '', $item['sbd_payout']);
+                    $author_data['GOLOS'] = str_replace(' GOLOS', '', $item['steem_payout']);
+                    $author_data['GESTS'] = str_replace(' GESTS', '', $item['vesting_payout']);
+                    $author_data['SBD'] = str_replace(' SBD', '', $item['sbd_payout']);
+                    $author_data['STEEM'] = str_replace(' STEEM', '', $item['steem_payout']);
+                    $author_data['VESTS'] = str_replace(' VESTS', '', $item['vesting_payout']);
+                    return $author_data;
+                });
+                $curation_trans = collect(BchApi::getTransaction($acc, 'curation_reward'));//collect($trans['curation_reward']);
+
+                $curation_trans = $curation_trans->map(function ($item, $key) {
+                    $curation_data = $item;
+                    $curation_data['author'] = $item['comment_author'];
+                    $curation_data['permlink'] = $item['comment_permlink'];
+                    $curation_data['GESTS'] = str_replace(' GESTS', '', $item['reward']);
+                    $curation_data['VESTS'] = str_replace(' VESTS', '', $item['reward']);
+                    return $curation_data;
+                });
+                $posts_trans = collect(BchApi::getTransaction($acc, 'comment'));//collect($trans['posts']);
+
+                $posts_trans = $posts_trans->filter(function ($item) use ($acc) {
+                    if ($item['parent_author'] == '' && $item['author'] == $acc) return true;
+                });
+                //dump($posts_trans);
+
+                $posts_trans = $posts_trans->unique('permlink');
                 //dump($author_trans);
 
                 if ($date) {
@@ -226,7 +250,7 @@ if (getenv('BCH_API')=='steemit') {
                     $author_trans = $author_trans->where('timestamp', '>=', Carbon::parse($date)->toAtomString());
                     $curation_trans = $curation_trans->where('timestamp', '>=', Carbon::parse($date)->toAtomString());
                     $posts_trans = $posts_trans->where('timestamp', '>=', Carbon::parse($date)->toAtomString());
-                    $transfer_out_trans = $transfer_out_trans->where('timestamp', '>=', Carbon::parse($date)->toAtomString());
+                    //$transfer_out_trans = $transfer_out_trans->where('timestamp', '>=', Carbon::parse($date)->toAtomString());
                 }
                 //dump($author_trans);
 
@@ -240,15 +264,24 @@ if (getenv('BCH_API')=='steemit') {
                 }
                 //dump($author_trans);
                 //dump($author_trans);
+                if (getenv('BCH_API') == 'golos') {
+                    $all_author_rew['GESTS'] = $author_trans->sum('GESTS');
+                    $all_author_rew['GBG'] = $author_trans->sum('GBG');
+                    $all_author_rew['GOLOS'] = $author_trans->sum('GOLOS');
 
-                $all_author_rew['GESTS'] = $author_trans->sum('GESTS');
-                $all_author_rew['GBG'] = $author_trans->sum('GBG');
-                $all_author_rew['GOLOS'] = $author_trans->sum('GOLOS');
+                    $all_curation_rew['GESTS'] = $curation_trans->sum("GESTS");
 
-                $all_curation_rew['GESTS'] = $curation_trans->sum("GESTS");
+                    $all_gests = $all_author_rew['GESTS'] + $all_curation_rew['GESTS'];
+                }
+                if (getenv('BCH_API') == 'steemit') {
+                    $all_author_rew['VESTS'] = $author_trans->sum('VESTS');
+                    $all_author_rew['SBD'] = $author_trans->sum('SBD');
+                    $all_author_rew['STEEM'] = $author_trans->sum('STEEM');
 
-                $all_gests = $all_author_rew['GESTS'] + $all_curation_rew['GESTS'];
+                    $all_curation_rew['VESTS'] = $curation_trans->sum("VESTS");
 
+                    $all_gests = $all_author_rew['VESTS'] + $all_curation_rew['VESTS'];
+                }
                 $posts_count_all = $posts_trans->count();
 
                 $author_by_month = ($author_trans->sortByDesc('timestamp')->groupBy(function ($item) {
@@ -273,17 +306,17 @@ if (getenv('BCH_API')=='steemit') {
                     $month[$key] = $key;
                 }
 
-                $transfer_out_by_month = ($transfer_out_trans->sortByDesc('timestamp')->groupBy(function ($item) {
+               /* $transfer_out_by_month = ($transfer_out_trans->sortByDesc('timestamp')->groupBy(function ($item) {
                     return Carbon::parse($item['timestamp'])->format('Y\WW');
                 }));
                 foreach ($transfer_out_by_month as $key => $item) {
                     $month[$key] = $key;
-                }
+                }*/
                 krsort($month);
                 //dump($trans['author_reward']);
                 //if (!$date) $date =
                 //dd($curator_by_month['2017W48']);
-                return view(getenv('BCH_API').'.trans.index-by-week', [
+                return view(getenv('BCH_API') . '.trans.index-by-week', [
                     'account' => $acc,
                     'form_action' => 'TransAccController@indexByWeek',
                     'author_by_month' => $author_by_month,
@@ -295,7 +328,7 @@ if (getenv('BCH_API')=='steemit') {
                     'date' => $date,
                     'vp_calc' => $vp_calc,
                     'month' => $month,
-                    'transfer_out_by_month' => $transfer_out_by_month,
+                    'transfer_out_by_month' => [],//$transfer_out_by_month,
                     'week' => true,
                 ]);
             }
@@ -304,7 +337,7 @@ if (getenv('BCH_API')=='steemit') {
             $textnotify = 'Ошибка запроса в сборе #статистики по неделям. Запрашиваемый аккаунт #' . $acc . $e->getMessage();;
             AdminNotify::send($textnotify);
             GolosApi::disconnect();
-            return view(getenv('BCH_API').'.trans.notfound', ['account' => $acc,
+            return view(getenv('BCH_API') . '.trans.notfound', ['account' => $acc,
                 'form_action' => 'TransAccController@indexByWeek',]);
         }
     }
@@ -422,7 +455,8 @@ if (getenv('BCH_API')=='steemit') {
                         }
                         $history[$type_op][] = $item;
 
-                    } else {
+                    }
+                    else {
                         //echo 1;
                         //dump($item);
                         //AdminNotify::send(print_r($item,true));
@@ -472,7 +506,7 @@ if (getenv('BCH_API')=='steemit') {
         $month = [];
         if (empty($acc)) {
             if (empty($_acc)) {
-                return view(getenv('BCH_API').'.trans.notfound', ['account' => $_acc,
+                return view(getenv('BCH_API') . '.trans.notfound', ['account' => $_acc,
                     'form_action' => 'TransAccController@indexSg',]);
             }
             $acc = $_acc;
@@ -514,17 +548,17 @@ if (getenv('BCH_API')=='steemit') {
                 }
                 //dump($wv_by_month,$month);
                 $wv_by_month = $wv_by_month->toArray();
-                if (!is_array($wv_by_month)){
+                if (!is_array($wv_by_month)) {
                     $wv_by_month = [];
                 }
                 krsort($wv_by_month);
                 //dump($wv_by_month,$month);
-                return view(getenv('BCH_API').'.trans.index-sg', [
+                return view(getenv('BCH_API') . '.trans.index-sg', [
                     'account' => $acc,
                     'acc' => $acc,
                     'form_action' => 'TransAccController@indexSg',
                     'date' => $date,
-                    'wv_by_month'=>$wv_by_month,
+                    'wv_by_month' => $wv_by_month,
                     'month' => $month,
                     'week' => true,
                 ]);
@@ -534,27 +568,27 @@ if (getenv('BCH_API')=='steemit') {
             $textnotify = 'Ошибка запроса в сборе #статистики по #sg. Запрашиваемый аккаунт #' . $acc . $e->getMessage();;
             AdminNotify::send($textnotify);
             GolosApi::disconnect();
-            return view(getenv('BCH_API').'.trans.notfound', ['account' => $acc,
+            return view(getenv('BCH_API') . '.trans.notfound', ['account' => $acc,
                 'form_action' => 'TransAccController@indexSg',]);
         }
     }
 
-    public function showProcessTranz(Request $request, $acc){
+    public function showProcessTranz(Request $request, $acc)
+    {
 
         //$acc = ($request->acc);
         $max = GolosApi::getHistoryAccountLast($acc);
         $current = GolosApi::getCurrentProcessedHistoryTranzId($acc);
 
 
-
     }
 
 
-    public function inProcess($page){
-        return view(getenv('BCH_API').'.workInProcess');
+    public function inProcess($page)
+    {
+        return view(getenv('BCH_API') . '.workInProcess');
     }
 }
-
 
 
 [

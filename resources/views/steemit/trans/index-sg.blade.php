@@ -1,6 +1,6 @@
 @extends ('layouts.tra')
 
-@section('title')Accusta  -  {{ '@'.$account }}: статистика понижения СГ @endsection
+@section('title')Accusta  -  {{ '@'.$account }}: Steem power down statistics @endsection
 
 
 @section('style')

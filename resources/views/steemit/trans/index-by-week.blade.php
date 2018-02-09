@@ -1,7 +1,6 @@
 @extends ('layouts.tra')
 
-@section('title')Accusta  -  {{ '@'.$account }}: статистика по неделям @endsection
-
+@section('title')Accusta  -  {{ '@'.$account }}: Statistics grouped by weeks @endsection
 
 @section('style')
     <link rel="shortcut icon" href="/golos_icon.png">
