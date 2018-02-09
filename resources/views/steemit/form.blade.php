@@ -8,8 +8,8 @@
             </div>
             <div class="modal-body">
                 {!! Form::date('d_from', $date) !!}
-                <br> Select the date you want in the box above.
-                <br> To cancel the date selection, click on the cross.
+                <br> Select the date you want in the field above.
+                <br> To cancel the date selection, click on the cross in the field above.
                 <br> Then "Close" and "View statistics"
             </div>
             <div class="modal-footer">
