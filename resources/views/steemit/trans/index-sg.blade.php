@@ -52,7 +52,7 @@
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
-           @include('form')
+           @include(getenv('BCH_API').'.form')
         </div>
     </div>
     @include('steemit.trans.data-sg')

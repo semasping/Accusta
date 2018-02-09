@@ -23,7 +23,7 @@
         </div>
 
         <div class="text">
-            <h3>In this service your can see:</h3>
+            <h3>In this service you can see:</h3>
             <p>Weekly and monthly data grouping: </p>
             <ul>
                 <li> * Posts</li>
