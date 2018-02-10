@@ -320,7 +320,7 @@ class TransHistoryController extends Controller
                 preg_match('/ (\S*)/', $item['amount'], $cur);
                 $ni['date'] = Date::parse($ni['timestamp'])->format('Y.m.d H:i');
                 $ni['currency'] = trim($cur[0]);
-                $ni['sum'] = trim(str_replace(' GOLOS', '', str_replace(' GBG', '', $item['amount'])));
+                $ni['sum'] = trim(str_replace(' STEEM', '', str_replace(' SBD', '', $item['amount'])));
                 return $ni;
             });
 
@@ -350,7 +350,7 @@ class TransHistoryController extends Controller
             echo $e->getMessage();
             $textnotify = 'Ошибка запроса в историю #транзакций_dt. Запрашиваемый аккаунт #' . $acc . ' : ' . $e->getMessage();;
             AdminNotify::send($textnotify);
-            GolosApi::disconnect();
+            //GolosApi::disconnect();
             return view(getenv('BCH_API').'.TransHistory.notfound', ['account' => $acc,
                 'form_action' => 'TransHistoryController@dt_show',]);
         }
