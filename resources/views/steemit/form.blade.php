@@ -25,6 +25,6 @@
     {!! Form::hidden('controller', $form_action) !!}
 
 </div>
-{!! Form::submit('View statistics',  array('class'=>'btn btn-primary', 'data-after-submit-value'=>"Loading transactions. It`s takes for a while&hellip;")) !!}
+{!! Form::submit('View statistics',  array('class'=>'btn btn-primary', 'data-after-submit-value'=>"Loading transactions. It takes for a while&hellip;")) !!}
 
 {!! Form::close() !!}

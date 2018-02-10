@@ -1,6 +1,6 @@
 @extends ('layouts.tra')
 
-@section('title')Транзакции аккаунта  -  @endsection
+@section('title')Account statistics  -  @endsection
 
 @section('style')
     <link rel="shortcut icon" href="/golos_icon.png">
@@ -44,24 +44,16 @@
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
-            {!! Form::open(array('action' => [$form_action, '@'.$account], 'class' => 'form-inline', 'method' => 'get')) !!}
-            <div class="form-group">
-                {!! Form::label('Account Name: @') !!}
-                {!! Form::text('acc', null,
-                    array('required','class'=>'form-control','placeholder'=>'Account name')) !!}
-            </div>
-            {!! Form::submit('Посмотреть транзакции',  array('class'=>'btn btn-primary', 'data-after-submit-value'=>"Собираю транзакции. Это может занять некоторое время. Ждите&hellip;")) !!}
-            {!! Form::close() !!}
+            @include(getenv('BCH_API').'.form')
             @if($account=='')
                 @include('trans.description')
 
 
             @else
                 <div class="page-header">
-                    <h1>
-                        Аккаунт не найден. Или возникла ошибка обработки данных. Введите другой аккаунт или попробуйте
-                        этот же через некоторое время..
-                    </h1>
+                    <h2>
+                        Account not found. Or there was a data processing error. Please enter another account or try the same after a while ..
+                    </h2>
                 </div>
 
             @endif

@@ -1,6 +1,6 @@
 @extends ('layouts.tra')
 
-@section('title')Accusta  -  {{ '@'.$account }}: фильтр истории @endsection
+@section('title')Accusta  -  {{ '@'.$account }}: History transaction with filter @endsection
 
 
 @section('style')
@@ -175,22 +175,22 @@
                         array('required','class'=>'form-control','placeholder'=>'Account name')) !!}
                 </div>
                 <div class="form-group">
-                    {!! Form::label('tr_type','Тип транзакции', ['class'=>'control-label']) !!}
+                    {!! Form::label('tr_type','Transaction types', ['class'=>'control-label']) !!}
 
-                    <label class="radio-inline"><input type="radio" name="tr_type" value="all" {!! $tr['all'] !!}>Все</label>
-                    <label class="radio-inline"><input type="radio" name="tr_type" value="in"  {!! $tr['tr_in'] !!}>Входящие</label>
-                    <label class="radio-inline"><input type="radio" name="tr_type" value="out"  {!! $tr['tr_out'] !!}>Исходящие</label>
+                    <label class="radio-inline"><input type="radio" name="tr_type" value="all" {!! $tr['all'] !!}>All</label>
+                    <label class="radio-inline"><input type="radio" name="tr_type" value="in"  {!! $tr['tr_in'] !!}>In</label>
+                    <label class="radio-inline"><input type="radio" name="tr_type" value="out"  {!! $tr['tr_out'] !!}>Out</label>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('currency','Валюта', ['class'=>'control-label']) !!}
-                    {!! Form::select('currency', ['gbg'=>'GBG','golos'=>'GOLOS'],null,
-                        array('class'=>'form-control','placeholder'=>'Выберите валюту')) !!}
+                    {!! Form::label('currency','Currency', ['class'=>'control-label']) !!}
+                    {!! Form::select('currency', ['sbd'=>'SBD','steem'=>'STEEM'],null,
+                        array('class'=>'form-control','placeholder'=>'Choose currency')) !!}
                 </div>
                 <div class="form-group">
-                    {!! Form::label('exclude_sum','Исключить суммы меньше', ['class'=>'control-label']) !!}
+                    {!! Form::label('exclude_sum','Exclude sums less', ['class'=>'control-label']) !!}
                     {!! Form::text('exclude_sum_less', null,
                     array('class'=>'form-control','placeholder'=>'<', '')) !!}
-                    {!! Form::label('exclude_sum','Исключить суммы больше', ['class'=>'control-label']) !!}
+                    {!! Form::label('exclude_sum','Exclude sums more', ['class'=>'control-label']) !!}
                     {!! Form::text('exclude_sum_more', null,
                         array('class'=>'form-control','placeholder'=>'>', '')) !!}
 
@@ -202,7 +202,7 @@
                 </div>--}}
 
                 <div class="form-group">
-                    {!! Form::label('d_from','Считать с даты:', ['class'=>'control-label'] ) !!}
+                    {!! Form::label('d_from','SHow from period:', ['class'=>'control-label'] ) !!}
                     <div class='input-group' id='datetimepickerraw'>
                         <input type='text' class="form-control" name="d_from" id="datetimepicker1"/>
                         <span class="input-group-addon">
@@ -212,7 +212,7 @@
                 </div>
                 <div class="form-group">
                     {!! Form::hidden('controller', $form_action) !!}
-                    {!! Form::submit('Посмотреть транзакции',  array('class'=>'btn btn-primary', 'data-after-submit-value'=>"Собираю транзакции. Это может занять некоторое время. Ждите&hellip;")) !!}
+                    {!! Form::submit('Show transaction',  array('class'=>'btn btn-primary', 'data-after-submit-value'=>"Load transaction. It takes a while&hellip;")) !!}
                     {{--{!! Form::label('','*Возможность выбора параметров будет в течении дня', ['class'=>'control-label']) !!}--}}
                 </div>
                 {!! Form::close() !!}
@@ -222,15 +222,15 @@
             <table id="tranz">
                 <thead>
                 <tr>
-                    <td>Дата (GMT)</td>
-                    <td>От</td>
-                    <td>Кому</td>
-                    <td>Сколько</td>
-                    <td class="sum">Сумма</td>
-                    <td>Валюта</td>
-                    <td>Заметка(memo)</td>
-                    <td>Идентификатор блока</td>
-                    <td>Идентификатор транзакции в блокчейне</td>
+                    <td>Date (GMT)</td>
+                    <td>Form</td>
+                    <td>To</td>
+                    <td>Amount</td>
+                    <td class="sum">Sum</td>
+                    <td>Currency</td>
+                    <td>Memo</td>
+                    <td>ID block</td>
+                    <td>ID transaction</td>
                 </tr>
                 </thead>
                 <tbody>
