@@ -43,6 +43,9 @@ Route::get('/_form_submit', function (Request $request) {
 });
 
 //Route::get('/test/', function (){ \App\semas\BchApi::getBlock('111111111');});
+Route::get('info',function (){
+    phpinfo();
+});
 
 if (getenv('BCH_API') == 'golos') {
     Route::get('/@{acc}', 'TransAccController@index')->middleware(CheckHistoryAcc::class)->name('home');
@@ -50,6 +53,8 @@ if (getenv('BCH_API') == 'golos') {
     Route::get('/@{acc}/by_weeks', 'TransAccController@indexByWeek')->name('trans_by_week')->middleware(CheckHistoryAcc::class);
     Route::get('/@{acc}/transaction_history', 'TransHistoryController@show')->name('trans_history')->middleware(CheckHistoryAcc::class);
     Route::get('/@{acc}/_transaction_history', 'TransHistoryController@dt_show')->name('trans_history_dt_show')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/_export_xls_transaction_history', 'TransHistoryController@exportToExcel')->name('trans_history_show_export_xls');//->middleware(CheckHistoryAcc::class);
+
     Route::get('/@{acc}/sg', 'TransAccController@indexSg')->name('trans_sg')->middleware(CheckHistoryAcc::class);
     Route::get('/@{acc}/process_tranz', 'TransAccController@showProcessTranz');
 }
@@ -60,10 +65,12 @@ if (getenv('BCH_API') == 'steemit') {
     Route::get('/@{acc}/by_weeks', 'TransAccController@indexByWeek')->name('trans_by_week')->middleware(CheckHistoryAcc::class);
     Route::get('/@{acc}/transaction_history', 'TransHistoryController@show')->name('trans_history')->middleware(CheckHistoryAcc::class);
     Route::get('/@{acc}/_transaction_history', 'TransHistoryController@dt_show')->name('trans_history_dt_show')->middleware(CheckHistoryAcc::class);
+
     Route::get('/@{acc}/sg', 'TransAccController@indexSg')->name('trans_sg')->middleware(CheckHistoryAcc::class);
     Route::get('/@{acc}/process_tranz', 'TransAccController@showProcessTranz');
     Route::get('/@{acc}/{page}', 'TransAccController@inProcess');
 
 }
+
 
 

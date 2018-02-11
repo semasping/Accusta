@@ -6,7 +6,6 @@ ini_set('max_execution_time', 60);
 use App\semas\AdminNotify;
 use App\semas\BchApi;
 use App\semas\GolosApi;
-use App\Swi\CurrencyOperations;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -14,6 +13,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use DataTables;
 use Jenssegers\Date\Date;
+use Maatwebsite\Excel\Facades\Excel;
 use function Psy\debug;
 use ViewComponents\Grids\Component\Column;
 use ViewComponents\Grids\Component\ColumnSortingControl;
@@ -35,6 +35,7 @@ class TransHistoryController extends Controller
 {
     public function index(Request $request)
     {
+
         try {
             $acc = $request->get('acc', $_acc = 'semasping');
             if (empty($acc)) {
@@ -320,7 +321,9 @@ class TransHistoryController extends Controller
                 preg_match('/ (\S*)/', $item['amount'], $cur);
                 $ni['date'] = Date::parse($ni['timestamp'])->format('Y.m.d H:i');
                 $ni['currency'] = trim($cur[0]);
-                $ni['sum'] = trim(str_replace(' STEEM', '', str_replace(' SBD', '', $item['amount'])));
+                $ni['sum'] = $item['amount'];
+                $ni['sum'] = trim(str_replace(' GOLOS', '', str_replace(' GBG', '', $ni['sum'])));
+                $ni['sum'] = trim(str_replace(' STEEM', '', str_replace(' SBD', '', $ni['sum'])));
                 return $ni;
             });
 
@@ -343,6 +346,10 @@ class TransHistoryController extends Controller
                 });
             }
             $tr = $tr->sortByDesc('timestamp');
+            //dump($tr);
+            if ($request->csv){
+                return $this->exportToExcel($tr->toArray());
+            }
 
             return Datatables::collection($tr)->make(true);
 
@@ -591,6 +598,17 @@ class TransHistoryController extends Controller
     {
 
     }
+
+    public function exportToExcel($data){
+        Excel::create('123', function($excel) use ($data) {
+
+            $excel->sheet('45', function($sheet) use ($data) {
+
+                $sheet->fromArray($data);
+
+            });
+
+        })->download('csv');    }
 }
 
 [
