@@ -348,7 +348,7 @@ class TransHistoryController extends Controller
             $tr = $tr->sortByDesc('timestamp');
             //dump($tr);
             if ($request->csv){
-                return $this->exportToExcel($tr->toArray());
+                return $this->exportToExcel($tr->toArray(), $acc);
             }
 
             return Datatables::collection($tr)->make(true);
@@ -599,10 +599,10 @@ class TransHistoryController extends Controller
 
     }
 
-    public function exportToExcel($data){
-        Excel::create('123', function($excel) use ($data) {
+    public function exportToExcel($data, $acc){
+        Excel::create('HistoryTransaction_'.$acc, function($excel) use ($data, $acc) {
 
-            $excel->sheet('45', function($sheet) use ($data) {
+            $excel->sheet('HistoryTransaction', function($sheet) use ($data) {
 
                 $sheet->fromArray($data);
 
