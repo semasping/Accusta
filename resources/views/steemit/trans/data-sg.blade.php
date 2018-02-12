@@ -7,6 +7,7 @@
                                         href="https://steemit.com/{{ '@'.$account }}">{{ '@'.$account }}</a>
             </h1>
             <h3>
+
                 @if (!$date)
                     From registration (
                     <button type="button" class="btn btn-link btn-xs" data-toggle="modal" data-target="#myModal">
@@ -22,8 +23,11 @@
         </div>
     </div>
     @if(!empty($wv_by_month))
+        <div class="row">{!! link_to_route('trans_sg',
+'Export to Excel (CSV)', ['account'=> $acc, 'csv'=>1, Request::getQueryString()],
+['class' => 'btn btn-info pull-right'])
+!!}</div>
         <div class="row">
-
         @foreach($month as $key=>$month1)
             <?php if (isset ($wv_by_month[$key])) {
                 $wv = $wv_by_month[$key][0];

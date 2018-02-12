@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use DataTables;
 use Jenssegers\Date\Date;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TransAccController extends Controller
 {
@@ -58,12 +59,16 @@ class TransAccController extends Controller
                 $author_trans = collect(BchApi::getTransaction($acc, 'author_reward'));//collect($trans['author_reward']);
                 $author_trans = $author_trans->map(function ($item, $key) {
                     $author_data = $item;
-                    $author_data['GBG'] = str_replace(' GBG', '', $item['sbd_payout']);
-                    $author_data['GOLOS'] = str_replace(' GOLOS', '', $item['steem_payout']);
-                    $author_data['GESTS'] = str_replace(' GESTS', '', $item['vesting_payout']);
-                    $author_data['SBD'] = str_replace(' SBD', '', $item['sbd_payout']);
-                    $author_data['STEEM'] = str_replace(' STEEM', '', $item['steem_payout']);
-                    $author_data['VESTS'] = str_replace(' VESTS', '', $item['vesting_payout']);
+                    if (getenv('BCH_API') == 'golos') {
+                        $author_data['GBG'] = str_replace(' GBG', '', $item['sbd_payout']);
+                        $author_data['GOLOS'] = str_replace(' GOLOS', '', $item['steem_payout']);
+                        $author_data['GESTS'] = str_replace(' GESTS', '', $item['vesting_payout']);
+                    }
+                    if (getenv('BCH_API') == 'steemit') {
+                        $author_data['SBD'] = str_replace(' SBD', '', $item['sbd_payout']);
+                        $author_data['STEEM'] = str_replace(' STEEM', '', $item['steem_payout']);
+                        $author_data['VESTS'] = str_replace(' VESTS', '', $item['vesting_payout']);
+                    }
                     return $author_data;
                 });
                 $curation_trans = collect(BchApi::getTransaction($acc, 'curation_reward'));//collect($trans['curation_reward']);
@@ -72,8 +77,12 @@ class TransAccController extends Controller
                     $curation_data = $item;
                     $curation_data['author'] = $item['comment_author'];
                     $curation_data['permlink'] = $item['comment_permlink'];
-                    $curation_data['GESTS'] = str_replace(' GESTS', '', $item['reward']);
-                    $curation_data['VESTS'] = str_replace(' VESTS', '', $item['reward']);
+                    if (getenv('BCH_API') == 'golos') {
+                        $curation_data['GESTS'] = str_replace(' GESTS', '', $item['reward']);
+                    }
+                    if (getenv('BCH_API') == 'steemit') {
+                        $curation_data['VESTS'] = str_replace(' VESTS', '', $item['reward']);
+                    }
                     return $curation_data;
                 });
                 $posts_trans = collect(BchApi::getTransaction($acc, 'comment'));//collect($trans['posts']);
@@ -128,6 +137,16 @@ class TransAccController extends Controller
                     $all_gests = $all_author_rew['VESTS'] + $all_curation_rew['VESTS'];
                 }
                 $posts_count_all = $posts_trans->count();
+
+                if ($request->csv) {
+                    if ($request->authors) {
+                        return $this->exportToExcel($author_trans->toArray(), 'AuthorsRewards', $acc);
+                    }
+                    if ($request->curators) {
+                        return $this->exportToExcel($curation_trans->toArray(), 'CuratorsRewards', $acc);
+                    }
+                    //return $this->exportToExcel($data_withdraw_vesting->toArray(),'SteemPowerDown', $acc);
+                }
 
                 $author_by_month = ($author_trans->sortByDesc('timestamp')->groupBy(function ($item) {
                     return Carbon::parse($item['timestamp'])->format('Y-m');
@@ -284,6 +303,16 @@ class TransAccController extends Controller
                 }
                 $posts_count_all = $posts_trans->count();
 
+                if ($request->csv) {
+                    if ($request->authors) {
+                        return $this->exportToExcel($author_trans->toArray(), 'AuthorsRewards', $acc);
+                    }
+                    if ($request->curators) {
+                        return $this->exportToExcel($curation_trans->toArray(), 'CuratorsRewards', $acc);
+                    }
+                    //return $this->exportToExcel($data_withdraw_vesting->toArray(),'SteemPowerDown', $acc);
+                }
+
                 $author_by_month = ($author_trans->sortByDesc('timestamp')->groupBy(function ($item) {
                     return Carbon::parse($item['timestamp'])->format('Y\WW');
                 }));
@@ -306,12 +335,12 @@ class TransAccController extends Controller
                     $month[$key] = $key;
                 }
 
-               /* $transfer_out_by_month = ($transfer_out_trans->sortByDesc('timestamp')->groupBy(function ($item) {
-                    return Carbon::parse($item['timestamp'])->format('Y\WW');
-                }));
-                foreach ($transfer_out_by_month as $key => $item) {
-                    $month[$key] = $key;
-                }*/
+                /* $transfer_out_by_month = ($transfer_out_trans->sortByDesc('timestamp')->groupBy(function ($item) {
+                     return Carbon::parse($item['timestamp'])->format('Y\WW');
+                 }));
+                 foreach ($transfer_out_by_month as $key => $item) {
+                     $month[$key] = $key;
+                 }*/
                 krsort($month);
                 //dump($trans['author_reward']);
                 //if (!$date) $date =
@@ -539,6 +568,10 @@ class TransAccController extends Controller
                     return $ni;
                 });*/
 
+                if ($request->csv) {
+                    return $this->exportToExcel($data_withdraw_vesting->toArray(), 'SteemPowerDown', $acc);
+                }
+
                 $wv_by_month = ($data_withdraw_vesting->sortByDesc('timestamp')->groupBy(function ($item) {
                     return Carbon::parse($item['timestamp'])->format('Y\WW');
                 }));
@@ -587,6 +620,20 @@ class TransAccController extends Controller
     public function inProcess($page)
     {
         return view(getenv('BCH_API') . '.workInProcess');
+    }
+
+
+    public function exportToExcel($data, $type, $acc)
+    {
+        Excel::create($type . '_' . $acc, function ($excel) use ($data, $type, $acc) {
+
+            $excel->sheet($type, function ($sheet) use ($data) {
+
+                $sheet->fromArray($data);
+
+            });
+
+        })->download('csv');
     }
 }
 

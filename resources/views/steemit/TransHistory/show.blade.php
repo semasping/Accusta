@@ -213,6 +213,10 @@
                 <div class="form-group">
                     {!! Form::hidden('controller', $form_action) !!}
                     {!! Form::submit('Show transaction',  array('class'=>'btn btn-primary', 'data-after-submit-value'=>"Load transaction. It takes a while&hellip;")) !!}
+                    {!! link_to_route('trans_history_dt_show',
+'Export to Excel (CSV)', ['account'=> $acc, 'csv'=>1, Request::getQueryString()],
+['class' => 'btn btn-info pull-right'])
+!!}
                     {{--{!! Form::label('','*Возможность выбора параметров будет в течении дня', ['class'=>'control-label']) !!}--}}
                 </div>
                 {!! Form::close() !!}

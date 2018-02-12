@@ -22,6 +22,10 @@
         </div>
     </div>
     @if(!empty($wv_by_month))
+        <div class="row">{!! link_to_route('trans_sg',
+'Export to Excel (CSV)', ['account'=> $acc, 'csv'=>1, Request::getQueryString()],
+['class' => 'btn btn-info pull-right'])
+!!}</div>
         <div class="row">
 
         @foreach($month as $key=>$month1)

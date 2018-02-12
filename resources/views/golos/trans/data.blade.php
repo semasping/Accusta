@@ -21,6 +21,14 @@
         </div>
     </div>
     <div class="row">
+        {!! link_to_route('trans_by_month',
+'Export Author`s rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'authors'=>1, Request::getQueryString()],
+['class' => 'btn btn-info pull-right ml10'])
+!!}
+        {!! link_to_route('trans_by_month',
+        'Export Curator`s rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'curators'=>1, Request::getQueryString()],
+        ['class' => 'btn btn-info pull-right ','role'=>"button"])
+        !!}
         <div>
             Всего аккаунтом заработано на постах и кураторстве:
             <br>Силы Голоса: {{  \App\semas\GolosApi::convertToSg($all_gests) }}* (без учета переводов в СилуГолоса)
