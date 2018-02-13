@@ -41,7 +41,7 @@
          $('.datepicker').datepicker();
          });*/
     </script>
-@endsection
+@stop
 
 @section ('content')
     <div class="container">

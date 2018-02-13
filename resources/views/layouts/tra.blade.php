@@ -16,6 +16,7 @@
         {{ Html::style(('assets/admin/css/admin.css')) }}
         {{ Html::style(('assets/admin/css/dashboard.css')) }}--}}
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/css/slickModal.min.css">
 
     @yield('style')
     <link rel="shortcut icon" href="/favicon.ico">
@@ -134,6 +135,7 @@
 
 
 <br>
+@include(getenv('BCH_API').'.new-articles-modal')
 @include(getenv('BCH_API').'.footer')
 <!-- Scripts -->
 <!-- jQuery -->
@@ -143,7 +145,9 @@
 <!-- Bootstrap JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-
+<!-- Slick Modals jQuery plugin -->
+<script type="text/javascript" src="/js/slickModal.min.js"></script>
 @yield('js')
+@yield('js2')
 </body>
 </html>
