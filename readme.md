@@ -8,9 +8,9 @@ In this service you can see:
 * Full history of Account wallet with filters
 
 
-[![golos_accusta_logo.png](https://images.golos.io/DQmbparKFQHSAvd2WoySb28qTLwNVUR1cTSvshanLbm5Pgb/golos_accusta_logo.png)](http://golos.accusta.tk) - Accusta for Golos
+[![golos_accusta_logo.png](https://steemitimages.com/DQmd29uRmaiHzbZd8yEckQvS7J76NsewEqKQsomQuKgw5mp/image.png)](http://golos.accusta.tk) - Accusta for Golos
 
-[![steem_accusta_logo.png](https://images.golos.io/DQmd36Veh3toz48iadaiKFeixV2aeKZMAiXC4ZY7c7Efsbb/steem_accusta_logo.png)](https://steemit.accusta.tk) - Accusta for Steemit
+[![steem_accusta_logo.png](https://steemitimages.com/DQmeQFx6VYLTKzdqtpwWDN6sAkSfKXiV98Fq85tHq2F7woH/image.png)](https://steemit.accusta.tk) - Accusta for Steemit
 
 
 ##  [![accusta_logo_line_170.png](https://steemitimages.com/DQmSq8MRTBXoSMgCUXEMJ4KFjLxMrEaWyPGFJPXamwY3Thx/accusta_logo_line_170.png)](https://steemit.accusta.tk) roadmap:
