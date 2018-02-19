@@ -32,7 +32,7 @@ class SteemitApi
     public static function getHistoryAccount($acc, $from, $limit = 2000)
     {
         $key = "2steemit_getacchistory.$acc.$from";
-        if (Cache::get($key . '_status') != 'working') {
+        if (Cache::get($key . '_status') != 'working' && Cache::get($key . '_status') != 'done') {
             Cache::put($key . '_status', 'working');
             //dump($key.' start working');
             if ($from % 2000 == 0) {
@@ -42,12 +42,13 @@ class SteemitApi
 
                 $history = Cache::rememberForever($key,
                     function () use ($acc, $from, $limit) {
-                        AdminNotify::send("steemit to set cache getHistoryAccount($acc, $from, $limit) in function");
+                        //AdminNotify::send("steemit to set cache getHistoryAccount($acc, $from, $limit) in function");
 
                         return self::_getAccHistory($acc, $from, $limit);
                     });
                 if (!$history) {
                     Cache::forget("2steemit_getacchistory.$acc.$from");
+                    Cache::put($key . '_status', 'fail');
                     //dump($acc,$history);
                 }
                 //
@@ -161,44 +162,50 @@ class SteemitApi
     {
         $max = self::getHistoryAccountLast($acc);
 //@todo тут вот забивает диск лишними кешами. Надо переписать чтобы удаляло старые кеши которые уже ненужны
-        $return = Cache::rememberForever('steemit_resulthistory' . $acc . $max,
-            function () use ($max, $acc) {
-                $history = [];
-                $qq = 0;
-                $h = 0;
-                $i = 2000;
-                $limit = 2000;
-                if ($i > $max) {
-                    $i = $max;
-                    $limit = $max;
-                }
-                while ($i <= $max) {
-                    if (self::getHistoryAccount($acc, $i, $limit)) {
-                        self::setCurrentCachedTransactionId($acc, $i);
-                    }
-
-
-                    $i = $i + 2000;
+        $return = false;
+        $key = "steemit_getfullacchis.$acc.$max";
+        if (Cache::get($key . '_status') != 'working' && Cache::get($key . '_status') != 'working') {
+            Cache::put($key . '_status', 'working');
+            $return = Cache::remember('steemit_resulthistory' . $acc . $max, 100,
+                function () use ($max, $acc) {
+                    $history = [];
+                    $qq = 0;
+                    $h = 0;
+                    $i = 2000;
+                    $limit = 2000;
                     if ($i > $max) {
-                        //AdminNotify::send('i' . $i);
-                        $i = $i - 2000;
-                        $limit = $max - $i;
                         $i = $max;
+                        $limit = $max;
                     }
-                    if ($limit == 0) {
-                        //AdminNotify::send('limit =0 exit');
-                        break;
+                    while ($i <= $max) {
+                        if (self::getHistoryAccount($acc, $i, $limit)) {
+                            self::setCurrentCachedTransactionId($acc, $i);
+                        }
+
+
+                        $i = $i + 2000;
+                        if ($i > $max) {
+                            //AdminNotify::send('i' . $i);
+                            $i = $i - 2000;
+                            $limit = $max - $i;
+                            $i = $max;
+                        }
+                        if ($limit == 0) {
+                            //AdminNotify::send('limit =0 exit');
+                            break;
+                        }
+                        $qq++;
+                        if ($qq > 5000) {
+                            AdminNotify::send('$qq > 5000 in SteemitApi.php:188');
+                            break;
+                        }
                     }
-                    $qq++;
-                    if ($qq > 5000) {
-                        AdminNotify::send('$qq > 5000 in SteemitApi.php:188');
-                        break;
-                    }
-                }
-                //self::setCurrentCachedTransactionId($acc,$max);
-                return true;
-            });
-        self::setCurrentCachedTransactionId($acc, $max);
+                    //self::setCurrentCachedTransactionId($acc,$max);
+                    return true;
+                });
+            self::setCurrentCachedTransactionId($acc, $max);
+            Cache::put($key . '_status', 'done');
+        }
         return $return;
     }
 
