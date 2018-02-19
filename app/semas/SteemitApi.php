@@ -33,7 +33,7 @@ class SteemitApi
     {
         $key = "1steemit_getacchistory.$acc.$from";
         if (Cache::get($key . '_status') != 'working') {
-            Cache::put($key . '_status', 'working', 10);
+            Cache::put($key . '_status', 'working', 2);
             //dump($key.' start working');
             if ($from % 2000 == 0) {
                 //AdminNotify::send("to set cache getHistoryAccount($acc, $from, $limit)");
@@ -48,12 +48,12 @@ class SteemitApi
                     });
                 if (!$history) {
                     Cache::forget($key);
-                    Cache::put($key . '_status', 'fail', 10);
+                    Cache::put($key . '_status', 'fail', 2);
                     //dump($acc,$history);
                 }
                 //
                 //self::setCurrentCachedTransactionId($acc, $from);
-                Cache::put($key . '_status', 'done', 10);
+                Cache::put($key . '_status', 'done', 2);
                 //dump($key.' done');
 
                 return $history;
@@ -62,7 +62,7 @@ class SteemitApi
             }
             else {
                 //AdminNotify::send("without cache getHistoryAccount($acc, $from, $limit)");
-                Cache::put($key . '_status', 'done', 10);
+                Cache::put($key . '_status', 'done', 2);
                 //dump($key.' done');
 
                 return self::_getAccHistory($acc, $from, $limit);

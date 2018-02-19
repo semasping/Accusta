@@ -4,7 +4,7 @@
     "name": "SteemitCheckHistoryAcc",
     "script": "artisan",
     "args": [
-      "queue:listen",
+      "queue:work",
       "--queue=steemitCheckHistoryAcc"
     ],
     "exec_interpreter": "php",
@@ -19,7 +19,7 @@
     "name": "SteemitCheckHistoryAcc_2",
     "script": "artisan",
     "args": [
-      "queue:listen",
+      "queue:work",
       "--queue=steemitCheckHistoryAcc"
     ],
     "exec_interpreter": "php",
