@@ -48,12 +48,12 @@ class SteemitApi
                     });
                 if (!$history) {
                     Cache::forget($key);
-                    Cache::put($key . '_status', 'fail');
+                    Cache::put($key . '_status', 'fail', 10);
                     //dump($acc,$history);
                 }
                 //
                 //self::setCurrentCachedTransactionId($acc, $from);
-                Cache::put($key . '_status', 'done');
+                Cache::put($key . '_status', 'done', 10);
                 //dump($key.' done');
 
                 return $history;
@@ -62,7 +62,7 @@ class SteemitApi
             }
             else {
                 //AdminNotify::send("without cache getHistoryAccount($acc, $from, $limit)");
-                Cache::put($key . '_status', 'done');
+                Cache::put($key . '_status', 'done', 10);
                 //dump($key.' done');
 
                 return self::_getAccHistory($acc, $from, $limit);
