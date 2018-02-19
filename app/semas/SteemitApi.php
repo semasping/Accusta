@@ -31,7 +31,7 @@ class SteemitApi
 
     public static function getHistoryAccount($acc, $from, $limit = 2000)
     {
-        $key = "2steemit_getacchistory.$acc.$from";
+        $key = "1steemit_getacchistory.$acc.$from";
         if (Cache::get($key . '_status') != 'working' && Cache::get($key . '_status') != 'done') {
             Cache::put($key . '_status', 'working');
             //dump($key.' start working');
@@ -47,7 +47,7 @@ class SteemitApi
                         return self::_getAccHistory($acc, $from, $limit);
                     });
                 if (!$history) {
-                    Cache::forget("2steemit_getacchistory.$acc.$from");
+                    Cache::forget($key);
                     Cache::put($key . '_status', 'fail');
                     //dump($acc,$history);
                 }
@@ -163,7 +163,7 @@ class SteemitApi
         $max = self::getHistoryAccountLast($acc);
 //@todo тут вот забивает диск лишними кешами. Надо переписать чтобы удаляло старые кеши которые уже ненужны
         $return = false;
-        $key = "steemit_getfullacchis.$acc.$max";
+        $key = "1steemit_getfullacchis.$acc.$max";
         if (Cache::get($key . '_status') != 'working' && Cache::get($key . '_status') != 'working') {
             Cache::put($key . '_status', 'working');
             $return = Cache::remember('steemit_resulthistory' . $acc . $max, 100,
