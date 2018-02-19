@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 use App\semas\AdminNotify;
 use App\semas\BchApi;
 use App\semas\GolosApi;
-use App\Swi\CurrencyOperations;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
