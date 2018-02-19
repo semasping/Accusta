@@ -33,7 +33,7 @@ class SteemitApi
     {
         $key = "1steemit_getacchistory.$acc.$from";
         if (Cache::get($key . '_status') != 'working' && Cache::get($key . '_status') != 'done') {
-            Cache::put($key . '_status', 'working');
+            Cache::put($key . '_status', 'working', 10);
             //dump($key.' start working');
             if ($from % 2000 == 0) {
                 //AdminNotify::send("to set cache getHistoryAccount($acc, $from, $limit)");
@@ -69,7 +69,7 @@ class SteemitApi
             }
         }
         else {
-            sleep(1);
+            sleep(5);
             //dump($key.' wait');
 
             return self::getHistoryAccount($acc, $from, $limit);
@@ -164,8 +164,10 @@ class SteemitApi
 //@todo тут вот забивает диск лишними кешами. Надо переписать чтобы удаляло старые кеши которые уже ненужны
         $return = false;
         $key = "1steemit_getfullacchis.$acc.$max";
-        if (Cache::get($key . '_status') != 'working' && Cache::get($key . '_status') != 'working') {
-            Cache::put($key . '_status', 'working');
+
+        if (Cache::get($key . '_status') != 'working' && Cache::get($key . '_status') != 'done') {
+            dump($key);
+            Cache::put($key . '_status', 'working',10);
             $return = Cache::remember('steemit_resulthistory' . $acc . $max, 100,
                 function () use ($max, $acc) {
                     $history = [];
@@ -179,6 +181,7 @@ class SteemitApi
                     }
                     while ($i <= $max) {
                         if (self::getHistoryAccount($acc, $i, $limit)) {
+
                             self::setCurrentCachedTransactionId($acc, $i);
                         }
 
@@ -203,7 +206,7 @@ class SteemitApi
                     //self::setCurrentCachedTransactionId($acc,$max);
                     return true;
                 });
-            self::setCurrentCachedTransactionId($acc, $max);
+            //self::setCurrentCachedTransactionId($acc, $max);
             Cache::put($key . '_status', 'done');
         }
         return $return;
@@ -768,5 +771,6 @@ class SteemitApi
     {
         $key = self::getKeyCurrentCachedTransaction($acc);
         Cache::forever($key, $from);
+        dump($key, $from, 'finish');
     }
 }
