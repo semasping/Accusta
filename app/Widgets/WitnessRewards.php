@@ -35,10 +35,14 @@ class WitnessRewards extends AbstractWidget
             return $data;
         });
 
+        $summs['all'] = $data->sum('VESTS');
+        $summs['days7'] = $data->where('timestamp','>=',\Jenssegers\Date\Date::now()->subDays(7))->sum('VESTS');
+        $summs['days30'] = $data->where('timestamp','>=',\Jenssegers\Date\Date::now()->subDays(30))->sum('VESTS');
+
         return view(getenv('BCH_API') . '.widgets.witness_rewards', [
             'config' => $this->config,
             'account' => $acc,
-            'data' => $data,
+            'summs' => $summs,
         ]);
 
     }

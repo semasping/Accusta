@@ -1,4 +1,4 @@
-@if (($data->isNotEmpty()))
+@if (!empty($summs))
     <div class="container">
         <div class="row">
             <div class="panel panel-default">
@@ -16,18 +16,18 @@
                             <tbody>
                             <tr>
                                 <td>Last 7 days</td>
-                                <td>{{ $data->where('timestamp','>=',\Jenssegers\Date\Date::now()->subDays(7))->sum('VESTS') }}</td>
-                                <td>{{ \App\semas\SteemitApi::convertToSg($data->where('timestamp','>=',\Jenssegers\Date\Date::now()->subDays(7))->sum('VESTS')) }}</td>
+                                <td>{{ $summs['days7'] }}</td>
+                                <td>{{ \App\semas\SteemitApi::convertToSg($summs['days7']) }}</td>
                             </tr>
                             <tr>
                                 <td>Last 30 days</td>
-                                <td>{{ $data->where('timestamp','>=',\Jenssegers\Date\Date::now()->subDays(30))->sum('VESTS') }}</td>
-                                <td>{{ \App\semas\SteemitApi::convertToSg($data->where('timestamp','>=',\Jenssegers\Date\Date::now()->subDays(30))->sum('VESTS')) }}</td>
+                                <td>{{ $summs['days30'] }}</td>
+                                <td>{{ \App\semas\SteemitApi::convertToSg($summs['days30']) }}</td>
                             </tr>
                             <tr>
                                 <td>Whole witness time</td>
-                                <td>{{ $data->sum('VESTS') }}</td>
-                                <td>{{ \App\semas\SteemitApi::convertToSg($data->sum('VESTS')) }}</td>
+                                <td>{{ $summs['all'] }}</td>
+                                <td>{{ \App\semas\SteemitApi::convertToSg($summs['all']) }}</td>
                             </tr>
                             </tbody>
                         </table>
