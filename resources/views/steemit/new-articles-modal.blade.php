@@ -17,16 +17,9 @@
             <div class="title">Please consider to support my posts about developing this Service</div>
             <div class="posts">
                 <ul>
-                    <li>
-                        <a href="https://steemit.com/steem-dev/@semasping/introduction-of-new-service-statistic-of-steemit-accounts-accusta" target="_blank">Introduction
-                            of new service 'Statistic of steemit Accounts' - [Accusta]</a></li>
-                    <li><a href="https://steemit.com/accusta/@semasping/accusta-update-new-functions-v-0-3" target="_blank">[Accusta]
-                            Update. New functions (v:0.3)</a></li>
-                    <li>
-                        <a href="https://steemit.com/accusta/@semasping/accusta-new-functions-added-history-transaction-with-filters-v-0-4" target="_blank">[Accusta]
-                            New functions added: History transaction with filters (v:0.4)</a></li>
-                    <li><a href="https://steemit.com/accusta/@semasping/accusta-export-to-csv-v-0-55" target="_blank">[Accusta] Export
-                            to CSV (v:0.55)</a></li>
+                    <li><a href="https://steemit.com/utopian-io/@semasping/accusta-witness-s-rewards-v-0-7">[Accusta] Witness`s rewards (v 0.7)</a></li>
+                    <li><a href="https://steemit.com/utopian-io/@semasping/accusta-now-opensorce-v-0-6-account-statistics-service-for-steemit">[Accusta] Now opensorce (v:0.6) - Account statistics service for Steemit</a></li>
+                    <li><a href=""></a></li>
                 </ul>
             </div>
         </div>
