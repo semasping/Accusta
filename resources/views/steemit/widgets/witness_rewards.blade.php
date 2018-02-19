@@ -1,4 +1,4 @@
-@if (!empty($summs))
+@if (($summs['all']!=0))
     <div class="container">
         <div class="row">
             <div class="panel panel-default">
