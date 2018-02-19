@@ -7,6 +7,7 @@ use Arrilot\Widgets\AbstractWidget;
 
 class WitnessRewards extends AbstractWidget
 {
+    public $cacheTime = 1;
     /**
      * The configuration array.
      *
