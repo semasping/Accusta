@@ -34,6 +34,7 @@ class SteemitApi
         $key = "2steemit_getacchistory.$acc.$from";
         if (Cache::get($key . '_status') != 'working') {
             Cache::put($key . '_status', 'working');
+            //dump($key.' start working');
             if ($from % 2000 == 0) {
                 //AdminNotify::send("to set cache getHistoryAccount($acc, $from, $limit)");
                 //if ($acc==' vp-bodyform')
@@ -50,20 +51,26 @@ class SteemitApi
                     //dump($acc,$history);
                 }
                 //
-                self::setCurrentCachedTransactionId($acc, $from);
+                //self::setCurrentCachedTransactionId($acc, $from);
                 Cache::put($key . '_status', 'done');
+                //dump($key.' done');
+
                 return $history;
 
 
             }
             else {
                 //AdminNotify::send("without cache getHistoryAccount($acc, $from, $limit)");
+                Cache::put($key . '_status', 'done');
+                //dump($key.' done');
 
                 return self::_getAccHistory($acc, $from, $limit);
             }
         }
         else {
             sleep(1);
+            //dump($key.' wait');
+
             return self::getHistoryAccount($acc, $from, $limit);
         }
     }
@@ -154,7 +161,7 @@ class SteemitApi
     {
         $max = self::getHistoryAccountLast($acc);
 //@todo тут вот забивает диск лишними кешами. Надо переписать чтобы удаляло старые кеши которые уже ненужны
-        return Cache::rememberForever('steemit_resulthistory' . $acc . $max,
+        $return = Cache::rememberForever('steemit_resulthistory' . $acc . $max,
             function () use ($max, $acc) {
                 $history = [];
                 $qq = 0;
@@ -166,7 +173,7 @@ class SteemitApi
                     $limit = $max;
                 }
                 while ($i <= $max) {
-                    if ($his = self::getHistoryAccount($acc, $i, $limit)) {
+                    if (self::getHistoryAccount($acc, $i, $limit)) {
                         self::setCurrentCachedTransactionId($acc, $i);
                     }
 
@@ -191,6 +198,8 @@ class SteemitApi
                 //self::setCurrentCachedTransactionId($acc,$max);
                 return true;
             });
+        self::setCurrentCachedTransactionId($acc, $max);
+        return $return;
     }
 
     public static function getHistoryAccountAllWCallback($acc, $fn)
@@ -657,7 +666,6 @@ class SteemitApi
                             //->delay($date);
                         }
                         $history[$type_op][] = $item;
-
                     }
                     else {
                         //echo 1;
@@ -666,6 +674,8 @@ class SteemitApi
                     }
                     $h++;
                 }
+                dump($history);
+
                 unset($his);
                 $i = $i + 2000;
                 if ($i > $max) {
