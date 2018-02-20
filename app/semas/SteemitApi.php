@@ -49,6 +49,7 @@ class SteemitApi
                 if (!$history) {
                     Cache::forget($key);
                     Cache::put($key . '_status', 'fail', 2);
+                    return self::getHistoryAccount($acc, $from, $limit);
                     //dump($acc,$history);
                 }
                 //
@@ -550,6 +551,7 @@ class SteemitApi
                 });
                 $history = array_merge($history, $history_n);
                 unset($his);
+                unset($history_n);
                 $i = $i + 2000;
                 if ($i > $max) {
                     //AdminNotify::send('i' . $i);

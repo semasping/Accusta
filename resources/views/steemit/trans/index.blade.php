@@ -55,7 +55,7 @@
             @include(getenv('BCH_API').'.form')
         </div>
     </div>
-     @asyncWidget('witnessRewards', [], $account )
+     @asyncWidget('witnessRewards', [], $account, $date )
 
     @include('steemit.trans.data')
 

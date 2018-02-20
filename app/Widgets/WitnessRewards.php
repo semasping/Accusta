@@ -4,6 +4,7 @@ namespace App\Widgets;
 
 use App\semas\BchApi;
 use Arrilot\Widgets\AbstractWidget;
+use Jenssegers\Date\Date;
 
 class WitnessRewards extends AbstractWidget
 {
@@ -19,7 +20,7 @@ class WitnessRewards extends AbstractWidget
      * Treat this method as a controller action.
      * Return view() or other content to display.
      */
-    public function run($acc)
+    public function run($acc, $date=false)
     {
         //
         $data = collect(BchApi::getTransaction($acc, 'producer_reward'));
@@ -34,6 +35,13 @@ class WitnessRewards extends AbstractWidget
             }
             return $data;
         });
+
+
+        if ($date == false) {
+            $date = Date::now()->subMonths(2)->startOfMonth();
+        }
+
+        $data = $data->where('timestamp', '>=', Carbon::parse($date)->toAtomString());
 
         $summs['all'] = $data->sum('VESTS');
         $summs['days7'] = $data->where('timestamp','>=',\Jenssegers\Date\Date::now()->subDays(7))->sum('VESTS');
