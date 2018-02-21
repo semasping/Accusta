@@ -17,6 +17,7 @@
         "maatwebsite/excel": "~2.1",
         "predis/predis": "^1.1",
         "rollbar/rollbar-laravel": "^2.2",
+        "sentry/sentry-laravel": "^0.8.0",
         "t3ran13/php-graphene-node-client": "^3.0",
         "view-components/grids": "^0.5.9",
         "yajra/laravel-datatables": "^1.0"
