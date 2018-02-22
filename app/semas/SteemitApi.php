@@ -364,7 +364,7 @@ class SteemitApi
 
                     $collection = (new MongoDB\Client)->selectCollection('accusta', $acc);
                     //dump($collection);
-                    $collection->insertMany($reTra);
+                    $collection->insertMany($reTra,['ordered'=>false]);
 
                     $time3 = microtime(true);
                     self::setCurrentCachedTransactionId($acc, $t);
