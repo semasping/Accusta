@@ -364,7 +364,7 @@ class SteemitApi
                     try{
                         $collection = (new MongoDB\Client)->selectCollection('accusta', $acc);
                         //dump($collection);
-                        $collection->insertMany($reTra,['ordered'=>'false']);
+                        $collection->insertMany($reTra,['ordered'=>false]);
                     }catch (\MongoDuplicateKeyException $e){
                         dump('already exist');
                     }

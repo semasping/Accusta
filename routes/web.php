@@ -12,6 +12,7 @@
 */
 
 
+use App\AccountTransaction;
 use App\Http\Middleware\CheckHistoryAcc;
 use App\semas\GolosApi;
 use Illuminate\Http\Request;
@@ -45,6 +46,27 @@ Route::get('/_form_submit', function (Request $request) {
 //Route::get('/test/', function (){ \App\semas\BchApi::getBlock('111111111');});
 Route::get('info',function (){
     phpinfo();
+});
+Route::get('mt',function (){
+    \App\semas\SteemitApi::getHistoryAccountFullInDBDesc('prc');
+    /*$at = new AccountTransaction();
+    $tr = $at->where('account', 'semasping')->groupBy('type')->get(['type', 'block']);
+    dump($tr->toArray());*/
+});
+Route::get('mongo-test',function (){
+    $transaction = \App\semas\SteemitApi::getHistoryAccount('semasping',1,0);
+    $transaction =$transaction[0][1];
+    dump($transaction);
+    $accTr = new AccountTransaction();
+    $accTr->account = 'semasping';
+    $accTr->trx_id = $transaction['trx_id'];
+    $accTr->block = $transaction['block'];
+    $accTr->timestamp = $transaction['timestamp'];
+    $accTr->type = $transaction['op'][0];
+    $accTr->op = $transaction['op'];
+    $accTr->save();
+    dump($transaction);
+    dump($accTr);
 });
 
 if (getenv('BCH_API') == 'golos') {
