@@ -369,6 +369,8 @@ class SteemitApi
                         dump('already exist');
                     }catch (\MongoException $e){
                         dump('excepshen', $e->getMessage());
+                    }catch (\Exception $e){
+                        dump('excepshen', $e->getMessage());
                     }
 
 
