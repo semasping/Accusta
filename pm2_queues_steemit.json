@@ -5,7 +5,8 @@
     "script": "artisan",
     "args": [
       "queue:work",
-      "--queue=steemitCheckHistoryAcc"
+      "--queue=steemitCheckHistoryAcc",
+      "--timeout=0"
     ],
     "exec_interpreter": "php",
     "exec_mode": "fork_mode",
@@ -20,7 +21,8 @@
     "script": "artisan",
     "args": [
       "queue:work",
-      "--queue=steemitCheckHistoryAcc"
+      "--queue=steemitCheckHistoryAcc",
+      "--timeout=0"
     ],
     "exec_interpreter": "php",
     "exec_mode": "fork_mode",
