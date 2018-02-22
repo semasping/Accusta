@@ -38,7 +38,8 @@ class GetHistoryAccountFullInCache implements ShouldQueue
         if ($this->api == 'golos')
             GolosApi::getHistoryAccountFullInCache($this->acc);
         if ($this->api == 'steemit')
-            SteemitApi::getHistoryAccountFullInCache($this->acc);
+            //SteemitApi::getHistoryAccountFullInCache($this->acc);
+            SteemitApi::getHistoryAccountFullInDBDesc($this->acc);
         dump('-------done--');
     }
 }

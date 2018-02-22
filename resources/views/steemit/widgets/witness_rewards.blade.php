@@ -14,17 +14,16 @@
                             </tr>
                             </thead>
                             <tbody>
+                            @foreach($summs_by_monthes as $month)
+                                <tr>
+                                    <td>{{ $month['date'] }}</td>
+                                    <td>{{ $month['value'] }}</td>
+                                    <td>{{ \App\semas\SteemitApi::convertToSg($month['value']) }}</td>
+                                </tr>
+                            @endforeach
                             <tr>
-                                <td>Last 7 days</td>
-                                <td>{{ $summs['days7'] }}</td>
-                                <td>{{ \App\semas\SteemitApi::convertToSg($summs['days7']) }}</td>
-                            </tr>
-                            <tr>
-                                <td>Last 30 days</td>
-                                <td>{{ $summs['days30'] }}</td>
-                                <td>{{ \App\semas\SteemitApi::convertToSg($summs['days30']) }}</td>
-                            </tr>
-                            <tr>
+
+
                                 <td>Whole witness time</td>
                                 <td>{{ $summs['all'] }}</td>
                                 <td>{{ \App\semas\SteemitApi::convertToSg($summs['all']) }}</td>

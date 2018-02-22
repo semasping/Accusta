@@ -8,6 +8,7 @@
 
 namespace App\semas;
 
+use MongoDB;
 
 class BchApi
 {
@@ -50,7 +51,21 @@ class BchApi
         }
 
         if (getenv('BCH_API') == 'steemit') {
+
             return SteemitApi::getCurrentProcessedHistoryTranzId($acc);
+        }
+    }
+
+    public static function getCurrentProcessedHistoryTranzIdInDB($acc)
+    {
+        if (getenv('BCH_API') == 'golos') {
+            return GolosApi::getCurrentProcessedHistoryTranzId($acc);
+        }
+
+        if (getenv('BCH_API') == 'steemit') {
+            $collection = (new MongoDB\Client)->selectCollection('accusta',$acc);
+            $current = $collection->count();
+            return $current;
         }
     }
 }

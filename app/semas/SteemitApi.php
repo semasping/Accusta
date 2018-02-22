@@ -10,6 +10,7 @@ namespace App\semas;
 
 //ini_set('memory_limit', '512M');
 
+use App\AccountTransaction;
 use Exception;
 use GrapheneNodeClient\Commands\CommandQueryData;
 use GrapheneNodeClient\Commands\DataBase\GetAccountCommand;
@@ -24,6 +25,9 @@ use GrapheneNodeClient\Commands\DataBase\GetDynamicGlobalPropertiesCommand;
 use GrapheneNodeClient\Commands\Follow\GetFollowersCommand;
 use GrapheneNodeClient\Connectors\Http\SteemitHttpConnector;
 use Illuminate\Support\Facades\Cache;
+use Jenssegers\Date\Date;
+
+use MongoDB;
 
 class SteemitApi
 {
@@ -169,8 +173,8 @@ class SteemitApi
 
         if (Cache::get($key2 . '_status') != 'working' && Cache::get($key2 . '_status') != 'done') {
             dump($key2);
-            Cache::put($key2 . '_status', 'working',1);
-            $return = Cache::remember($key2.$max, 100,
+            Cache::put($key2 . '_status', 'working', 1);
+            $return = Cache::remember($key2 . $max, 100,
                 function () use ($max, $acc, $key2) {
                     $history = [];
                     $qq = 0;
@@ -185,7 +189,7 @@ class SteemitApi
                         if (self::getHistoryAccount($acc, $i, $limit)) {
 
                             self::setCurrentCachedTransactionId($acc, $i);
-                            Cache::put($key2 . '_status', 'working',1);
+                            Cache::put($key2 . '_status', 'working', 1);
                         }
 
 
@@ -210,10 +214,176 @@ class SteemitApi
                     return true;
                 });
             //self::setCurrentCachedTransactionId($acc, $max);
-            Cache::put($key2 . '_status', 'done',1);
+            Cache::put($key2 . '_status', 'done', 1);
         }
         return $return;
     }
+
+    public static function getHistoryAccountFullInDB($acc)
+    {
+        $max = self::getHistoryAccountLast($acc);
+//@todo тут вот забивает диск лишними кешами. Надо переписать чтобы удаляло старые кеши которые уже ненужны
+        $return = false;
+        $key = "1stmGetFullAccHisToDB.$acc.$max";
+        $key2 = "1stmGetFullAccHisToDBHis.$acc";
+
+        if (Cache::get($key2 . '_status') != 'working' && Cache::get($key2 . '_status') != 'done') {
+            dump($key2);
+            Cache::put($key2 . '_status', 'working', 1);
+            $return = Cache::remember($key2 . $max, 100,
+                function () use ($max, $acc, $key2) {
+                    $history = [];
+                    $qq = 0;
+                    $h = 0;
+                    $i = 2000;
+                    $limit = 2000;
+                    if ($i > $max) {
+                        $i = $max;
+                        $limit = $max;
+                    }
+                    while ($i <= $max) {
+                        $timestart = microtime(true);
+                        if ($transactions = self::getHistoryAccount($acc, $i, $limit)) {
+                            $time1 = microtime(true);
+                            $trns = [];
+                            foreach ($transactions as $transaction) {
+                                $trns = $transaction['1'];
+                                //$at = new AccountTransaction($acc);
+                                /*if (!AccountTransaction::find($acc . '_' . $transaction[0])) {
+                                    $accTr = new AccountTransaction();
+                                    $accTr->_id = $acc . '_' . $transaction[0];
+                                    $accTr->account = $acc;
+                                    $accTr->trx_id = $trns['trx_id'];
+                                    $accTr->block = $trns['block'];
+                                    $accTr->timestamp = $trns['timestamp'];
+                                    $accTr->type = $trns['op'][0];
+                                    if ($trns['op'][0] == 'producer_reward')
+                                        $trns['op'][1]['VESTS'] = str_replace(' VESTS', '', $trns['op'][1]['vesting_shares']);
+                                    $accTr->op = $trns['op'];
+
+                                    $accTr->save();
+                                    //dump($transaction);
+                                    //dump($accTr);
+                                }*/
+                                $trns['_id'] = $acc . '_' . $transaction[0];
+                                $trns['type'] = $trns['op'][0];
+                                if ($trns['op'][0] == 'producer_reward')
+                                    $trns['op'][1]['VESTS'] = str_replace(' VESTS', '', $trns['op'][1]['vesting_shares']);
+                                $reTra[] = $trns;
+                            }
+                            //dump($reTra);
+                            $collection = (new MongoDB\Client)->selectCollection('accusta', $acc);
+                            //dump($collection);
+                            $collection->insertMany($reTra);
+                            $time2 = microtime(true);
+                            self::setCurrentCachedTransactionId($acc, $i);
+                            Cache::put($key2 . '_status', 'working', 1);
+                        }
+                        $time3 = microtime(true);
+                        dump($time1 - $timestart, $time2 - $timestart, $time3 - $timestart);
+
+                        $i = $i + 1999;
+                        if ($i > $max) {
+                            //AdminNotify::send('i' . $i);
+                            $i = $i - 2000;
+                            $limit = $max - $i;
+                            $i = $max;
+                        }
+                        if ($limit == 0) {
+                            //AdminNotify::send('limit =0 exit');
+                            break;
+                        }
+                        $qq++;
+                        if ($qq > 5000) {
+                            AdminNotify::send('$qq > 5000 in SteemitApi.php:188');
+                            break;
+                        }
+                    }
+                    //self::setCurrentCachedTransactionId($acc,$max);
+                    Cache::put($key2 . '_status', 'done', 1);
+                    return true;
+                });
+            //self::setCurrentCachedTransactionId($acc, $max);
+            Cache::put($key2 . '_status', 'done', 1);
+        }
+        return $return;
+    }
+
+    public static function getHistoryAccountFullInDBDesc($acc)
+    {
+        $max = self::getHistoryAccountLast($acc);
+        $return = false;
+        $key = "1stmGetFullAccHisToDB.$acc.$max";
+        $key2 = "1stmGetFullAccHisToDBHis.$acc";
+        if (Cache::get($key2 . '_status') != 'working' && Cache::get($key2 . '_status') != 'done') {
+            dump($key2);
+            Cache::put($key2 . '_status', 'working', 1);
+            $t = $max;
+            $limit = 2000;
+            while ($t >= 0) {
+                $timestart = microtime(true);
+                if ($transactions = self::getHistoryAccount($acc, $t, $limit)) {
+                    $time1 = microtime(true);
+                    $reTra = [];
+                    foreach ($transactions as $transaction) {
+                        $trns = $transaction['1'];
+                        $trns['_id'] = $acc . '_' . $transaction[0];
+                        $trns['type'] = $trns['op'][0];
+
+                        $trns['date'] = (new MongoDB\BSON\UTCDateTime(strtotime($trns['timestamp'])*1000));
+
+                        if ($trns['op'][0] == 'producer_reward') {
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['vesting_shares'])));
+                        }
+                        if ($trns['op'][0] == 'claim_reward_balance') {
+                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '', $trns['op'][1]['reward_steem'])));
+                            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['reward_sbd'])));
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward_vests'])));
+                        }
+                        if ($trns['op'][0] == 'author_reward') {
+                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '', $trns['op'][1]['steem_payout'])));
+                            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['sbd_payout'])));
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['vesting_payout'])));
+                        }
+                        if ($trns['op'][0] == 'comment_benefactor_reward') {
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward'])));
+                        }
+                        if ($trns['op'][0] == 'curation_reward') {
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward'])));
+                        }
+                        /*if ($trns['op'][0] == 'transfer') {
+                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '', $trns['op'][1]['amount'])));
+                            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['amount'])));
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward_vests'])));
+                        }*/
+
+                        $reTra[] = $trns;
+                    }
+                    //dump($reTra);
+                    $time2 = microtime(true);
+
+                    $collection = (new MongoDB\Client)->selectCollection('accusta', $acc);
+                    //dump($collection);
+                    $collection->insertMany($reTra);
+
+                    $time3 = microtime(true);
+                    self::setCurrentCachedTransactionId($acc, $t);
+                    Cache::put($key2 . '_status', 'working', 1);
+
+                }
+                $time4 = microtime(true);
+                dump($time1 - $timestart, $time2 - $timestart, $time3 - $timestart, $time3 - $timestart);
+
+                $t = $t - 2001;
+                if ($t < 2000) {
+                    $limit = $t;
+                }
+            }
+
+            Cache::put($key2 . '_status', 'done', 1);
+        }
+    }
+
 
     public static function getHistoryAccountAllWCallback($acc, $fn)
     {
