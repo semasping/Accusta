@@ -367,6 +367,8 @@ class SteemitApi
                         $collection->insertMany($reTra,['ordered'=>false]);
                     }catch (\MongoDuplicateKeyException $e){
                         dump('already exist');
+                    }catch (\MongoException $e){
+                        dump('excepshen', $e->getMessage());
                     }
 
 
