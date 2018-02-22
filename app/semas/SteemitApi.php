@@ -361,10 +361,14 @@ class SteemitApi
                     }
                     //dump($reTra);
                     $time2 = microtime(true);
+                    try{
+                        $collection = (new MongoDB\Client)->selectCollection('accusta', $acc);
+                        //dump($collection);
+                        $collection->insertMany($reTra,['ordered'=>'false']);
+                    }catch (\MongoDuplicateKeyException $e){
+                        dump('already exist');
+                    }
 
-                    $collection = (new MongoDB\Client)->selectCollection('accusta', $acc);
-                    //dump($collection);
-                    $collection->insertMany($reTra,['ordered'=>false]);
 
                     $time3 = microtime(true);
                     self::setCurrentCachedTransactionId($acc, $t);
