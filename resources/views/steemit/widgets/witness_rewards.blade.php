@@ -10,7 +10,7 @@
                             <tr>
                                 <th>Time</th>
                                 <th>Vests</th>
-                                <th>SteemPower</th>
+                                <th>SteemPower (Calculated for current <b>steem_per_mvests</b> )</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -18,7 +18,7 @@
                                 <tr>
                                     <td>{{ $month['date'] }}</td>
                                     <td>{{ $month['value'] }}</td>
-                                    <td>{{ \App\semas\SteemitApi::convertToSg($month['value']) }}</td>
+                                    <td>~ {{ \App\semas\SteemitApi::convertToSg($month['value']) }}</td>
                                 </tr>
                             @endforeach
                             <tr>
@@ -26,7 +26,7 @@
 
                                 <td>Whole witness time</td>
                                 <td>{{ $summs['all'] }}</td>
-                                <td>{{ \App\semas\SteemitApi::convertToSg($summs['all']) }}</td>
+                                <td>~ {{ \App\semas\SteemitApi::convertToSg($summs['all']) }}</td>
                             </tr>
                             </tbody>
                         </table>
