@@ -24,29 +24,29 @@ class WitnessRewards extends AbstractWidget
      */
     public function run($acc, $date = false)
     {
-        //
+        $summs['all'] = 0;
 
-        $collection = (new MongoDB\Client)->selectCollection('accusta',$this->config['account']);
+        $collection = (new MongoDB\Client)->selectCollection('accusta', $this->config['account']);
         //$data = $collection->find(['op'=>'producer_reward']);
         $sums_by_monthes = $collection->aggregate([
             //['$group'=>['_id'=>['date'=>['month'=>['$month'=>'timestamp']]], 'total'=>['$sum'=>'block']]]
-            ['$match'=>['type'=>['$eq'=>'producer_reward']]],
-            ['$unwind'=>'$op'],
-            ['$group'=>['_id'=>['date'=>['M'=>['$month'=>'$date'],'Y'=>['$year'=>'$date'], ]], 'total'=>['$sum'=>'$op.VESTS']]],
+            ['$match' => ['type' => ['$eq' => 'producer_reward']]],
+            ['$unwind' => '$op'],
+            ['$group' => ['_id' => ['date' => ['M' => ['$month' => '$date'], 'Y' => ['$year' => '$date'],]], 'total' => ['$sum' => '$op.VESTS']]],
             //['$sort'=>['$date']]
         ]);
         $sums_all = $collection->aggregate([
             //['$group'=>['_id'=>['date'=>['month'=>['$month'=>'timestamp']]], 'total'=>['$sum'=>'block']]]
-            ['$match'=>['type'=>['$eq'=>'producer_reward']]],
-            ['$unwind'=>'$op'],
-            ['$group'=>['_id'=>null, 'total'=>['$sum'=>'$op.VESTS']]],
+            ['$match' => ['type' => ['$eq' => 'producer_reward']]],
+            ['$unwind' => '$op'],
+            ['$group' => ['_id' => null, 'total' => ['$sum' => '$op.VESTS']]],
         ]);
         //dump(iterator_to_array($sums));
-
+        $monthes = [];
         foreach ($sums_by_monthes as $state) {
             //dump($state['total'],$state['_id']['date']['M'],$state['_id']['date']['Y']);
             //mp($state);
-            $date = Date::parse('01.'.$state['_id']['date']['M'].'.'.$state['_id']['date']['Y']);
+            $date = Date::parse('01.' . $state['_id']['date']['M'] . '.' . $state['_id']['date']['Y']);
             $r['date'] = $date->format('Y F');
             $r['value'] = $state['total'];
             $monthes[$date->format('Ym')] = $r;
