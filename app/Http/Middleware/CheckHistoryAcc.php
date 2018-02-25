@@ -40,7 +40,7 @@ class CheckHistoryAcc
                 $params['acc']=$acc;
                 //return redirect()->action('TransAccController@showProcessTranz',$params);
 
-                return response(view(getenv('BCH_API').'.process-tranz', ['account' => $acc,'total'=>$max,'current'=>$current ]));
+                return response(view(getenv('BCH_API').'.process-tranz', ['account' => $acc,'total'=>$max,'current'=>$processed ]));
             }
 
 
