@@ -327,7 +327,7 @@ class SteemitApi
                     $reTra = [];
                     foreach ($transactions as $transaction) {
                         $trns = $transaction['1'];
-                        $trns['_id'] = $acc . '_' . $transaction[0];
+                        $trns['_id'] = (integer)$transaction[0];
                         $trns['type'] = $trns['op'][0];
 
                         $trns['date'] = (new MongoDB\BSON\UTCDateTime(strtotime($trns['timestamp'])*1000));
@@ -365,6 +365,7 @@ class SteemitApi
                         $collection = (new MongoDB\Client)->selectCollection('accusta', $acc);
                         //dump($collection);
                         $collection->insertMany($reTra,['ordered'=>false]);
+                        self::setCurrentCachedTransactionId($acc, $t);
                     }catch (\MongoDuplicateKeyException $e){
                         dump('already exist');
                     }catch (\MongoException $e){
@@ -375,7 +376,7 @@ class SteemitApi
 
 
                     $time3 = microtime(true);
-                    self::setCurrentCachedTransactionId($acc, $t);
+
                     Cache::put($key2 . '_status', 'working', 1);
 
                 }

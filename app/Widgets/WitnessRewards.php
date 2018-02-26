@@ -10,7 +10,7 @@ use MongoDB;
 
 class WitnessRewards extends AbstractWidget
 {
-    //public $cacheTime = 1;
+    public $cacheTime = 1;
     /**
      * The configuration array.
      *
