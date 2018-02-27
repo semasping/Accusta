@@ -1,9 +1,61 @@
-
+[
 {
   // Application #2
   "name": "GolosCheckHistoryAcc",
   "script": "artisan",
-  "args": ["queue:listen", "--queue=golosCheckHistoryAcc"],
+  "args": [
+    "queue:work",
+    "--queue=golosCheckHistoryAcc",
+    "--timeout=0"
+  ],
+  "exec_interpreter": "php",
+  "exec_mode"  : "fork_mode",
+  "log_date_format" : "YYYY-MM-DD HH:mm Z",
+  "watch": false,
+  "merge_logs": true,
+  "cwd": "/home/admin/web/golos.accusta.tk/public_html/"
+},
+  {
+  // Application #2
+  "name": "GolosCheckHistoryAcc_2",
+  "script": "artisan",
+  "args": [
+    "queue:work",
+    "--queue=golosCheckHistoryAcc",
+    "--timeout=0"
+  ],
+  "exec_interpreter": "php",
+  "exec_mode"  : "fork_mode",
+  "log_date_format" : "YYYY-MM-DD HH:mm Z",
+  "watch": false,
+  "merge_logs": true,
+  "cwd": "/home/admin/web/golos.accusta.tk/public_html/"
+},
+  {
+  // Application #2
+  "name": "GolosCheckHistoryAcc_3",
+  "script": "artisan",
+  "args": [
+    "queue:work",
+    "--queue=golosCheckHistoryAcc",
+    "--timeout=0"
+  ],
+  "exec_interpreter": "php",
+  "exec_mode"  : "fork_mode",
+  "log_date_format" : "YYYY-MM-DD HH:mm Z",
+  "watch": false,
+  "merge_logs": true,
+  "cwd": "/home/admin/web/golos.accusta.tk/public_html/"
+},
+  {
+  // Application #2
+  "name": "GolosCheckHistoryAcc_4",
+  "script": "artisan",
+  "args": [
+    "queue:work",
+    "--queue=golosCheckHistoryAcc",
+    "--timeout=0"
+  ],
   "exec_interpreter": "php",
   "exec_mode"  : "fork_mode",
   "log_date_format" : "YYYY-MM-DD HH:mm Z",
@@ -11,3 +63,4 @@
   "merge_logs": true,
   "cwd": "/home/admin/web/golos.accusta.tk/public_html/"
 }
+  ]

@@ -30,5 +30,37 @@
     "watch": false,
     "merge_logs": true,
     "cwd": "/home/admin/web/steemit.accusta.tk/public_html/"
+  },
+  {
+    // Application #2
+    "name": "SteemitCheckHistoryAcc_3",
+    "script": "artisan",
+    "args": [
+      "queue:work",
+      "--queue=steemitCheckHistoryAcc",
+      "--timeout=0"
+    ],
+    "exec_interpreter": "php",
+    "exec_mode": "fork_mode",
+    "log_date_format": "YYYY-MM-DD HH:mm Z",
+    "watch": false,
+    "merge_logs": true,
+    "cwd": "/home/admin/web/steemit.accusta.tk/public_html/"
+  },
+  {
+    // Application #2
+    "name": "SteemitCheckHistoryAcc_4",
+    "script": "artisan",
+    "args": [
+      "queue:work",
+      "--queue=steemitCheckHistoryAcc",
+      "--timeout=0"
+    ],
+    "exec_interpreter": "php",
+    "exec_mode": "fork_mode",
+    "log_date_format": "YYYY-MM-DD HH:mm Z",
+    "watch": false,
+    "merge_logs": true,
+    "cwd": "/home/admin/web/steemit.accusta.tk/public_html/"
   }
 ]
