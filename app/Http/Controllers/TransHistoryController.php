@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-ini_set('max_execution_time', 60);
+ini_set('max_execution_time', 240);
 
 use App\semas\AdminNotify;
 use App\semas\BchApi;

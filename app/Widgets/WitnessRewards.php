@@ -26,7 +26,7 @@ class WitnessRewards extends AbstractWidget
     {
         $summs['all'] = 0;
 
-        $collection = (new MongoDB\Client)->selectCollection('accusta', $this->config['account']);
+        $collection = BchApi::getMongoDbCollection($this->config['account']);
         //$data = $collection->find(['op'=>'producer_reward']);
         $sums_by_monthes = $collection->aggregate([
             //['$group'=>['_id'=>['date'=>['month'=>['$month'=>'timestamp']]], 'total'=>['$sum'=>'block']]]

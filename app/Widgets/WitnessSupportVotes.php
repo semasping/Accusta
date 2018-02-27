@@ -72,7 +72,7 @@ class WitnessSupportVotes extends AbstractWidget
         $forWitnessHistory = collect($forWitnessHistory)->sortByDesc('timestamp');
         //dump($voteFor, $forWitness);
         //dump($forWitnessHistory[''])
-        return view('widgets.witness_support_votes', [
+        return view(getenv('BCH_API') . '.widgets.witness_support_votes', [
             'config' => $this->config,
             'voteFor' => $voteFor->toArray(),
             'forWitness' => $forWitness->toArray(),

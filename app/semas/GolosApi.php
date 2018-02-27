@@ -251,6 +251,7 @@ class GolosApi
                         //dump($collection);
                         $collection->insertMany($reTra,['ordered'=>false]);
                         self::setCurrentCachedTransactionId($acc, $t);
+                        dump($key, $t, 'finish');
                     }catch (\MongoDuplicateKeyException $e){
                         dump('already exist');
                     }catch (\MongoException $e){
@@ -813,6 +814,6 @@ class GolosApi
     {
         $key = self::getKeyCurrentCachedTransaction($acc);
         Cache::forever($key, $from);
-        dump($key, $from, 'finish');
+        //dump($key, $from, 'finish');
     }
 }
