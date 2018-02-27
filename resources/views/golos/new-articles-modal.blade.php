@@ -17,6 +17,8 @@
             <div class="title">Новости системы</div>
             <div class="posts">
                 <ul>
+                    <li><a href="https://golos.io/ru--delegaty/@semasping/prosmotr-informacii-o-golosakh-za-delegatov-accusta" target="_blank">Просмотр информации о голосах за делегатов. [Accusta]</a></li>
+                    <li>
                     <li><a href="https://golos.io/accusta/@semasping/accusta-obnovlenie-cervisa-dlya-prosmotra-statistiki-akkaunta-v-0-4" target="_blank">[Accusta] Обновление cервиса для просмотра статистики аккаунта. v:0.4</a></li>
                     <li>
                         <a href="https://golos.io/accusta/@semasping/accusta-obnovlenie-servisa-dlya-prosmotra-statistiki-akkaunta-v-0-5" target="_blank">
