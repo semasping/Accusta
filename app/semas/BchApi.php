@@ -59,13 +59,24 @@ class BchApi
     public static function getCurrentProcessedHistoryTranzIdInDB($acc)
     {
         if (getenv('BCH_API') == 'golos') {
-            return GolosApi::getCurrentProcessedHistoryTranzId($acc);
+            $collection = self::getMongoDbCollection($acc);
+            $current = $collection->count();
+            return $current;
         }
 
         if (getenv('BCH_API') == 'steemit') {
-            $collection = (new MongoDB\Client)->selectCollection('accusta',$acc);
+            $collection = self::getMongoDbCollection($acc);
             $current = $collection->count();
             return $current;
+        }
+    }
+
+    public static function getMongoDbCollection($account){
+        if (getenv('BCH_API') == 'golos') {
+            return (new MongoDB\Client)->selectCollection(getenv('BCH_API').'_accusta', $account);
+        }
+        if (getenv('BCH_API') == 'steemit') {
+            return (new MongoDB\Client)->selectCollection('accusta', $account);
         }
     }
 }

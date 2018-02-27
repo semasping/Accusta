@@ -24,6 +24,7 @@ use GrapheneNodeClient\Commands\Follow\GetFollowersCommand;
 use GrapheneNodeClient\Connectors\WebSocket\GolosWSConnector;
 use Illuminate\Support\Facades\Cache;
 use WebSocket\Exception;
+use MongoDB;
 
 class GolosApi
 {
@@ -190,6 +191,91 @@ class GolosApi
                 //self::setCurrentCachedTransactionId($acc,$max);
                 return true;
             });
+    }
+
+
+    public static function getHistoryAccountFullInDBDesc($acc)
+    {
+        $max = self::getHistoryAccountLast($acc);
+        $return = false;
+        $key = "1glsGetFullAccHisToDB.$acc.$max";
+        $key2 = "1glsGetFullAccHisToDBHis.$acc";
+        if (Cache::get($key2 . '_status') != 'working' && Cache::get($key2 . '_status') != 'done') {
+            dump($key2);
+            Cache::put($key2 . '_status', 'working', 1);
+            $t = $max;
+            $limit = 2000;
+            while ($t >= 0) {
+                $timestart = microtime(true);
+                if ($transactions = self::getHistoryAccount($acc, $t, $limit)) {
+                    $time1 = microtime(true);
+                    $reTra = [];
+                    foreach ($transactions as $transaction) {
+                        $trns = $transaction['1'];
+                        $trns['_id'] = (integer)$transaction[0];
+                        $trns['type'] = $trns['op'][0];
+
+                        $trns['date'] = (new MongoDB\BSON\UTCDateTime(strtotime($trns['timestamp'])*1000));
+
+                        if ($trns['op'][0] == 'producer_reward') {
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['vesting_shares'])));
+                        }
+                        if ($trns['op'][0] == 'claim_reward_balance') {
+                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '', $trns['op'][1]['reward_steem'])));
+                            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['reward_sbd'])));
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward_vests'])));
+                        }
+                        if ($trns['op'][0] == 'author_reward') {
+                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '', $trns['op'][1]['steem_payout'])));
+                            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['sbd_payout'])));
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['vesting_payout'])));
+                        }
+                        if ($trns['op'][0] == 'comment_benefactor_reward') {
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward'])));
+                        }
+                        if ($trns['op'][0] == 'curation_reward') {
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward'])));
+                        }
+                        /*if ($trns['op'][0] == 'transfer') {
+                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '', $trns['op'][1]['amount'])));
+                            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['amount'])));
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward_vests'])));
+                        }*/
+
+                        $reTra[] = $trns;
+                    }
+                    //dump($reTra);
+                    $time2 = microtime(true);
+                    try{
+                        $collection = BchApi::getMongoDbCollection($acc);
+                        //dump($collection);
+                        $collection->insertMany($reTra,['ordered'=>false]);
+                        self::setCurrentCachedTransactionId($acc, $t);
+                    }catch (\MongoDuplicateKeyException $e){
+                        dump('already exist');
+                    }catch (\MongoException $e){
+                        dump('excepshen', $e->getMessage());
+                    }catch (\Exception $e){
+                        dump('excepshen', $e->getMessage());
+                    }
+
+
+                    $time3 = microtime(true);
+
+                    Cache::put($key2 . '_status', 'working', 1);
+
+                }
+                $time4 = microtime(true);
+                dump($time1 - $timestart, $time2 - $timestart, $time3 - $timestart, $time3 - $timestart);
+
+                $t = $t - 2001;
+                if ($t < 2000) {
+                    $limit = $t;
+                }
+            }
+
+            Cache::put($key2 . '_status', 'done', 1);
+        }
     }
 
     public static function getHistoryAccountAllWCallback($acc, $fn)
@@ -727,5 +813,6 @@ class GolosApi
     {
         $key = self::getKeyCurrentCachedTransaction($acc);
         Cache::forever($key, $from);
+        dump($key, $from, 'finish');
     }
 }
