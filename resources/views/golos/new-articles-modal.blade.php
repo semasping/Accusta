@@ -42,7 +42,7 @@
                 hideOnPages: ['/page1/', '/page2/', '/page3/'],
                 // Popup type
                 popupType: 'delayed',
-                delayTime: 5000,
+                delayTime: 25000,
                 scrollTopDistance: 400,
                 // Auto closing
                 autoClose: false,
