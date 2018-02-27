@@ -22,4 +22,9 @@
             Статистика понижения СГ
         </a>
     @endif
+    @if(Route::has('witness_votes'))
+        <a class="navbar-brand" href="{{ route('witness_votes',[''.$account]) }}">
+            Голосование за делегатов
+        </a>
+    @endif
 </ul>
