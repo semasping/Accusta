@@ -22,4 +22,9 @@
             Power Down Statistics
         </a>
     @endif
+    @if(Route::has('witness_votes'))
+        <a class="navbar-brand" href="{{ route('witness_votes',[''.$account]) }}">
+            WItness votes Statistics
+        </a>
+    @endif
 </ul>
