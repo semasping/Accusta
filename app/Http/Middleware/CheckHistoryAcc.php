@@ -31,7 +31,7 @@ class CheckHistoryAcc
             $current = BchApi::getCurrentProcessedHistoryTranzId($acc);
             $processed = BchApi::getCurrentProcessedHistoryTranzIdInDB($acc);
             //dump($max,$processed);
-            if ($processed < $max-2000){
+            if ($processed < $max-20){
                 //Artisan::call('BchApi:GetHistoryAccountFullInCache',['api'=>'golos','acc'=>$acc]);
                 //GolosApi::getHistoryAccountFullInCache($acc);
 
