@@ -8,7 +8,7 @@
 
 namespace App\semas;
 
-//ini_set('memory_limit', '512M');
+ini_set('memory_limit', '512M');
 
 use GrapheneNodeClient\Commands\CommandQueryData;
 use GrapheneNodeClient\Commands\DataBase\GetAccountCommand;
@@ -34,7 +34,7 @@ class GolosApi
     {
         $key = "2golos_getacchistory.$acc.$from";
         if (Cache::get($key . '_status') != 'working') {
-            Cache::put($key . '_status', 'working');
+            Cache::put($key . '_status', 'working', 2);
             if ($from % 2000 == 0) {
                 //AdminNotify::send("to set cache getHistoryAccount($acc, $from, $limit)");
                 //if ($acc==' vp-bodyform')
@@ -52,7 +52,7 @@ class GolosApi
                 }
                 //
                 self::setCurrentCachedTransactionId($acc, $from);
-                Cache::put($key . '_status', 'done');
+                Cache::put($key . '_status', 'done', 2);
                 return $history;
 
 
@@ -83,9 +83,10 @@ class GolosApi
             //AdminNotify::send("_getAccHistory($acc, $from, $limit)");
 
             $content = $command->execute($commandQuery);
-            //dump($content);
+            //dd($content);
         } catch (Exception $e) {
-            self::disconnect();
+            //dd($e);
+            //self::disconnect();
             return self::checkResult($content, '_getAccHistory', [$acc, $from, $limit]);
         }
 
@@ -96,7 +97,7 @@ class GolosApi
     {
         $res = self::_getAccHistory($acc, -1, 0);
 
-        AdminNotify::send("max = getHistoryAccountLast($acc) = " . print_r($res, true));
+        AdminNotify::send("max = getHistoryAccountLast($acc) = " . print_r($res[0][0], true));
 //dump($res);
         return $res[0][0];
     }
@@ -405,10 +406,10 @@ class GolosApi
 
     public static function getAccountFull($acc)
     {
-        $command = new GetAccountCommand(new GolosWSConnector());
+        $command = new GetAccountCommand(new GolosApiWsConnector());
 
         $commandQuery = new CommandQueryData();
-        $commandQuery->setParamByKey('0', $acc);
+        $commandQuery->setParamByKey('0', [$acc]);
         $content = $command->execute($commandQuery);
 
         return $content;
@@ -457,12 +458,12 @@ class GolosApi
     {
         $content = '';
         try {
-            $command = new GetDynamicGlobalPropertiesCommand(new GolosWSConnector());
+            $command = new GetDynamicGlobalPropertiesCommand(new GolosApiWsConnector());
 
             $commandQuery = new CommandQueryData();
             $content = $command->execute($commandQuery);
         } catch (Exception $e) {
-            GolosApi::disconnect();
+            self::disconnect();
 
             return self::checkResult($content, 'GetDynamicGlobalProperties');
         }
