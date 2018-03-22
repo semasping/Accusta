@@ -10,6 +10,7 @@ namespace App\semas;
 
 
 use GrapheneNodeClient\Connectors\WebSocket\WSConnectorAbstract;
+use WebSocket\ConnectionException;
 
 class GolosApiWsConnector extends WSConnectorAbstract
 {
