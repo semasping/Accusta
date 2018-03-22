@@ -25,7 +25,8 @@ class GolosApiWsConnector extends WSConnectorAbstract
      * @var string
      */
     //protected $nodeURL = 'wss://ws.golos.io';
-    protected $nodeURL = 'wss://api.golos.cf';
+    protected $nodeURL = ['wss://ws.golos.io','wss://api.golos.cf'];
+    //protected $nodeURL = 'wss://api.golos.cf';
 
 
 
