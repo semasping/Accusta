@@ -55,14 +55,12 @@ class GolosApi
                 return $history;
 
 
-            }
-            else {
+            } else {
                 //AdminNotify::send("without cache getHistoryAccount($acc, $from, $limit)");
 
                 return self::_getAccHistory($acc, $from, $limit);
             }
-        }
-        else {
+        } else {
             sleep(1);
             return self::getHistoryAccount($acc, $from, $limit);
         }
@@ -71,6 +69,12 @@ class GolosApi
     private static function _getAccHistory($acc, $from, $limit)
     {
         $content = '';
+        if ($from > 1) {
+            if ($from < $limit) {
+                AdminNotify::send("from=$from;limit=$limit");
+                $limit = $from;
+            }
+        }
         try {
             $command = new GetAccountHistoryCommand(new GolosApiWsConnector());
 
@@ -215,20 +219,25 @@ class GolosApi
                         $trns['_id'] = (integer)$transaction[0];
                         $trns['type'] = $trns['op'][0];
 
-                        $trns['date'] = (new MongoDB\BSON\UTCDateTime(strtotime($trns['timestamp'])*1000));
+                        $trns['date'] = (new MongoDB\BSON\UTCDateTime(strtotime($trns['timestamp']) * 1000));
 
                         if ($trns['op'][0] == 'producer_reward') {
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['vesting_shares'])));
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '',
+                                $trns['op'][1]['vesting_shares'])));
                         }
                         if ($trns['op'][0] == 'claim_reward_balance') {
-                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '', $trns['op'][1]['reward_steem'])));
+                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '',
+                                $trns['op'][1]['reward_steem'])));
                             $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['reward_sbd'])));
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward_vests'])));
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '',
+                                $trns['op'][1]['reward_vests'])));
                         }
                         if ($trns['op'][0] == 'author_reward') {
-                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '', $trns['op'][1]['steem_payout'])));
+                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '',
+                                $trns['op'][1]['steem_payout'])));
                             $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['sbd_payout'])));
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['vesting_payout'])));
+                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '',
+                                $trns['op'][1]['vesting_payout'])));
                         }
                         if ($trns['op'][0] == 'comment_benefactor_reward') {
                             $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward'])));
@@ -246,17 +255,17 @@ class GolosApi
                     }
                     //dump($reTra);
                     $time2 = microtime(true);
-                    try{
+                    try {
                         $collection = BchApi::getMongoDbCollection($acc);
                         //dump($collection);
-                        $collection->insertMany($reTra,['ordered'=>false]);
+                        $collection->insertMany($reTra, ['ordered' => false]);
                         self::setCurrentCachedTransactionId($acc, $t);
                         dump($key, $t, 'finish');
-                    }catch (\MongoDuplicateKeyException $e){
+                    } catch (\MongoDuplicateKeyException $e) {
                         dump('already exist');
-                    }catch (\MongoException $e){
+                    } catch (\MongoException $e) {
                         dump('excepshen', $e->getMessage());
-                    }catch (\Exception $e){
+                    } catch (\Exception $e) {
                         dump('excepshen', $e->getMessage());
                     }
 
@@ -264,10 +273,10 @@ class GolosApi
                     $time3 = microtime(true);
 
                     Cache::put($key2 . '_status', 'working', 1);
+                    dump($time1 - $timestart, $time2 - $timestart, $time3 - $timestart, $time3 - $timestart);
 
                 }
                 $time4 = microtime(true);
-                dump($time1 - $timestart, $time2 - $timestart, $time3 - $timestart, $time3 - $timestart);
 
                 $t = $t - 2001;
                 if ($t < 2000) {
@@ -393,11 +402,13 @@ class GolosApi
         } catch (Exception $e) {
             GolosApi::disconnect();
 
-            return self::checkResult($content, 'getDiscussionsByAuthorBeforeDate', [$author, $before_date, $limit, $start_permlink]);
+            return self::checkResult($content, 'getDiscussionsByAuthorBeforeDate',
+                [$author, $before_date, $limit, $start_permlink]);
 
         }
 
-        return self::checkResult($content, 'getDiscussionsByAuthorBeforeDate', [$author, $before_date, $limit, $start_permlink]);
+        return self::checkResult($content, 'getDiscussionsByAuthorBeforeDate',
+            [$author, $before_date, $limit, $start_permlink]);
 
 
     }
@@ -485,12 +496,12 @@ class GolosApi
     {
         if (isset($content['result'])) {
             return $content['result'];
-        }
-        else {
+        } else {
             self::disconnect();
             if (self::$attempt < 3) {
                 self::$attempt++;
-                AdminNotify::send('Golos reconnect function:' . $f . ' attempt:' . self::$attempt . ' Error:' . print_r($content, true));
+                AdminNotify::send('Golos reconnect function:' . $f . ' attempt:' . self::$attempt . ' Error:' . print_r($content,
+                        true));
                 return call_user_func_array(array('self', $f), $params);
                 //return self::$f();
             }
@@ -503,7 +514,7 @@ class GolosApi
     {
         return Cache::remember('golos_getPrice_', 1, function () {
             $resp = GolosApi::GetDynamicGlobalProperties();
-            //AdminNotify::send(print_r($resp,true));
+            AdminNotify::send(print_r($resp, true));
             if (is_array($resp)) {
                 $q1 = str_replace(' GOLOS', '', $resp['total_vesting_fund_steem']);
                 $q2 = str_replace(' GESTS', '', $resp['total_vesting_shares']);
@@ -567,29 +578,30 @@ class GolosApi
             while ($i <= $max) {
                 $cache_key = '6his' . $acc . $type . $i . $limit;
                 //AdminNotify::send($cache_key);
-                $history_n = Cache::rememberForever($cache_key, function () use ($acc, $i, $limit, $type, $h, $cache_key) {
-                    $his = GolosApi::getHistoryAccount($acc, $i, $limit);
-                    //dump(current($his));
-                    $history = [];
-                    foreach ($his as $item) {
-                        if (isset($item[1]['op'])) {
-                            //dump($item);
-                            $type_op = $item[1]['op'][0];
-                            if ($type == $type_op) {
-                                $container = $item[1]['op'][1];
-                                $container['trx_id'] = $item[1]['trx_id'];
-                                $container['block'] = $item[1]['block'];
-                                $container['timestamp'] = $item[1]['timestamp'];
-                                $container['op'] = $item[1]['op'][0];
-                                $history[$h] = $container;
+                $history_n = Cache::rememberForever($cache_key,
+                    function () use ($acc, $i, $limit, $type, $h, $cache_key) {
+                        $his = GolosApi::getHistoryAccount($acc, $i, $limit);
+                        //dump(current($his));
+                        $history = [];
+                        foreach ($his as $item) {
+                            if (isset($item[1]['op'])) {
+                                //dump($item);
+                                $type_op = $item[1]['op'][0];
+                                if ($type == $type_op) {
+                                    $container = $item[1]['op'][1];
+                                    $container['trx_id'] = $item[1]['trx_id'];
+                                    $container['block'] = $item[1]['block'];
+                                    $container['timestamp'] = $item[1]['timestamp'];
+                                    $container['op'] = $item[1]['op'][0];
+                                    $history[$h] = $container;
+                                }
                             }
+                            $h++;
                         }
-                        $h++;
-                    }
-                    ////AdminNotify::send('in '.$cache_key.":_".count($history));
+                        ////AdminNotify::send('in '.$cache_key.":_".count($history));
 //dump(($history));
-                    return $history;
-                });
+                        return $history;
+                    });
                 $history = array_merge($history, $history_n);
                 unset($his);
                 $i = $i + 2000;
@@ -721,8 +733,7 @@ class GolosApi
                         }
                         $history[$type_op][] = $item;
 
-                    }
-                    else {
+                    } else {
                         //echo 1;
                         dump($item);
                         //AdminNotify::send(print_r($item,true));
@@ -754,11 +765,12 @@ class GolosApi
             $data['transfer_out_data'] = $transfer_out_data;
 
             //dump($post_data);
-            for ($i = 0; $i < 100; $i++)
-                //dump($history['transfer'][$i]);
+            for ($i = 0; $i < 100; $i++) //dump($history['transfer'][$i]);
 
 
+            {
                 return $data;
+            }
         });
     }
 
