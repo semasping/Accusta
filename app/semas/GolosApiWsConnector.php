@@ -48,7 +48,7 @@ class GolosApiWsConnector extends WSConnectorAbstract
     {
         $requestId = $this->getNextId();
         $data = [
-            'jsonrpc' => '2.0',
+            'jsonrpc' => 2.0,
             'id'     => $requestId,
             'method' => 'call',
             'params' => [

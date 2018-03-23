@@ -21,7 +21,6 @@ use GrapheneNodeClient\Commands\DataBase\GetContentCommand;
 use GrapheneNodeClient\Commands\DataBase\GetDiscussionsByBlogCommand;
 use GrapheneNodeClient\Commands\DataBase\GetDynamicGlobalPropertiesCommand;
 use GrapheneNodeClient\Commands\Follow\GetFollowersCommand;
-use GrapheneNodeClient\Connectors\WebSocket\GolosWSConnector;
 use Illuminate\Support\Facades\Cache;
 use WebSocket\Exception;
 use MongoDB;
@@ -322,7 +321,7 @@ class GolosApi
 
     public static function getVotes($acc)
     {
-        $command = new GetAccountVotesCommand(new GolosWSConnector());
+        $command = new GetAccountVotesCommand(new GolosApiWsConnector());
 
         $commandQuery = new CommandQueryData();
         $commandQuery->setParamByKey('0', $acc);
@@ -417,7 +416,7 @@ class GolosApi
 
     public static function getAccountsCount()
     {
-        $command = new GetAccountCountCommand(new GolosWSConnector());
+        $command = new GetAccountCountCommand(new GolosApiWsConnector());
 
         $commandQuery = new CommandQueryData();
         $content = $command->execute($commandQuery);
@@ -427,7 +426,7 @@ class GolosApi
 
     public static function getCurrentPrice()
     {
-        $command = new GetCurrentMedianHistoryPriceCommand(new GolosWSConnector());
+        $command = new GetCurrentMedianHistoryPriceCommand(new GolosApiWsConnector());
 
         $commandQuery = new CommandQueryData();
         $content = $command->execute($commandQuery);
@@ -437,7 +436,7 @@ class GolosApi
 
     public static function getBlockHeader($block)
     {
-        $command = new GetBlockHeaderCommand(new GolosWSConnector());
+        $command = new GetBlockHeaderCommand(new GolosApiWsConnector());
 
         $commandQuery = new CommandQueryData();
         $commandQuery->setParamByKey('0', $block);
@@ -765,7 +764,7 @@ class GolosApi
 
     public static function getFollowers($account)
     {
-        $command = new GetFollowersCommand(new GolosWSConnector());
+        $command = new GetFollowersCommand(new GolosApiWsConnector());
 
         $commandQuery = new CommandQueryData();
         $commandQuery->setParamByKey('0', $account);
