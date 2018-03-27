@@ -56,7 +56,7 @@ class GolosApi
 
 
             } else {
-                //AdminNotify::send("without cache getHistoryAccount($acc, $from, $limit)");
+                AdminNotify::send("without cache getHistoryAccount($acc, $from, $limit)");
 
                 return self::_getAccHistory($acc, $from, $limit);
             }
@@ -83,12 +83,12 @@ class GolosApi
             $commandQuery->setParamByKey('1', $from);
             $commandQuery->setParamByKey('2', $limit);
 
-            //AdminNotify::send("_getAccHistory($acc, $from, $limit)");
+            AdminNotify::send("_getAccHistory($acc, $from, $limit)");
 
             $content = $command->execute($commandQuery);
             //dd($content);
         } catch (Exception $e) {
-            //dd($e);
+            dd($e);
             //self::disconnect();
             return self::checkResult($content, '_getAccHistory', [$acc, $from, $limit]);
         }

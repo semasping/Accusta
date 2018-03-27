@@ -33,6 +33,18 @@ class BchApi
 
     }
 
+    public static function convertToSg($gests)
+    {
+        if (getenv('BCH_API') == 'golos') {
+            return GolosApi::convertToSg($gests);
+        }
+
+        if (getenv('BCH_API') == 'steemit') {
+            return SteemitApi::convertToSg($gests);
+        }
+
+    }
+
     public static function getHistoryAccountLast($acc)
     {
         if (getenv('BCH_API') == 'golos') {

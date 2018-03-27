@@ -193,9 +193,10 @@ class TransAccController extends Controller
             }
         } catch (Exception $e) {
             echo $e->getMessage() . '|' . $e->getLine() . '|' . $e->getFile();
-            $textnotify = 'Ошибка запроса в сборе #статистики. Запрашиваемый аккаунт #' . $acc . $e->getMessage();;
+            $textnotify = 'Ошибка запроса в сборе #статистики. Запрашиваемый аккаунт #' . $acc . ' '.$e->getFile().' | '.$e->getLine().' | '.$e->getMessage().' >>>>>'.$e->getPrevious();;
             AdminNotify::send($textnotify);
             GolosApi::disconnect();
+            throw $e;
             return view(getenv('BCH_API') . '.trans.notfound', ['account' => $acc,
                 'form_action' => 'TransAccController@index',]);
         }

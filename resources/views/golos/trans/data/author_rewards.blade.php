@@ -11,7 +11,7 @@
                     <a data-toggle="collapse" href="#arw_{{$key}}"> Выплаты:</a>
                 </h4>
             </div>
-            <div id="arw_{{$key}}" class="panel-collapse collapse">
+            <div id="arw_{{$key}}" class="panel-collapse ">
                 <div class="panel-body">
 
                     <TABLE class="table table-bordered">
@@ -37,7 +37,7 @@
                                 <td class="GBG">{{ $athr['GBG'] }}</td>
                                 <td class="GOLOS">{{ $athr['GOLOS'] }}</td>
                                 <td class="GESTS">{{ $athr['GESTS'] }}</td>
-                                <td class="SG">{{ \App\semas\GolosApi::convertToSg($athr['GESTS']) }}
+                                <td class="SG">{{ $athr['SP'] }}
                                 </td>
 
                             </tr>
