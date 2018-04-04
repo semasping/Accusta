@@ -51,7 +51,7 @@ class GolosApiWsConnector extends WSConnectorAbstract
      * @throws ConnectionException
      * @throws \WebSocket\BadOpcodeException
      */
-    /*public function doRequest($apiName, array $data, $answerFormat = self::ANSWER_FORMAT_ARRAY, $try_number = 1)
+    public function doRequest($apiName, array $data, $answerFormat = self::ANSWER_FORMAT_ARRAY, $try_number = 1)
     {
         $requestId = $this->getNextId();
         $data = [
@@ -98,6 +98,6 @@ class GolosApiWsConnector extends WSConnectorAbstract
         }
 
         return $answer;
-    }*/
+    }
 
 }
