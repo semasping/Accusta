@@ -8,7 +8,7 @@
 
 namespace App\semas;
 
-ini_set('memory_limit', '512M');
+ini_set('memory_limit', '712M');
 
 use GrapheneNodeClient\Commands\CommandQueryData;
 use GrapheneNodeClient\Commands\DataBase\GetAccountCommand;
@@ -21,6 +21,7 @@ use GrapheneNodeClient\Commands\DataBase\GetContentCommand;
 use GrapheneNodeClient\Commands\DataBase\GetDiscussionsByBlogCommand;
 use GrapheneNodeClient\Commands\DataBase\GetDynamicGlobalPropertiesCommand;
 use GrapheneNodeClient\Commands\Follow\GetFollowersCommand;
+use GrapheneNodeClient\Connectors\WebSocket\GolosWSConnector;
 use Illuminate\Support\Facades\Cache;
 use WebSocket\Exception;
 use MongoDB;
@@ -487,7 +488,7 @@ class GolosApi
         $commandQuery = new CommandQueryData();
         $commandQuery->setParamByKey('0', $block_id);
 
-        $command = new GetBlockCommand(new GolosApiWsConnector());
+        $command = new GetBlockCommand(new GolosWSConnector());
 
         $data1 = $command->execute($commandQuery);
     }

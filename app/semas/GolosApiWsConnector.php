@@ -24,9 +24,9 @@ class GolosApiWsConnector extends WSConnectorAbstract
      *
      * @var string
      */
-    //protected $nodeURL = 'wss://ws.golos.io';
+    protected $nodeURL = 'wss://ws17.golos.io';
     //protected $nodeURL = ['wss://ws.golos.io','wss://api.golos.cf'];
-    protected $nodeURL = 'wss://api.golos.cf';
+    //protected $nodeURL = 'wss://api.golos.cf';
     //protected $nodeURL = 'wss://74.119.194.37:9090'; не работаю никакие варианты
 
     /**
@@ -51,7 +51,7 @@ class GolosApiWsConnector extends WSConnectorAbstract
      * @throws ConnectionException
      * @throws \WebSocket\BadOpcodeException
      */
-    public function doRequest($apiName, array $data, $answerFormat = self::ANSWER_FORMAT_ARRAY, $try_number = 1)
+    /*public function doRequest($apiName, array $data, $answerFormat = self::ANSWER_FORMAT_ARRAY, $try_number = 1)
     {
         $requestId = $this->getNextId();
         $data = [
@@ -98,6 +98,6 @@ class GolosApiWsConnector extends WSConnectorAbstract
         }
 
         return $answer;
-    }
+    }*/
 
 }
