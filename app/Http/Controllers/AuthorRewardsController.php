@@ -61,7 +61,7 @@ class AuthorRewardsController extends Controller
             $arr['SP'] = BchApi::convertToSg($arr['GESTS']);
             $res_arr[] = $arr;
         }
-        $author = collect($res_arr);
+        $author = collect($res_arr)->sortByDesc('timestamp');
         $key = $acc;
         $account = $acc;
         $date = Date::now();
