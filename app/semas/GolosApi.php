@@ -8,7 +8,7 @@
 
 namespace App\semas;
 
-ini_set('memory_limit', '712M');
+ini_set('memory_limit', '1204M');
 
 use GrapheneNodeClient\Commands\CommandQueryData;
 use GrapheneNodeClient\Commands\DataBase\GetAccountCommand;
@@ -17,7 +17,6 @@ use GrapheneNodeClient\Commands\DataBase\GetAccountHistoryCommand;
 use GrapheneNodeClient\Commands\DataBase\GetAccountVotesCommand;
 use GrapheneNodeClient\Commands\DataBase\GetBlockCommand;
 use GrapheneNodeClient\Commands\DataBase\GetBlockHeaderCommand;
-use GrapheneNodeClient\Commands\DataBase\GetContentCommand;
 use GrapheneNodeClient\Commands\DataBase\GetDiscussionsByBlogCommand;
 use GrapheneNodeClient\Commands\DataBase\GetDynamicGlobalPropertiesCommand;
 use GrapheneNodeClient\Commands\Follow\GetFollowersCommand;
@@ -351,7 +350,7 @@ class GolosApi
             $commandQuery->setParamByKey('1', $permlink);
             $content = $command->execute($commandQuery);
         } catch (Exception $e) {
-            self::disconnect();
+            //self::disconnect();
 
             return self::checkResult($content, 'getContent', [$author, $permlink]);
 
@@ -474,7 +473,7 @@ class GolosApi
             $commandQuery = new CommandQueryData();
             $content = $command->execute($commandQuery);
         } catch (Exception $e) {
-            self::disconnect();
+            //self::disconnect();
 
             return self::checkResult($content, 'GetDynamicGlobalProperties');
         }

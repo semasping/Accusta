@@ -40,7 +40,7 @@
             {!! Form::label('Account Name: @') !!}
             {!! Form::text('acc', null,
                 array('required','class'=>'form-control','placeholder'=>'Account name')) !!}
-            {!! Form::hidden('controller', 'TransAccController@index') !!}
+            {!! Form::hidden('controller', 'AuthorRewardsController@index') !!}
 
         </div>
         {!! Form::submit('Начать просмотр',  array('class'=>'btn btn-primary', 'data-after-submit-value'=>"Собираю транзакции. Это может занять некоторое время. Ждите&hellip;")) !!}

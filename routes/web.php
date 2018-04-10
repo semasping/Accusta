@@ -70,7 +70,7 @@ Route::get('mongo-test',function (){
 });
 
 if (getenv('BCH_API') == 'golos') {
-    Route::get('/vox-populi/', 'TransAccController@index')->middleware(CheckHistoryAcc::class)->name('home');
+    //Route::get('/vox-populi/', 'TransAccController@index')->middleware(CheckHistoryAcc::class)->name('home');
 
 
 
