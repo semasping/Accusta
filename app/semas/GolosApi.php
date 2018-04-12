@@ -11,16 +11,7 @@ namespace App\semas;
 ini_set('memory_limit', '1204M');
 
 use GrapheneNodeClient\Commands\CommandQueryData;
-use GrapheneNodeClient\Commands\DataBase\GetAccountCommand;
-use GrapheneNodeClient\Commands\DataBase\GetAccountCountCommand;
-use GrapheneNodeClient\Commands\DataBase\GetAccountHistoryCommand;
-use GrapheneNodeClient\Commands\DataBase\GetAccountVotesCommand;
-use GrapheneNodeClient\Commands\DataBase\GetBlockCommand;
-use GrapheneNodeClient\Commands\DataBase\GetBlockHeaderCommand;
-use GrapheneNodeClient\Commands\DataBase\GetDiscussionsByBlogCommand;
-use GrapheneNodeClient\Commands\DataBase\GetDynamicGlobalPropertiesCommand;
-use GrapheneNodeClient\Commands\Follow\GetFollowersCommand;
-use GrapheneNodeClient\Connectors\WebSocket\GolosWSConnector;
+use GrapheneNodeClient\Commands\Commands;
 use Illuminate\Support\Facades\Cache;
 use WebSocket\Exception;
 use MongoDB;
@@ -76,7 +67,9 @@ class GolosApi
             }
         }
         try {
-            $command = new GetAccountHistoryCommand(new GolosApiWsConnector());
+            //$command = new GetAccountHistoryCommand(new GolosApiWsConnector());
+            $command = new Commands(new GolosApiWsConnector());
+            $command = $command->get_account_history();
 
             $commandQuery = new CommandQueryData();
             $commandQuery->setParamByKey('0', $acc);
@@ -160,9 +153,9 @@ class GolosApi
 
         return Cache::rememberForever('golos_resulthistory' . $acc . $max,
             function () use ($max, $acc) {
-                $history = [];
+                //$history = [];
                 $qq = 0;
-                $h = 0;
+                //$h = 0;
                 $i = 2000;
                 $limit = 2000;
                 if ($i > $max) {
@@ -201,7 +194,7 @@ class GolosApi
     public static function getHistoryAccountFullInDBDesc($acc)
     {
         $max = self::getHistoryAccountLast($acc);
-        $return = false;
+        //$return = false;
         $key = "1glsGetFullAccHisToDB.$acc.$max";
         $key2 = "1glsGetFullAccHisToDBHis.$acc";
         if (Cache::get($key2 . '_status') != 'working' && Cache::get($key2 . '_status') != 'done') {
@@ -276,7 +269,7 @@ class GolosApi
                     dump($time1 - $timestart, $time2 - $timestart, $time3 - $timestart, $time3 - $timestart);
 
                 }
-                $time4 = microtime(true);
+                //$time4 = microtime(true);
 
                 $t = $t - 2001;
                 if ($t < 2000) {
@@ -330,7 +323,9 @@ class GolosApi
 
     public static function getVotes($acc)
     {
-        $command = new GetAccountVotesCommand(new GolosApiWsConnector());
+        //$command = new GetAccountVotesCommand(new GolosApiWsConnector());
+        $command = new Commands(new GolosApiWsConnector());
+        $command = $command->get_account_votes();
 
         $commandQuery = new CommandQueryData();
         $commandQuery->setParamByKey('0', $acc);
@@ -343,7 +338,9 @@ class GolosApi
     {
         $content = '';
         try {
-            $command = new GetContentCommand(new GolosApiWsConnector());
+//            $command = new GetContentCommand(new GolosApiWsConnector());
+            $command = new Commands(new GolosApiWsConnector());
+            $command = $command->get_content();
 
             $commandQuery = new CommandQueryData();
             $commandQuery->setParamByKey('0', $author);
@@ -364,7 +361,9 @@ class GolosApi
     {
         $content = '';
         try {
-            $command = new GetDiscussionsByBlogCommand(new GolosApiWsConnector());
+            //$command = new GetDiscussionsByBlogCommand(new GolosApiWsConnector());
+            $command = new Commands(new GolosApiWsConnector());
+            $command = $command->get_discussions_by_blog();
 
             $commandQuery = new CommandQueryData();
             $commandQuery->setParamByKey('0:limit', $limit);
@@ -391,7 +390,9 @@ class GolosApi
     {
         $content = '';
         try {
-            $command = new GetContentCommand(new GolosApiWsConnector());
+            //$command = new GetContentCommand(new GolosApiWsConnector());
+            $command = new Commands(new GolosApiWsConnector());
+            $command = $command->get_content();
 
             $commandQuery = new CommandQueryData();
             $commandQuery->setParamByKey('0', $author);
@@ -416,7 +417,9 @@ class GolosApi
 
     public static function getAccountFull($acc)
     {
-        $command = new GetAccountCommand(new GolosApiWsConnector());
+        //$command = new GetAccountCommand(new GolosApiWsConnector());
+        $command = new Commands(new GolosApiWsConnector());
+        $command = $command->get_accounts();
 
         $commandQuery = new CommandQueryData();
         $commandQuery->setParamByKey('0', [$acc]);
@@ -427,7 +430,9 @@ class GolosApi
 
     public static function getAccountsCount()
     {
-        $command = new GetAccountCountCommand(new GolosApiWsConnector());
+        //$command = new GetAccountCountCommand(new GolosApiWsConnector());
+        $command = new Commands(new GolosApiWsConnector());
+        $command = $command->get_account_count();
 
         $commandQuery = new CommandQueryData();
         $content = $command->execute($commandQuery);
@@ -437,7 +442,9 @@ class GolosApi
 
     public static function getCurrentPrice()
     {
-        $command = new GetCurrentMedianHistoryPriceCommand(new GolosApiWsConnector());
+        //$command = new GetCurrentMedianHistoryPriceCommand(new GolosApiWsConnector());
+        $command = new Commands(new GolosApiWsConnector());
+        $command = $command->get_current_median_history_price();
 
         $commandQuery = new CommandQueryData();
         $content = $command->execute($commandQuery);
@@ -447,7 +454,9 @@ class GolosApi
 
     public static function getBlockHeader($block)
     {
-        $command = new GetBlockHeaderCommand(new GolosApiWsConnector());
+        //$command = new GetBlockHeaderCommand(new GolosApiWsConnector());
+        $command = new Commands(new GolosApiWsConnector());
+        $command = $command->get_block_header();
 
         $commandQuery = new CommandQueryData();
         $commandQuery->setParamByKey('0', $block);
@@ -468,7 +477,9 @@ class GolosApi
     {
         $content = '';
         try {
-            $command = new GetDynamicGlobalPropertiesCommand(new GolosApiWsConnector());
+            //$command = new GetDynamicGlobalPropertiesCommand(new GolosApiWsConnector());
+            $command = new Commands(new GolosApiWsConnector());
+            $command = $command->get_dynamic_global_properties();
 
             $commandQuery = new CommandQueryData();
             $content = $command->execute($commandQuery);
@@ -487,9 +498,12 @@ class GolosApi
         $commandQuery = new CommandQueryData();
         $commandQuery->setParamByKey('0', $block_id);
 
-        $command = new GetBlockCommand(new GolosWSConnector());
+        //$command = new GetBlockCommand(new GolosWSConnector());
+        $command = new Commands(new GolosApiWsConnector());
+        $command = $command->get_block();
 
         $data1 = $command->execute($commandQuery);
+        return $data1;
     }
 
     private static function checkResult($content, $f, $params = [])
@@ -566,7 +580,7 @@ class GolosApi
         $history = Cache::remember('6his' . $acc . $type, 10, function () use ($acc, $type) {
             $max = GolosApi::getHistoryAccountLast($acc);
             $history = [];
-            $data = [];
+            //$data = [];
             $qq = 0;
             $h = 0;
             $i = 2000;
@@ -663,7 +677,7 @@ class GolosApi
                             //AdminNotify::send(print_r($his, true));
                             //dump($item);
                             //    $reward = $this->processReward($item);
-                            $block = $item[1]['block'];
+                            //$block = $item[1]['block'];
                             $account_create['block'] = $item[1]['block'];
                             $account_create['timestamp'] = $item[1]['timestamp'];
                             //->delay($date);
@@ -675,8 +689,8 @@ class GolosApi
                             //dump($item);
                             //    $reward = $this->processReward($item);
 
-                            $block = $item[1]['block'];
-                            $permlink = $item[1]['op'][1]['permlink'];
+                            //$block = $item[1]['block'];
+                            //$permlink = $item[1]['op'][1]['permlink'];
                             $author_data[$h]['block'] = $item[1]['block'];
                             $author_data[$h]['timestamp'] = $item[1]['timestamp'];
                             $author_data[$h]['permlink'] = $item[1]['op'][1]['permlink'];
@@ -691,7 +705,7 @@ class GolosApi
                             //AdminNotify::send(print_r($his, true));
                             //dump($item);
                             //    $reward = $this->processReward($item);
-                            $block = $item[1]['block'];
+                            //$block = $item[1]['block'];
 
                             //$permlink = $item[1]['op'][1]['permlink'];
                             $kur_data[$h]['block'] = $item[1]['block'];
@@ -708,7 +722,7 @@ class GolosApi
                             //    $reward = $this->processReward($item);
                             $permlink = $item[1]['op'][1]['permlink'];
                             if (!in_array($permlink, $post_temp)) {
-                                $block = $item[1]['block'];
+                                //$block = $item[1]['block'];
                                 $post_data[$permlink]['block'] = $item[1]['block'];
                                 $post_data[$permlink]['timestamp'] = $item[1]['timestamp'];
                                 $post_data[$permlink]['permlink'] = $permlink;
@@ -721,7 +735,7 @@ class GolosApi
                             //AdminNotify::send(print_r($his, true));
                             //dump($item);
                             //    $reward = $this->processReward($item);
-                            $block = $item[1]['block'];
+                            //$block = $item[1]['block'];
                             //$permlink = $item[1]['op'][1]['permlink'];
                             $transfer_out_data[$h]['block'] = $item[1]['block'];
                             $transfer_out_data[$h]['timestamp'] = $item[1]['timestamp'];
@@ -765,18 +779,22 @@ class GolosApi
             $data['transfer_out_data'] = $transfer_out_data;
 
             //dump($post_data);
-            for ($i = 0; $i < 100; $i++) //dump($history['transfer'][$i]);
+            /*for ($i = 0; $i < 100; $i++) {
 
+                //dump($history['transfer'][$i]);
+            }*/
 
-            {
-                return $data;
-            }
+            return $data;
         });
     }
 
-    public static function getFollowers($account)
-    {
-        $command = new GetFollowersCommand(new GolosApiWsConnector());
+    public
+    static function getFollowers(
+        $account
+    ) {
+        //$command = new GetFollowersCommand(new GolosApiWsConnector());
+        $command = new Commands(new GolosApiWsConnector());
+        $command = $command->get_followers();
 
         $commandQuery = new CommandQueryData();
         $commandQuery->setParamByKey('0', $account);
@@ -788,13 +806,17 @@ class GolosApi
         return $content;
     }
 
-    public static function getPostsByAuthor($author)
-    {
+    public
+    static function getPostsByAuthor(
+        $author
+    ) {
 
     }
 
-    public static function getPostsAll($author)
-    {
+    public
+    static function getPostsAll(
+        $author
+    ) {
         $post_more = true;
         $posts = [];
         while ($post_more) {
@@ -807,8 +829,10 @@ class GolosApi
         return $posts;
     }
 
-    public static function getCurrentProcessedHistoryTranzId($acc)
-    {
+    public
+    static function getCurrentProcessedHistoryTranzId(
+        $acc
+    ) {
         $current = 0;
         $key = self::getKeyCurrentCachedTransaction($acc);
         if (Cache::has($key)) {
@@ -817,13 +841,18 @@ class GolosApi
         return $current;
     }
 
-    public static function getKeyCurrentCachedTransaction($acc)
-    {
+    public
+    static function getKeyCurrentCachedTransaction(
+        $acc
+    ) {
         return '1current_cache_transactions_' . $acc;
     }
 
-    private static function setCurrentCachedTransactionId($acc, $from)
-    {
+    private
+    static function setCurrentCachedTransactionId(
+        $acc,
+        $from
+    ) {
         $key = self::getKeyCurrentCachedTransaction($acc);
         Cache::forever($key, $from);
         //dump($key, $from, 'finish');
