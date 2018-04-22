@@ -12,6 +12,7 @@ namespace App\Http\Controllers;
 use App\semas\BchApi;
 use Illuminate\Http\Request;
 use Jenssegers\Date\Date;
+use PragmaRX\Tracker\Vendor\Laravel\Facade as Tracker;
 
 
 class AuthorRewardsController extends Controller
@@ -33,6 +34,10 @@ class AuthorRewardsController extends Controller
         $acc = str_replace('@', '', $acc);
         $acc = mb_strtolower($acc);
         $acc = trim($acc);
+        Tracker::trackEvent(['event' => 'AuthorRewards for @'.$acc]);
+        Tracker::trackEvent(['event' => 'AuthorRewards']);
+        Tracker::trackEvent(['event' => '@'.$acc]);
+
         $collection = BchApi::getMongoDbCollection($acc);
         //$data = $collection->find(['op'=>'producer_reward']);
         $rewards_by_monthes = $collection->aggregate([

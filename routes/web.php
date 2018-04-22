@@ -106,3 +106,7 @@ if (getenv('BCH_API') == 'steemit') {
 }
 
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
