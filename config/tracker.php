@@ -5,7 +5,7 @@ return [
     /*
      * Enable it?
      */
-    'enabled' => true,
+    'enabled' => false,
 
     /*
      * Enable cache?
