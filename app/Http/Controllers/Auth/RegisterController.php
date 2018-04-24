@@ -69,7 +69,7 @@ class RegisterController extends Controller
         ]);
     }
 
-    /*public function showRegistrationForm()
+    public function showRegistrationForm()
     {
         return redirect('login');
     }
@@ -77,5 +77,5 @@ class RegisterController extends Controller
     public function register()
     {
 
-    }*/
+    }
 }
