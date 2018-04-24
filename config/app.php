@@ -168,6 +168,7 @@ return [
          * Package Service Providers...
          */
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        PragmaRX\Tracker\Vendor\Laravel\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -178,7 +179,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        PragmaRX\Tracker\Vendor\Laravel\ServiceProvider::class,
+
 
 
     ],
