@@ -14,10 +14,12 @@ class BchApi
 {
     public static function getHistoryAccountFirst($acc)
     {
-        if (getenv('BCH_API') == 'golos')
+        if (getenv('BCH_API') == 'golos') {
             return GolosApi::getHistoryAccountFirst($acc);
-        if (getenv('BCH_API') == 'steemit')
+        }
+        if (getenv('BCH_API') == 'steemit') {
             return SteemitApi::getHistoryAccountFirst($acc);
+        }
     }
 
 
@@ -70,22 +72,26 @@ class BchApi
 
     public static function getCurrentProcessedHistoryTranzIdInDB($acc)
     {
-        if (getenv('BCH_API') == 'golos') {
-            $collection = self::getMongoDbCollection($acc);
-            $current = $collection->count();
-            return $current;
+        $collection = self::getMongoDbCollection($acc);
+        $filter = [];
+        $options = ['sort' => ['_id' => -1]]; // -1 is for DESC
+        $result = $collection->findOne($filter, $options);
+        $max = $result['_id'];
+        $current = $collection->count();
+        //dump($current);
+        if ($current == $max + 1) {
+            return $max;
+        } else {
+            AdminNotify::send('GetCurrentWithError(getCurrentProcessedHistoryTranzIdInDB) for account:'.$acc.' $max='.$max.' $current='.$current);
+            return 0;
         }
 
-        if (getenv('BCH_API') == 'steemit') {
-            $collection = self::getMongoDbCollection($acc);
-            $current = $collection->count();
-            return $current;
-        }
     }
 
-    public static function getMongoDbCollection($account){
+    public static function getMongoDbCollection($account)
+    {
         if (getenv('BCH_API') == 'golos') {
-            return (new MongoDB\Client)->selectCollection(getenv('BCH_API').'_accusta', $account);
+            return (new MongoDB\Client)->selectCollection(getenv('BCH_API') . '_accusta', $account);
         }
         if (getenv('BCH_API') == 'steemit') {
             return (new MongoDB\Client)->selectCollection('accusta', $account);

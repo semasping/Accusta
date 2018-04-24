@@ -76,12 +76,12 @@ class GolosApi
             $commandQuery->setParamByKey('1', $from);
             $commandQuery->setParamByKey('2', $limit);
 
-            AdminNotify::send("_getAccHistory($acc, $from, $limit)");
+            //AdminNotify::send("_getAccHistory($acc, $from, $limit)");
 
             $content = $command->execute($commandQuery);
             //dd($content);
         } catch (Exception $e) {
-            dd($e);
+            //dd($e);
             //self::disconnect();
             return self::checkResult($content, '_getAccHistory', [$acc, $from, $limit]);
         }
@@ -93,7 +93,7 @@ class GolosApi
     {
         $res = self::_getAccHistory($acc, -1, 0);
 
-        AdminNotify::send("max = getHistoryAccountLast($acc) = " . print_r($res[0][0], true));
+        //AdminNotify::send("max = getHistoryAccountLast($acc) = " . print_r($res[0][0], true));
 //dump($res);
         return $res[0][0];
     }
@@ -208,43 +208,7 @@ class GolosApi
                     $time1 = microtime(true);
                     $reTra = [];
                     foreach ($transactions as $transaction) {
-                        $trns = $transaction['1'];
-                        $trns['_id'] = (integer)$transaction[0];
-                        $trns['type'] = $trns['op'][0];
-
-                        $trns['date'] = (new MongoDB\BSON\UTCDateTime(strtotime($trns['timestamp']) * 1000));
-
-                        if ($trns['op'][0] == 'producer_reward') {
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '',
-                                $trns['op'][1]['vesting_shares'])));
-                        }
-                        if ($trns['op'][0] == 'claim_reward_balance') {
-                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '',
-                                $trns['op'][1]['reward_steem'])));
-                            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['reward_sbd'])));
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '',
-                                $trns['op'][1]['reward_vests'])));
-                        }
-                        if ($trns['op'][0] == 'author_reward') {
-                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '',
-                                $trns['op'][1]['steem_payout'])));
-                            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['sbd_payout'])));
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '',
-                                $trns['op'][1]['vesting_payout'])));
-                        }
-                        if ($trns['op'][0] == 'comment_benefactor_reward') {
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward'])));
-                        }
-                        if ($trns['op'][0] == 'curation_reward') {
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward'])));
-                        }
-                        /*if ($trns['op'][0] == 'transfer') {
-                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '', $trns['op'][1]['amount'])));
-                            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['amount'])));
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward_vests'])));
-                        }*/
-
-                        $reTra[] = $trns;
+                        $reTra[] = self::prepare_transactions($transaction);;
                     }
                     //dump($reTra);
                     $time2 = microtime(true);
@@ -274,6 +238,66 @@ class GolosApi
                 $t = $t - 2001;
                 if ($t < 2000) {
                     $limit = $t;
+                }
+            }
+
+            Cache::put($key2 . '_status', 'done', 1);
+        }
+    }
+
+    public static function getHistoryAccountUpdateInDBDesc($acc, $processed)
+    {
+        $max = self::getHistoryAccountLast($acc);
+        //$return = false;
+        $key = "1glsGetUpdateAccHisToDB.$acc.$max";
+        $key2 = "1glsGetUpdateAccHisToDBHis.$acc";
+        if (Cache::get($key2 . '_status') != 'working' && Cache::get($key2 . '_status') != 'done') {
+            dump($key2);
+            Cache::put($key2 . '_status', 'working', 1);
+            $t = $max;
+            $limit = 2000;
+            if ($t-$processed<2000){
+                $limit = $t-$processed;
+            }
+            while ($processed <= $t) {
+                $timestart = microtime(true);
+                if ($transactions = self::getHistoryAccount($acc, $t, $limit)) {
+                    $time1 = microtime(true);
+                    $reTra = [];
+                    foreach ($transactions as $transaction) {
+                        $reTra[] = self::prepare_transactions($transaction);;
+                    }
+                    //dump($reTra);
+                    $time2 = microtime(true);
+                    try {
+                        $collection = BchApi::getMongoDbCollection($acc);
+                        //dump($collection);
+                        $collection->insertMany($reTra, ['ordered' => false]);
+                        self::setCurrentCachedTransactionId($acc, $t);
+                        dump($key, $t, 'finish');
+                    } catch (\MongoDuplicateKeyException $e) {
+                        dump('already exist');
+                    } catch (\MongoException $e) {
+                        dump('excepshen 1', $e->getMessage());
+                    } catch (\Exception $e) {
+                        dump('excepshen 2', $e->getMessage());
+                    }
+
+
+                    $time3 = microtime(true);
+
+                    Cache::put($key2 . '_status', 'working', 1);
+                    dump($time1 - $timestart, $time2 - $timestart, $time3 - $timestart, $time3 - $timestart);
+
+                }
+                //$time4 = microtime(true);
+
+                $t = $t - 2001;
+                $processed = $processed+$limit;
+                if ($t > 0) {
+                    if ($t < 2000) {
+                        $limit = $t;
+                    }
                 }
             }
 
@@ -856,5 +880,49 @@ class GolosApi
         $key = self::getKeyCurrentCachedTransaction($acc);
         Cache::forever($key, $from);
         //dump($key, $from, 'finish');
+    }
+
+    /**
+     * @param $transaction
+     * @return mixed
+     */
+    private static function prepare_transactions($transaction)
+    {
+        $trns = $transaction['1'];
+        $trns['_id'] = (integer)$transaction[0];
+        $trns['type'] = $trns['op'][0];
+
+        $trns['date'] = (new MongoDB\BSON\UTCDateTime(strtotime($trns['timestamp']) * 1000));
+
+        if ($trns['op'][0] == 'producer_reward') {
+            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '',
+                $trns['op'][1]['vesting_shares'])));
+        }
+        if ($trns['op'][0] == 'claim_reward_balance') {
+            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '',
+                $trns['op'][1]['reward_steem'])));
+            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['reward_sbd'])));
+            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '',
+                $trns['op'][1]['reward_vests'])));
+        }
+        if ($trns['op'][0] == 'author_reward') {
+            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '',
+                $trns['op'][1]['steem_payout'])));
+            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['sbd_payout'])));
+            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '',
+                $trns['op'][1]['vesting_payout'])));
+        }
+        if ($trns['op'][0] == 'comment_benefactor_reward') {
+            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward'])));
+        }
+        if ($trns['op'][0] == 'curation_reward') {
+            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward'])));
+        }
+        return $trns;
+        /*if ($trns['op'][0] == 'transfer') {
+            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '', $trns['op'][1]['amount'])));
+            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['amount'])));
+            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward_vests'])));
+        }*/
     }
 }

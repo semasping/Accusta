@@ -24,7 +24,7 @@ class GolosApiWsConnector extends WSConnectorAbstract
      *
      * @var string
      */
-    protected $nodeURL = 'wss://ws17.golos.io';
+    protected $nodeURL = ['wss://ws17.golos.io','wss://api.golos.cf'];
     //protected $nodeURL = ['wss://ws.golos.io','wss://api.golos.cf'];
     //protected $nodeURL = 'wss://api.golos.cf';
     //protected $nodeURL = 'wss://74.119.194.37:9090'; не работаю никакие варианты
@@ -38,7 +38,7 @@ class GolosApiWsConnector extends WSConnectorAbstract
 
 
     public function destroyConnection() {
-        //self::$connection = null;
+        self::$connection = null;
     }
 
     /**
@@ -95,6 +95,8 @@ class GolosApiWsConnector extends WSConnectorAbstract
                 //if nothing helps
                 throw $e;
             }
+        } catch (\Exception $e){
+            $this->destroyConnection();
         }
 
         return $answer;
