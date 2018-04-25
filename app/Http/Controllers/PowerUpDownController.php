@@ -12,6 +12,7 @@ namespace App\Http\Controllers;
 use App\semas\BchApi;
 use Illuminate\Http\Request;
 use Jenssegers\Date\Date;
+use Maatwebsite\Excel\Facades\Excel;
 use PragmaRX\Tracker\Vendor\Laravel\Facade as Tracker;
 
 
@@ -61,15 +62,16 @@ class PowerUpDownController extends Controller
             $arr['deposited'] = $state['op']['1']['deposited'];
             $res_arr[Date::parse($state['timestamp'])->format('Y\WW')] = $arr;
         }
+        $author = collect($res_arr)->sortByDesc('timestamp');
+
         if ($request->csv) {
             Tracker::trackEvent(['event' => 'CSV PowerUpDown']);
 
-            return $this->exportToExcel($res_arr, 'GolosPowerDown', $acc);
+            return $this->exportToExcel($author->toArray(), 'GolosPowerDown', $acc);
         }
 
         Tracker::trackEvent(['event' => 'PowerUpDown']);
 
-        $author = collect($res_arr)->sortByDesc('timestamp');
 
         foreach ($res_arr as $key => $item) {
             //$fm = Date::parse('2017W'.$key)->format('Y-m');
@@ -97,5 +99,18 @@ class PowerUpDownController extends Controller
         ]);
         //return view(env('BCH_API').'.rewards', compact('author', 'key','account','date','form_action'));
         //dump($res_arr);
+    }
+
+    public function exportToExcel($data, $type, $acc)
+    {
+        Excel::create($type . '_' . $acc, function ($excel) use ($data, $type, $acc) {
+
+            $excel->sheet($type, function ($sheet) use ($data) {
+
+                $sheet->fromArray($data);
+
+            });
+
+        })->download('csv');
     }
 }
