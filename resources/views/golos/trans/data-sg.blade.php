@@ -8,10 +8,7 @@
             </h1>
             <h3>
                 @if (!$date)
-                    С момента регистрации (
-                    <button type="button" class="btn btn-link btn-xs" data-toggle="modal" data-target="#myModal">
-                        Указать дату
-                    </button>)
+                    С момента регистрации
                 @else
                     С даты {{ \Jenssegers\Date\Date::parse($date)->format('d F Y') }} (
                     <button type="button" class="btn btn-link btn-xs" data-toggle="modal" data-target="#myModal">
@@ -30,7 +27,7 @@
 
         @foreach($month as $key=>$month1)
             <?php if (isset ($wv_by_month[$key])) {
-                $wv = $wv_by_month[$key][0];
+                $wv = $wv_by_month[$key];
             } else {
                 $wv = collect([]);
             }?>
