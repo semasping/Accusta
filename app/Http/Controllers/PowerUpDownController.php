@@ -83,6 +83,7 @@ class PowerUpDownController extends Controller
             $wv_by_month = [];
         }
         krsort($wv_by_month);
+        krsort($month);
         //dd($wv_by_month);
         $key = $acc;
         $account = $acc;
