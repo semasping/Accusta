@@ -79,7 +79,10 @@ class BchApi
         $options = ['sort' => ['_id' => -1]]; // -1 is for DESC
         $result = $collection->findOne($filter, $options);
         $max = $result['_id'];
-        /*if (intval($max))*/
+
+        if (!is_numeric($max)){
+            $max = 0;
+        }
         $current = $collection->count();
         //dump($current);
         if ($current == ($max) + 1) {
