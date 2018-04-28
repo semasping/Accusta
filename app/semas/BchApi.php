@@ -82,11 +82,11 @@ class BchApi
 
         if (!is_numeric($max)){
             //запустить удаление или очистку от текста
-            $collection->deleteMany(['_id' => '/[^0-9]*$/']);
+            $collection->deleteMany(['_id' => ['$regex' => '/[^0-9]*$/']]);
             $max = 0;
         }
         $current = $collection->count();
-        //dump($current);
+        dd($current);
         if ($current == ($max) + 1) {
             return ($max);
         } else {
