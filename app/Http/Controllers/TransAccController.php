@@ -49,6 +49,7 @@ class TransAccController extends Controller
             if (!empty($acc)) {
                 $textnotify = 'Старт Запроса на сбор #статистики для аккаунта #' . $acc;
                 AdminNotify::send($textnotify);
+                $month = [];
                 //$max = GolosApi::getHistoryAccountLast($acc);
 
                 //$trans = GolosApi::getData($acc, $max);
