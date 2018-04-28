@@ -82,8 +82,8 @@ class BchApi
         /*if (intval($max))*/
         $current = $collection->count();
         //dump($current);
-        if ($current == intval($max) + 1) {
-            return intval($max);
+        if ($current == ($max) + 1) {
+            return ($max);
         } else {
             AdminNotify::send('GetCurrentWithError(getCurrentProcessedHistoryTranzIdInDB) for account:'.$acc.' $max='.$max.' $current='.$current);
             return 0;
