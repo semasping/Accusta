@@ -82,7 +82,7 @@ class BchApi
 
         if (!is_numeric($max)){
             //запустить удаление или очистку от текста
-            $collection->deleteMany(['_id' => ['$regex' => '/[^0-9]*$/']]);
+            $collection->deleteMany(['_id' => ['$regex' => '[^0-9]*$']]);
             $max = 0;
         }
         $current = $collection->count();
