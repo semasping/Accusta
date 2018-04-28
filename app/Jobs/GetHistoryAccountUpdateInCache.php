@@ -42,7 +42,7 @@ class GetHistoryAccountUpdateInCache implements ShouldQueue
             GolosApi::getHistoryAccountUpdateInDBDesc($this->acc, $this->processed);
         if ($this->api == 'steemit')
             //SteemitApi::getHistoryAccountFullInCache($this->acc);
-            SteemitApi::getHistoryAccountFullInDBDesc($this->acc);
+            SteemitApi::getHistoryAccountUpdateInDBDesc($this->acc, $this->processed);
         dump('-------done--');
     }
 }

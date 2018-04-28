@@ -8,25 +8,14 @@
 
 namespace App\semas;
 
-//ini_set('memory_limit', '512M');
+ini_set('memory_limit', '1204M');
 
-use App\AccountTransaction;
-use Exception;
 use GrapheneNodeClient\Commands\CommandQueryData;
-use GrapheneNodeClient\Commands\DataBase\GetAccountCommand;
-use GrapheneNodeClient\Commands\DataBase\GetAccountCountCommand;
-use GrapheneNodeClient\Commands\DataBase\GetAccountHistoryCommand;
-use GrapheneNodeClient\Commands\DataBase\GetAccountVotesCommand;
-use GrapheneNodeClient\Commands\DataBase\GetBlockCommand;
-use GrapheneNodeClient\Commands\DataBase\GetBlockHeaderCommand;
-use GrapheneNodeClient\Commands\DataBase\GetContentCommand;
-use GrapheneNodeClient\Commands\DataBase\GetDiscussionsByBlogCommand;
-use GrapheneNodeClient\Commands\DataBase\GetDynamicGlobalPropertiesCommand;
-use GrapheneNodeClient\Commands\Follow\GetFollowersCommand;
+use GrapheneNodeClient\Commands\Commands;
 use GrapheneNodeClient\Connectors\Http\SteemitHttpConnector;
+use GrapheneNodeClient\Connectors\WebSocket\SteemitWSConnector;
 use Illuminate\Support\Facades\Cache;
-use Jenssegers\Date\Date;
-
+use WebSocket\Exception;
 use MongoDB;
 
 class SteemitApi
@@ -64,16 +53,14 @@ class SteemitApi
                 return $history;
 
 
-            }
-            else {
+            } else {
                 //AdminNotify::send("without cache getHistoryAccount($acc, $from, $limit)");
                 Cache::put($key . '_status', 'done', 2);
                 //dump($key.' done');
 
                 return self::_getAccHistory($acc, $from, $limit);
             }
-        }
-        else {
+        } else {
             sleep(5);
             //dump($key.' wait');
 
@@ -84,8 +71,16 @@ class SteemitApi
     private static function _getAccHistory($acc, $from, $limit)
     {
         $content = '';
+        if ($from > 1) {
+            if ($from < $limit) {
+                AdminNotify::send("from=$from;limit=$limit");
+                $limit = $from;
+            }
+        }
         try {
-            $command = new GetAccountHistoryCommand(new SteemitHttpConnector());
+            //$command = new GetAccountHistoryCommand(new SteemitWsConnector());
+            $command = new Commands(new SteemitWSConnector());
+            $command = $command->get_account_history();
 
             $commandQuery = new CommandQueryData();
             $commandQuery->setParamByKey('0', $acc);
@@ -95,9 +90,10 @@ class SteemitApi
             //AdminNotify::send("_getAccHistory($acc, $from, $limit)");
 
             $content = $command->execute($commandQuery);
-            //dump($content);
+            //dd($content);
         } catch (Exception $e) {
-            self::disconnect();
+            //dd($e);
+            //self::disconnect();
             return self::checkResult($content, '_getAccHistory', [$acc, $from, $limit]);
         }
 
@@ -187,7 +183,6 @@ class SteemitApi
                     }
                     while ($i <= $max) {
                         if (self::getHistoryAccount($acc, $i, $limit)) {
-
                             self::setCurrentCachedTransactionId($acc, $i);
                             Cache::put($key2 . '_status', 'working', 1);
                         }
@@ -261,7 +256,7 @@ class SteemitApi
                                         $trns['op'][1]['VESTS'] = str_replace(' VESTS', '', $trns['op'][1]['vesting_shares']);
                                     $accTr->op = $trns['op'];
 
-                                    $accTr->save();
+                                    $accTr->save(); 
                                     //dump($transaction);
                                     //dump($accTr);
                                 }*/
@@ -326,51 +321,21 @@ class SteemitApi
                     $time1 = microtime(true);
                     $reTra = [];
                     foreach ($transactions as $transaction) {
-                        $trns = $transaction['1'];
-                        $trns['_id'] = (integer)$transaction[0];
-                        $trns['type'] = $trns['op'][0];
-
-                        $trns['date'] = (new MongoDB\BSON\UTCDateTime(strtotime($trns['timestamp'])*1000));
-
-                        if ($trns['op'][0] == 'producer_reward') {
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['vesting_shares'])));
-                        }
-                        if ($trns['op'][0] == 'claim_reward_balance') {
-                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '', $trns['op'][1]['reward_steem'])));
-                            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['reward_sbd'])));
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward_vests'])));
-                        }
-                        if ($trns['op'][0] == 'author_reward') {
-                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '', $trns['op'][1]['steem_payout'])));
-                            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['sbd_payout'])));
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['vesting_payout'])));
-                        }
-                        if ($trns['op'][0] == 'comment_benefactor_reward') {
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward'])));
-                        }
-                        if ($trns['op'][0] == 'curation_reward') {
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward'])));
-                        }
-                        /*if ($trns['op'][0] == 'transfer') {
-                            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '', $trns['op'][1]['amount'])));
-                            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['amount'])));
-                            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward_vests'])));
-                        }*/
-
-                        $reTra[] = $trns;
+                        $reTra[] = self::prepare_transactions($transaction);
                     }
                     //dump($reTra);
                     $time2 = microtime(true);
-                    try{
-                        $collection = (new MongoDB\Client)->selectCollection('accusta', $acc);
+                    try {
+                        $collection = BchApi::getMongoDbCollection($acc);
                         //dump($collection);
-                        $collection->insertMany($reTra,['ordered'=>false]);
+                        $collection->insertMany($reTra, ['ordered' => false]);
                         self::setCurrentCachedTransactionId($acc, $t);
-                    }catch (\MongoDuplicateKeyException $e){
+                        dump($key, $t, 'finish');
+                    } catch (\MongoDuplicateKeyException $e) {
                         dump('already exist');
-                    }catch (\MongoException $e){
+                    } catch (\MongoException $e) {
                         dump('excepshen', $e->getMessage());
-                    }catch (\Exception $e){
+                    } catch (\Exception $e) {
                         dump('excepshen', $e->getMessage());
                     }
 
@@ -378,10 +343,10 @@ class SteemitApi
                     $time3 = microtime(true);
 
                     Cache::put($key2 . '_status', 'working', 1);
+                    dump($time1 - $timestart, $time2 - $timestart, $time3 - $timestart, $time3 - $timestart);
 
                 }
-                $time4 = microtime(true);
-                dump($time1 - $timestart, $time2 - $timestart, $time3 - $timestart, $time3 - $timestart);
+                //$time4 = microtime(true);
 
                 $t = $t - 2001;
                 if ($t < 2000) {
@@ -393,6 +358,65 @@ class SteemitApi
         }
     }
 
+    public static function getHistoryAccountUpdateInDBDesc($acc, $processed)
+    {
+        $max = self::getHistoryAccountLast($acc);
+        //$return = false;
+        $key = "1smtGetUpdateAccHisToDB.$acc.$max";
+        $key2 = "1smtGetUpdateAccHisToDBHis.$acc";
+        if (Cache::get($key2 . '_status') != 'working' && Cache::get($key2 . '_status') != 'done') {
+            dump($key2);
+            Cache::put($key2 . '_status', 'working', 1);
+            $t = $max;
+            $limit = 2000;
+            if ($t-$processed<2000){
+                $limit = $t-$processed;
+            }
+            while ($processed <= $t) {
+                $timestart = microtime(true);
+                if ($transactions = self::getHistoryAccount($acc, $t, $limit)) {
+                    $time1 = microtime(true);
+                    $reTra = [];
+                    foreach ($transactions as $transaction) {
+                        $reTra[] = self::prepare_transactions($transaction);;
+                    }
+                    //dump($reTra);
+                    $time2 = microtime(true);
+                    try {
+                        $collection = BchApi::getMongoDbCollection($acc);
+                        //dump($collection);
+                        $collection->insertMany($reTra, ['ordered' => false]);
+                        self::setCurrentCachedTransactionId($acc, $t);
+                        dump($key, $t, 'finish');
+                    } catch (\MongoDuplicateKeyException $e) {
+                        dump('already exist');
+                    } catch (\MongoException $e) {
+                        dump('excepshen 1', $e->getMessage());
+                    } catch (\Exception $e) {
+                        dump('excepshen 2', $e->getMessage());
+                    }
+
+
+                    $time3 = microtime(true);
+
+                    Cache::put($key2 . '_status', 'working', 1);
+                    dump($time1 - $timestart, $time2 - $timestart, $time3 - $timestart, $time3 - $timestart);
+
+                }
+                //$time4 = microtime(true);
+
+                $t = $t - 2001;
+                $processed = $processed+$limit;
+                if ($t > 0) {
+                    if ($t < 2000) {
+                        $limit = $t;
+                    }
+                }
+            }
+
+            Cache::put($key2 . '_status', 'done', 1);
+        }
+    }
 
     public static function getHistoryAccountAllWCallback($acc, $fn)
     {
@@ -436,7 +460,9 @@ class SteemitApi
 
     public static function getVotes($acc)
     {
-        $command = new GetAccountVotesCommand(new SteemitHttpConnector());
+        //$command = new GetAccountVotesCommand(new SteemitWsConnector());
+        $command = new Commands(new SteemitWsConnector());
+        $command = $command->get_account_votes();
 
         $commandQuery = new CommandQueryData();
         $commandQuery->setParamByKey('0', $acc);
@@ -449,15 +475,16 @@ class SteemitApi
     {
         $content = '';
         try {
-            $command = new GetContentCommand(new SteemitHttpConnector());
+//            $command = new GetContentCommand(new SteemitWsConnector());
+            $command = new Commands(new SteemitWsConnector());
+            $command = $command->get_content();
 
             $commandQuery = new CommandQueryData();
             $commandQuery->setParamByKey('0', $author);
             $commandQuery->setParamByKey('1', $permlink);
             $content = $command->execute($commandQuery);
-
         } catch (Exception $e) {
-            self::disconnect();
+            //self::disconnect();
 
             return self::checkResult($content, 'getContent', [$author, $permlink]);
         }
@@ -470,7 +497,9 @@ class SteemitApi
     {
         $content = '';
         try {
-            $command = new GetDiscussionsByBlogCommand(new SteemitHttpConnector());
+            //$command = new GetDiscussionsByBlogCommand(new SteemitWsConnector());
+            $command = new Commands(new SteemitWsConnector());
+            $command = $command->get_discussions_by_blog();
 
             $commandQuery = new CommandQueryData();
             $commandQuery->setParamByKey('0:limit', $limit);
@@ -483,7 +512,7 @@ class SteemitApi
             $commandQuery->setParamByKey('0:parent_permlink', null);
             $content = $command->execute($commandQuery);
         } catch (Exception $e) {
-            self::disconnect();
+            //self::disconnect();
 
             return self::checkResult($content, 'getDiscussionsByBlog', [$author]);
 
@@ -497,7 +526,9 @@ class SteemitApi
     {
         $content = '';
         try {
-            $command = new GetContentCommand(new SteemitHttpConnector());
+            //$command = new GetContentCommand(new SteemitWsConnector());
+            $command = new Commands(new SteemitWsConnector());
+            $command = $command->get_content();
 
             $commandQuery = new CommandQueryData();
             $commandQuery->setParamByKey('0', $author);
@@ -506,7 +537,7 @@ class SteemitApi
             $commandQuery->setParamByKey('3', $limit);
             $content = $command->execute($commandQuery);
         } catch (Exception $e) {
-            self::disconnect();
+            //self::disconnect();
 
             return self::checkResult($content, 'getDiscussionsByAuthorBeforeDate', [$author, $before_date, $limit, $start_permlink]);
 
@@ -520,10 +551,12 @@ class SteemitApi
 
     public static function getAccountFull($acc)
     {
-        $command = new GetAccountCommand(new SteemitHttpConnector());
+        //$command = new GetAccountCommand(new SteemitWsConnector());
+        $command = new Commands(new SteemitWsConnector());
+        $command = $command->get_accounts();
 
         $commandQuery = new CommandQueryData();
-        $commandQuery->setParamByKey('0', $acc);
+        $commandQuery->setParamByKey('0', [$acc]);
         $content = $command->execute($commandQuery);
 
         return $content;
@@ -531,7 +564,9 @@ class SteemitApi
 
     public static function getAccountsCount()
     {
-        $command = new GetAccountCountCommand(new SteemitHttpConnector());
+        //$command = new GetAccountCountCommand(new SteemitWsConnector());
+        $command = new Commands(new SteemitWsConnector());
+        $command = $command->get_account_count();
 
         $commandQuery = new CommandQueryData();
         $content = $command->execute($commandQuery);
@@ -541,7 +576,9 @@ class SteemitApi
 
     public static function getCurrentPrice()
     {
-        $command = new GetCurrentMedianHistoryPriceCommand(new SteemitHttpConnector());
+        //$command = new GetCurrentMedianHistoryPriceCommand(new SteemitWsConnector());
+        $command = new Commands(new SteemitWsConnector());
+        $command = $command->get_current_median_history_price();
 
         $commandQuery = new CommandQueryData();
         $content = $command->execute($commandQuery);
@@ -551,7 +588,9 @@ class SteemitApi
 
     public static function getBlockHeader($block)
     {
-        $command = new GetBlockHeaderCommand(new SteemitHttpConnector());
+        //$command = new GetBlockHeaderCommand(new SteemitWsConnector());
+        $command = new Commands(new SteemitWsConnector());
+        $command = $command->get_block_header();
 
         $commandQuery = new CommandQueryData();
         $commandQuery->setParamByKey('0', $block);
@@ -562,7 +601,7 @@ class SteemitApi
 
     public static function getBlockHeader2($block)
     {
-        $command = new GetBlockHeaderCommand(new SteemitHttpConnector());
+        $command = new GetBlockHeaderCommand(new SteemitWsConnector());
 
         $commandQuery = new CommandQueryData();
         $commandQuery->setParamByKey('0', $block);
@@ -574,7 +613,7 @@ class SteemitApi
 
     public static function disconnect()
     {
-        /*$connect = new SteemitHttpConnector();
+        /*$connect = new SteemitWsConnector();
         $connect->destroyConnection();*/
         //echo 321;
     }
@@ -583,12 +622,14 @@ class SteemitApi
     {
         $content = '';
         try {
-            $command = new GetDynamicGlobalPropertiesCommand(new SteemitHttpConnector());
+            //$command = new GetDynamicGlobalPropertiesCommand(new SteemitWsConnector());
+            $command = new Commands(new SteemitWsConnector());
+            $command = $command->get_dynamic_global_properties();
 
             $commandQuery = new CommandQueryData();
             $content = $command->execute($commandQuery);
         } catch (Exception $e) {
-            self::disconnect();
+            //self::disconnect();
 
             return self::checkResult($content, 'GetDynamicGlobalProperties');
         }
@@ -604,7 +645,9 @@ class SteemitApi
             $commandQuery = new CommandQueryData();
             $commandQuery->setParamByKey('0', $block_id);
 
-            $command = new GetBlockCommand(new SteemitHttpConnector());
+        //$command = new GetBlockCommand(new GolosWSConnector());
+        $command = new Commands(new SteemitWsConnector());
+        $command = $command->get_block();
 
             $content = $command->execute($commandQuery);
         } catch (Exception $e) {
@@ -620,8 +663,7 @@ class SteemitApi
     {
         if (isset($content['result'])) {
             return $content['result'];
-        }
-        else {
+        } else {
             self::disconnect();
             if (self::$attempt < 3) {
                 AdminNotify::send('SteemApi #bots_project reconnect function:' . $f . ' attempt:' . self::$attempt);
@@ -894,17 +936,20 @@ class SteemitApi
             $data['transfer_out_data'] = $transfer_out_data;
 
             //dump($post_data);
-            for ($i = 0; $i < 100; $i++)
+            /*for ($i = 0; $i < 100; $i++) {
+
                 //dump($history['transfer'][$i]);
+            }*/
 
-
-                return $data;
+            return $data;
         });
     }
 
     public static function getFollowers($account)
     {
-        $command = new GetFollowersCommand(new SteemitHttpConnector());
+        //$command = new GetFollowersCommand(new SteemitWsConnector());
+        $command = new Commands(new SteemitWsConnector());
+        $command = $command->get_followers();
 
         $commandQuery = new CommandQueryData();
         $commandQuery->setParamByKey('0', $account);
@@ -955,5 +1000,50 @@ class SteemitApi
         $key = self::getKeyCurrentCachedTransaction($acc);
         Cache::forever($key, $from);
         dump($key, $from, 'finish');
+    }
+
+
+    /**
+     * @param $transaction
+     * @return mixed
+     */
+    private static function prepare_transactions($transaction)
+    {
+        $trns = $transaction['1'];
+        $trns['_id'] = (integer)$transaction[0];
+        $trns['type'] = $trns['op'][0];
+
+        $trns['date'] = (new MongoDB\BSON\UTCDateTime(strtotime($trns['timestamp']) * 1000));
+
+        if ($trns['op'][0] == 'producer_reward') {
+            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '',
+                $trns['op'][1]['vesting_shares'])));
+        }
+        if ($trns['op'][0] == 'claim_reward_balance') {
+            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '',
+                $trns['op'][1]['reward_steem'])));
+            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['reward_sbd'])));
+            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '',
+                $trns['op'][1]['reward_vests'])));
+        }
+        if ($trns['op'][0] == 'author_reward') {
+            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '',
+                $trns['op'][1]['steem_payout'])));
+            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['sbd_payout'])));
+            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '',
+                $trns['op'][1]['vesting_payout'])));
+        }
+        if ($trns['op'][0] == 'comment_benefactor_reward') {
+            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward'])));
+        }
+        if ($trns['op'][0] == 'curation_reward') {
+            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward'])));
+        }
+        return $trns;
+        /*if ($trns['op'][0] == 'transfer') {
+            $trns['op'][1]['STEEM'] = (double)((str_replace(' STEEM', '', $trns['op'][1]['amount'])));
+            $trns['op'][1]['SBD'] = (double)((str_replace(' SBD', '', $trns['op'][1]['amount'])));
+            $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward_vests'])));
+        }*/
     }
 }

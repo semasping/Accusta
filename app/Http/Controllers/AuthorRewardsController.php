@@ -34,9 +34,9 @@ class AuthorRewardsController extends Controller
         $acc = str_replace('@', '', $acc);
         $acc = mb_strtolower($acc);
         $acc = trim($acc);
-        Tracker::trackEvent(['event' => 'AuthorRewards for @'.$acc]);
+        /*Tracker::trackEvent(['event' => 'AuthorRewards for @'.$acc]);
         Tracker::trackEvent(['event' => 'AuthorRewards']);
-        Tracker::trackEvent(['event' => '@'.$acc]);
+        Tracker::trackEvent(['event' => '@'.$acc]);*/
 
         $collection = BchApi::getMongoDbCollection($acc);
         //$data = $collection->find(['op'=>'producer_reward']);

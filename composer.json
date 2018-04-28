@@ -16,7 +16,6 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.5",
         "maatwebsite/excel": "~2.1",
-        "pragmarx/tracker": "^3.3",
         "predis/predis": "^1.1",
         "rollbar/rollbar-laravel": "^2.2",
         "sentry/sentry-laravel": "^0.8.0",

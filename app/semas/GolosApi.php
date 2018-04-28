@@ -37,22 +37,30 @@ class GolosApi
                         return self::_getAccHistory($acc, $from, $limit);
                     });
                 if (!$history) {
-                    Cache::forget("2golos_getacchistory.$acc.$from");
+                    Cache::forget($key);
+                    Cache::put($key . '_status', 'fail', 2);
+                    return self::getHistoryAccount($acc, $from, $limit);
                     //dump($acc,$history);
                 }
                 //
-                self::setCurrentCachedTransactionId($acc, $from);
+                //self::setCurrentCachedTransactionId($acc, $from);
                 Cache::put($key . '_status', 'done', 2);
+                //dump($key.' done');
+
                 return $history;
 
 
             } else {
-                AdminNotify::send("without cache getHistoryAccount($acc, $from, $limit)");
+                //AdminNotify::send("without cache getHistoryAccount($acc, $from, $limit)");
+                Cache::put($key . '_status', 'done', 2);
+                //dump($key.' done');
 
                 return self::_getAccHistory($acc, $from, $limit);
             }
         } else {
-            sleep(1);
+            sleep(5);
+            //dump($key.' wait');
+
             return self::getHistoryAccount($acc, $from, $limit);
         }
     }
@@ -208,7 +216,7 @@ class GolosApi
                     $time1 = microtime(true);
                     $reTra = [];
                     foreach ($transactions as $transaction) {
-                        $reTra[] = self::prepare_transactions($transaction);;
+                        $reTra[] = self::prepare_transactions($transaction);
                     }
                     //dump($reTra);
                     $time2 = microtime(true);
@@ -374,7 +382,6 @@ class GolosApi
             //self::disconnect();
 
             return self::checkResult($content, 'getContent', [$author, $permlink]);
-
         }
 
         return self::checkResult($content, 'getContent', [$author, $permlink]);
@@ -400,7 +407,7 @@ class GolosApi
             $commandQuery->setParamByKey('0:parent_permlink', null);
             $content = $command->execute($commandQuery);
         } catch (Exception $e) {
-            GolosApi::disconnect();
+            //self::disconnect();
 
             return self::checkResult($content, 'getDiscussionsByBlog', [$author]);
 
@@ -425,7 +432,7 @@ class GolosApi
             $commandQuery->setParamByKey('3', $limit);
             $content = $command->execute($commandQuery);
         } catch (Exception $e) {
-            GolosApi::disconnect();
+            //self::disconnect();
 
             return self::checkResult($content, 'getDiscussionsByAuthorBeforeDate',
                 [$author, $before_date, $limit, $start_permlink]);
@@ -514,20 +521,28 @@ class GolosApi
         }
 
         return self::checkResult($content, 'GetDynamicGlobalProperties');
-
     }
 
     public static function getBlock($block_id)
     {
-        $commandQuery = new CommandQueryData();
-        $commandQuery->setParamByKey('0', $block_id);
+
+        $content = '';
+        try {
+            $commandQuery = new CommandQueryData();
+            $commandQuery->setParamByKey('0', $block_id);
 
         //$command = new GetBlockCommand(new GolosWSConnector());
         $command = new Commands(new GolosApiWsConnector());
         $command = $command->get_block();
 
-        $data1 = $command->execute($commandQuery);
-        return $data1;
+            $content = $command->execute($commandQuery);
+        } catch (Exception $e) {
+            self::disconnect();
+
+            return self::checkResult($content, 'getBlock', [$block_id]);
+        }
+
+        return self::checkResult($content, 'getBlock', [$block_id]);
     }
 
     private static function checkResult($content, $f, $params = [])
@@ -550,8 +565,8 @@ class GolosApi
 
     static function getPrice()
     {
-        return Cache::remember('golos_getPrice_', 1, function () {
-            $resp = GolosApi::GetDynamicGlobalProperties();
+        return Cache::remember('golos_getPrice_', 10, function () {
+            $resp = self::GetDynamicGlobalProperties();
             AdminNotify::send(print_r($resp, true));
             if (is_array($resp)) {
                 $q1 = str_replace(' GOLOS', '', $resp['total_vesting_fund_steem']);
@@ -602,7 +617,7 @@ class GolosApi
     public static function getTransaction($acc, $type)
     {
         $history = Cache::remember('6his' . $acc . $type, 10, function () use ($acc, $type) {
-            $max = GolosApi::getHistoryAccountLast($acc);
+            $max = self::getHistoryAccountLast($acc);
             $history = [];
             //$data = [];
             $qq = 0;
@@ -618,7 +633,7 @@ class GolosApi
                 //AdminNotify::send($cache_key);
                 $history_n = Cache::rememberForever($cache_key,
                     function () use ($acc, $i, $limit, $type, $h, $cache_key) {
-                        $his = GolosApi::getHistoryAccount($acc, $i, $limit);
+                        $his = self::getHistoryAccount($acc, $i, $limit);
                         //dump(current($his));
                         $history = [];
                         foreach ($his as $item) {
@@ -688,7 +703,7 @@ class GolosApi
             }
             while ($i <= $max) {
 
-                $his = GolosApi::getHistoryAccount($acc, $i, $limit);
+                $his = self::getHistoryAccount($acc, $i, $limit);
                 //dump($acc,$his);
 
                 foreach ($his as $item) {

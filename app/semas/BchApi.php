@@ -72,15 +72,18 @@ class BchApi
 
     public static function getCurrentProcessedHistoryTranzIdInDB($acc)
     {
+        $current = 0;
+        $max=0;
         $collection = self::getMongoDbCollection($acc);
         $filter = [];
         $options = ['sort' => ['_id' => -1]]; // -1 is for DESC
         $result = $collection->findOne($filter, $options);
         $max = $result['_id'];
+        if (intval($max))
         $current = $collection->count();
         //dump($current);
-        if ($current == $max + 1) {
-            return $max;
+        if ($current == intval($max) + 1) {
+            return intval($max);
         } else {
             AdminNotify::send('GetCurrentWithError(getCurrentProcessedHistoryTranzIdInDB) for account:'.$acc.' $max='.$max.' $current='.$current);
             return 0;

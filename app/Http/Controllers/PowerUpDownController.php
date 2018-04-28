@@ -36,8 +36,8 @@ class PowerUpDownController extends Controller
         $acc = str_replace('@', '', $acc);
         $acc = mb_strtolower($acc);
         $acc = trim($acc);
-        Tracker::trackEvent(['event' => 'PowerUpDown for @'.$acc]);
-        Tracker::trackEvent(['event' => '@'.$acc]);
+/*        Tracker::trackEvent(['event' => 'PowerUpDown for @'.$acc]);
+        Tracker::trackEvent(['event' => '@'.$acc]);*/
 
         $collection = BchApi::getMongoDbCollection($acc);
         //$data = $collection->find(['op'=>'producer_reward']);
@@ -65,12 +65,12 @@ class PowerUpDownController extends Controller
         $author = collect($res_arr)->sortByDesc('timestamp');
 
         if ($request->csv) {
-            Tracker::trackEvent(['event' => 'CSV PowerUpDown']);
+            /*Tracker::trackEvent(['event' => 'CSV PowerUpDown']);*/
 
             return $this->exportToExcel($author->toArray(), 'GolosPowerDown', $acc);
         }
 
-        Tracker::trackEvent(['event' => 'PowerUpDown']);
+        /*Tracker::trackEvent(['event' => 'PowerUpDown']);*/
 
 
         foreach ($res_arr as $key => $item) {
