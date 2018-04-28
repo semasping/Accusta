@@ -86,7 +86,7 @@ class BchApi
             $max = 0;
         }
         $current = $collection->count();
-        dd($current);
+        //dump($current);
         if ($current == ($max) + 1) {
             return ($max);
         } else {
