@@ -81,14 +81,14 @@ return [
             ],
             'supervisor-update-load' => [
                 'connection' => 'redis',
-                'queue' => ['update_load'],
+                'queue' => [getenv('BCH_API').'update_load'],
                 'balance' => 'auto',
                 'processes' => 10,
                 'tries' => 3,
             ],
             'supervisor-full-load' => [
                 'connection' => 'redis',
-                'queue' => ['full_load'],
+                'queue' => [getenv('BCH_API').'full_load'],
                 'balance' => 'auto',
                 'processes' => 20,
                 'tries' => 3,
@@ -105,14 +105,14 @@ return [
             ],
             'supervisor-update-load' => [
                 'connection' => 'redis',
-                'queue' => ['update_load'],
+                'queue' => [getenv('BCH_API').'update_load'],
                 'balance' => 'auto',
                 'processes' => 0,
                 'tries' => 3,
             ],
             'supervisor-full-load' => [
                 'connection' => 'redis',
-                'queue' => ['full_load'],
+                'queue' => [getenv('BCH_API').'full_load'],
                 'balance' => 'auto',
                 'processes' => 0,
                 'tries' => 3,

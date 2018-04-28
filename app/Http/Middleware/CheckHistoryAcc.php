@@ -39,7 +39,7 @@ class CheckHistoryAcc
                 //GolosApi::getHistoryAccountFullInCache($acc);
 
                 //dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue(getenv('BCH_API').'CheckHistoryAcc');
-                dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue('full_load');
+                dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue(getenv('BCH_API').'full_load');
                 $params = $request->all();
                 $params['acc']=$acc;
                 //return redirect()->action('TransAccController@showProcessTranz',$params);
@@ -47,7 +47,7 @@ class CheckHistoryAcc
                 return response(view(getenv('BCH_API').'.process-tranz', ['account' => $acc,'total'=>$max,'current'=>$processed ]));
             }else{
                 $toUpdate = $max-$processed;
-                dispatch(new GetHistoryAccountUpdateInCache($acc,$processed, getenv('BCH_API')))->onQueue('update_load');
+                dispatch(new GetHistoryAccountUpdateInCache($acc,$processed, getenv('BCH_API')))->onQueue(getenv('BCH_API').'update_load');
                 //dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue('full_load');
 
             }
