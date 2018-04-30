@@ -39,7 +39,7 @@
             bottom: 0;
             width: 100%;
             /* Set the fixed height of the footer here */
-            height: 70px;
+            height: 120px;
             background-color: #f5f5f5;
         }
 
