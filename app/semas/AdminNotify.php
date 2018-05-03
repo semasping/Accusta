@@ -24,12 +24,12 @@ class AdminNotify
             }
             $text = '#'.env('APP_ENV').' : '.env('APP_NAME').' '.$text;
 
-            Log::channel('slack')->info($text);
+            //Log::channel('slack')->info($text);
 
-            /*Telegram::setAccessToken(getenv('TELEGRAM_BOT_TOKEN'))->sendMessage([
+            Telegram::setAccessToken(getenv('TELEGRAM_BOT_TOKEN'))->sendMessage([
                     'chat_id' => '147893636',
                     'text'    => $text,
-                ]);*/
+                ]);
         }catch (\Exception $e){
             //echo $e->getMessage();
         }
