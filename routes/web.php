@@ -97,7 +97,7 @@ if (getenv('BCH_API') == 'steemit') {
     Route::get('/@{acc}/transaction_history', 'TransHistoryController@show')->name('trans_history')->middleware(CheckHistoryAcc::class);
     Route::get('/@{acc}/_transaction_history', 'TransHistoryController@dt_show')->name('trans_history_dt_show')->middleware(CheckHistoryAcc::class);
 
-    Route::get('/@{acc}/sg', 'TransAccController@indexSg')->name('trans_sg')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/sg', 'PowerUpDownController@showAll')->name('trans_sg')->middleware(CheckHistoryAcc::class);
     Route::get('/@{acc}/process_tranz', 'TransAccController@showProcessTranz');
     //Route::get('/@{acc}/{page}', 'TransAccController@inProcess');
 
