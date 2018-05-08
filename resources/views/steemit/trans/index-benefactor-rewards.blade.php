@@ -52,16 +52,24 @@
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
-           @include(getenv('BCH_API').'.form')
+            @include(getenv('BCH_API').'.form')
         </div>
     </div>
     <div class="container">
         <div class="row">
             <div class="col-md-6">
                 {!! $chartRewardsIn->render() !!}
+                Sums All rewards: {!! $dataIn['allSP'] !!}
+                @foreach($dataIn['month'] as $k=>$m)
+                    <div class="">{!! $m !!}: {!! $dataIn['total'][$k] !!} Steem Power</div>
+                @endforeach
             </div>
             <div class="col-md-6">
                 {!! $chartRewardsOut->render() !!}
+                Sums All rewards: {!! $dataOut['allSP'] !!}
+                @foreach($dataOut['month'] as $k=>$m)
+                    <div class="">{!! $m !!}: {!! $dataOut['total'][$k] !!} Steem Power</div>
+                @endforeach
             </div>
 
         </div>

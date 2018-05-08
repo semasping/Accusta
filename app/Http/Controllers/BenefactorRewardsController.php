@@ -67,6 +67,8 @@ class BenefactorRewardsController extends Controller
             //'wv_by_month' => $wv_by_month,
             'month' => $month,
             'week' => true,
+            'dataIn' => $dataIn,
+            'dataOut' => $dataOut,
             'chartRewardsIn' => $chartRewardsIn,
             'chartRewardsOut' => $chartRewardsOut,
         ]);
@@ -93,6 +95,7 @@ class BenefactorRewardsController extends Controller
         $data['month'] = [];
         $data['total'] = [];
         $data['count'] = [];
+        $data['allSP'] = 0;
         $collection = BchApi::getMongoDbCollection($acc);
         $data_by_monthes = $collection->aggregate([
             [
@@ -119,6 +122,7 @@ class BenefactorRewardsController extends Controller
             $arr['count'] = $state['count'];
             $arr['date'] = $date->endOfMonth();
             $res_arr[$date->format('Ym')] = $arr;
+
         }
         ksort($res_arr);
         foreach ($res_arr as $key => $item) {
@@ -127,6 +131,7 @@ class BenefactorRewardsController extends Controller
             $data['totalVests'][] = $item['total'];
             $data['count'][] = $item['count'];
             $data['month'][] = $fm;
+            $data['allSP'] = $data['allSP']+BchApi::convertToSg($item['total']);
         }
 
 
@@ -139,6 +144,7 @@ class BenefactorRewardsController extends Controller
         $data['month'] = [];
         $data['total'] = [];
         $data['count'] = [];
+        $data['allSP'] = 0;
         $collection = BchApi::getMongoDbCollection($acc);
         $data_by_monthes = $collection->aggregate([
             [
@@ -173,6 +179,7 @@ class BenefactorRewardsController extends Controller
             $data['totalVests'][] = $item['total'];
             $data['count'][] = $item['count'];
             $data['month'][] = $fm;
+            $data['allSP'] = $data['allSP']+BchApi::convertToSg($item['total']);
         }
 
 
