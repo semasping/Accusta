@@ -8,6 +8,7 @@
         "php": ">=7.1.0",
         "arrilot/laravel-widgets": "^3.9",
         "fideloper/proxy": "~4.0",
+        "fx3costa/laravelchartjs": "^2.5",
         "irazasyed/telegram-bot-sdk": "dev-master",
         "jenssegers/date": "^3.2",
         "jenssegers/mongodb": "^3.3",
