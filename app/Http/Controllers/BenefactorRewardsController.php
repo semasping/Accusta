@@ -90,7 +90,9 @@ class BenefactorRewardsController extends Controller
     public function getRewardsIn($acc)
     {
         $res_arr = [];
-        $data = [];
+        $data['month'] = [];
+        $data['total'] = [];
+        $data['count'] = [];
         $collection = BchApi::getMongoDbCollection($acc);
         $data_by_monthes = $collection->aggregate([
             [
@@ -134,7 +136,9 @@ class BenefactorRewardsController extends Controller
     public function getRewardsOut($acc)
     {
         $res_arr = [];
-        $data = [];
+        $data['month'] = [];
+        $data['total'] = [];
+        $data['count'] = [];
         $collection = BchApi::getMongoDbCollection($acc);
         $data_by_monthes = $collection->aggregate([
             [
