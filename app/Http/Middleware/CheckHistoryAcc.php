@@ -42,7 +42,10 @@ class CheckHistoryAcc
                 dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue(getenv('BCH_API').'full_load');
                 $params = $request->all();
                 $params['acc']=$acc;
-                //return redirect()->action('TransAccController@showProcessTranz',$params);
+                //return redirect()-
+                $collection = BchApi::getMongoDbCollection($acc);
+                $processed = $collection->count();
+
 
                 return response(view(getenv('BCH_API').'.process-tranz', ['account' => $acc,'total'=>$max,'current'=>$processed ]));
             }else{
