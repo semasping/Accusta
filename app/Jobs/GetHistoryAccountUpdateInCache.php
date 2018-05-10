@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\semas\AdminNotify;
 use App\semas\GolosApi;
 use App\semas\SteemitApi;
 use Illuminate\Bus\Queueable;
@@ -42,7 +43,24 @@ class GetHistoryAccountUpdateInCache implements ShouldQueue
             GolosApi::getHistoryAccountUpdateInDBDesc($this->acc, $this->processed);
         if ($this->api == 'steemit')
             //SteemitApi::getHistoryAccountFullInCache($this->acc);
-            SteemitApi::getHistoryAccountUpdateInDBDesc($this->acc, $this->processed);
+            SteemitApi::getHistoryAccountUpdateInDBDesc($this->acc1, $this->processed);
         dump('-------done--');
+    }
+
+    /**
+     * The job failed to process.
+     *
+     * @param  Exception $exception
+     * @return void
+     */
+    public function failed(Exception $exception)
+    {
+        if ($this->api == 'golos') {
+            GolosApi::disconnect();
+        }
+        if ($this->api == 'steemit') {
+            SteemitApi::disconnect();
+        }
+        AdminNotify::send('Jobs failed: '. print_r($exception,true));
     }
 }

@@ -613,8 +613,8 @@ class SteemitApi
 
     public static function disconnect()
     {
-        /*$connect = new SteemitWsConnector();
-        $connect->destroyConnection();*/
+        $connect = new SteemitWsConnector();
+        $connect->destroyConnection();
         //echo 321;
     }
 
