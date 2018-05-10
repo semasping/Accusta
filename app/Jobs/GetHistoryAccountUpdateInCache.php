@@ -46,11 +46,11 @@ class GetHistoryAccountUpdateInCache implements ShouldQueue
             }
             if ($this->api == 'steemit') //SteemitApi::getHistoryAccountFullInCache($this->acc);
             {
-                SteemitApi::getHistoryAccountUpdateInDBDesc($this->acc1, $this->processed);
+                SteemitApi::getHistoryAccountUpdateInDBDesc($this->acc, $this->processed);
             }
         } catch (Exception $e) {
             dump($e->getTraceAsString());
-            AdminNotify::send('Jobs failed: ' . print_r($e->getMessage(), true));
+            AdminNotify::send('Jobs failed: ' . print_r($e->getTraceAsString(), true));
 
             if ($this->api == 'golos') {
                 GolosApi::disconnect();
@@ -61,22 +61,5 @@ class GetHistoryAccountUpdateInCache implements ShouldQueue
         }
         dump('-------done--');
 
-    }
-
-    /**
-     * The job failed to process.
-     *
-     * @param  Exception $exception
-     * @return void
-     */
-    public function failed(Exception $exception)
-    {
-        if ($this->api == 'golos') {
-            GolosApi::disconnect();
-        }
-        if ($this->api == 'steemit') {
-            SteemitApi::disconnect();
-        }
-        AdminNotify::send('Jobs failed: ' . print_r($exception->getMessage(), true));
     }
 }

@@ -38,31 +38,27 @@ class GetHistoryAccountFullInCache implements ShouldQueue
     public function handle()
     {
         dump('Start getting ' . $this->acc, $this->api);
-        if ($this->api == 'golos') //GolosApi::getHistoryAccountFullInCache($this->acc);
-        {
-            GolosApi::getHistoryAccountFullInDBDesc($this->acc);
-        }
-        if ($this->api == 'steemit') //SteemitApi::getHistoryAccountFullInCache($this->acc);
-        {
-            SteemitApi::getHistoryAccountFullInDBDesc($this->acc);
+        try {
+            if ($this->api == 'golos') //GolosApi::getHistoryAccountFullInCache($this->acc);
+            {
+                GolosApi::getHistoryAccountFullInDBDesc($this->acc);
+            }
+            if ($this->api == 'steemit') //SteemitApi::getHistoryAccountFullInCache($this->acc);
+            {
+                SteemitApi::getHistoryAccountFullInDBDesc($this->acc);
+            }
+        } catch (Exception $e) {
+            dump($e->getTraceAsString());
+            AdminNotify::send('Jobs failed: ' . print_r($e->getTraceAsString(), true));
+
+            if ($this->api == 'golos') {
+                GolosApi::disconnect();
+            }
+            if ($this->api == 'steemit') {
+                SteemitApi::disconnect();
+            }
         }
         dump('-------done--');
-    }
 
-    /**
-     * The job failed to process.
-     *
-     * @param  Exception $exception
-     * @return void
-     */
-    public function failed(Exception $exception)
-    {
-        if ($this->api == 'golos') {
-            GolosApi::disconnect();
-        }
-        if ($this->api == 'steemit') {
-            SteemitApi::disconnect();
-        }
-        AdminNotify::send('Jobs failed: '. print_r($exception,true));
     }
 }
