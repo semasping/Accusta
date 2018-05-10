@@ -25,7 +25,6 @@ class AdminNotify
             $text = '#' . env('APP_ENV') . ' : ' . env('APP_NAME') . ' ' . $text;
             $laravel = app();
             $version = $laravel::VERSION;
-            echo $version;
             if (str_contains($version,  '5.6.')) {
                 Log::channel('slack')->info($text);
             } else {
