@@ -52,7 +52,9 @@ class CheckHistoryAcc
                 $toUpdate = $max-$processed;
                 dispatch(new GetHistoryAccountUpdateInCache($acc,$processed, getenv('BCH_API')))->onQueue(getenv('BCH_API').'update_load');
                 //dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue('full_load');
-
+                /*if (!$request->has('skip'))
+                return response(view(getenv('BCH_API').'.process-tranz', ['account' => $acc,'total'=>$max,'current'=>$processed ]));*/
+                sleep(5);
             }
 
 
