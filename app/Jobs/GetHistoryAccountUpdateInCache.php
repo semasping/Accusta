@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\semas\AdminNotify;
 use App\semas\GolosApi;
 use App\semas\SteemitApi;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
