@@ -50,7 +50,14 @@ class GetHistoryAccountUpdateInCache implements ShouldQueue
             }
         } catch (Exception $e) {
             dump($e->getTraceAsString());
-            $this->failed($e);
+            AdminNotify::send('Jobs failed: ' . print_r($e->getMessage(), true));
+
+            if ($this->api == 'golos') {
+                GolosApi::disconnect();
+            }
+            if ($this->api == 'steemit') {
+                SteemitApi::disconnect();
+            }
         }
         dump('-------done--');
 
