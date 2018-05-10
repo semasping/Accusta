@@ -49,6 +49,7 @@ class GetHistoryAccountUpdateInCache implements ShouldQueue
                 SteemitApi::getHistoryAccountUpdateInDBDesc($this->acc1, $this->processed);
             }
         } catch (Exception $e) {
+            dump($e->getTraceAsString());
             $this->failed($e);
         }
         dump('-------done--');
