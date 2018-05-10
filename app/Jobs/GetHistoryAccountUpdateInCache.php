@@ -39,13 +39,20 @@ class GetHistoryAccountUpdateInCache implements ShouldQueue
     public function handle()
     {
         dump('Start getting ' . $this->acc, $this->api);
-        if ($this->api == 'golos')
-            //GolosApi::getHistoryAccountFullInCache($this->acc);
-            GolosApi::getHistoryAccountUpdateInDBDesc($this->acc, $this->processed);
-        if ($this->api == 'steemit')
-            //SteemitApi::getHistoryAccountFullInCache($this->acc);
-            SteemitApi::getHistoryAccountUpdateInDBDesc($this->acc1, $this->processed);
+        try {
+            if ($this->api == 'golos') //GolosApi::getHistoryAccountFullInCache($this->acc);
+            {
+                GolosApi::getHistoryAccountUpdateInDBDesc($this->acc, $this->processed);
+            }
+            if ($this->api == 'steemit') //SteemitApi::getHistoryAccountFullInCache($this->acc);
+            {
+                SteemitApi::getHistoryAccountUpdateInDBDesc($this->acc1, $this->processed);
+            }
+        } catch (Exception $e) {
+            $this->failed($e);
+        }
         dump('-------done--');
+
     }
 
     /**
@@ -62,6 +69,6 @@ class GetHistoryAccountUpdateInCache implements ShouldQueue
         if ($this->api == 'steemit') {
             SteemitApi::disconnect();
         }
-        AdminNotify::send('Jobs failed: '. print_r($exception->getMessage(),true));
+        AdminNotify::send('Jobs failed: ' . print_r($exception->getMessage(), true));
     }
 }
