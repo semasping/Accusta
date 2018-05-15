@@ -421,7 +421,12 @@ class SteemitApi
             }
 
             Cache::put($key2 . '_status', 'done', 1);
+
+        }else{
+            dump($key, 'working', 'skip');
+            return false;
         }
+        return true;
     }
 
     public static function getHistoryAccountAllWCallback($acc, $fn)
