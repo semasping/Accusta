@@ -326,8 +326,9 @@ class BenefactorRewardsController extends Controller
 
     public function getDataTableRewardsByMonth(Request $request, Builder $htmlBuilder)
     {
-        if($request->ajax()){
-            return DataTables::collection($this->getRewardsByMonth($request->acc, $request->type, $request->date))->make(true);
+        if ($request->ajax()) {
+            return DataTables::collection($this->getRewardsByMonth($request->acc, $request->type,
+                $request->date))->make(true);
         }
         $html = $htmlBuilder
             ->addColumn(['data' => 'author', 'name' => 'author', 'title' => 'author'])
@@ -335,7 +336,7 @@ class BenefactorRewardsController extends Controller
             ->addColumn(['data' => 'VESTS', 'name' => 'VESTS', 'title' => 'VESTS'])
             ->addColumn(['data' => 'timestamp', 'name' => 'timestamp', 'title' => 'timestamp']);
 
-        return view(getenv('BCH_API').'.datatables.benefactor-rewards', compact('html'));
+        return view(getenv('BCH_API') . '.datatables.benefactor-rewards', compact('html'));
     }
 
     public function getRewardsByMonth($acc, $type, $date)
@@ -373,14 +374,21 @@ class BenefactorRewardsController extends Controller
             ]
         ]);
         foreach ($data_by_monthes as $state) {
-            if ($state['op'][1]['author']!=$acc){
+            if ($state['op'][1]['author'] != $acc) {
                 //dd($state);
-                $r=132;
+                $r = 132;
             }
             //dd($state);
-            $arr['author'] = $state['op'][1]['author'];
+            if ($type == 'In') {
+                $arr['author'] = $state['op'][1]['author'];
+            }
+            if ($type == 'Out') {
+                $arr['author'] = $state['op'][1]['benefactor'];
+            }
+
             $arr['permlink'] = $state['op'][1]['permlink'];
             $arr['VESTS'] = $state['op'][1]['VESTS'];
+            $arr['SP'] = BchApi::convertToSg($state['op'][1]['VESTS']);
             $arr['timestamp'] = $state['timestamp'];
             $res_arr[] = $arr;
         }

@@ -14,18 +14,25 @@
 
             <table id="data{{ $type.$data['date'][$k] }}">
                 <thead>
-                    <tr>
-                        <td>Author</td>
-                        <td>Permlink</td>
-                        <td class="sum">VESTS</td>
-                        <td>Timestamp</td>
-                    </tr>
+                <tr>
+                    @if($type=='In')
+                        <td>From</td>
+                    @endif
+                    @if($type=='Out')
+                        <td>To</td>
+                    @endif
+                    <td>Permlink</td>
+                    <td class="sum">VESTS</td>
+                    <td class="sum">SP</td>
+                    <td>Timestamp</td>
+                </tr>
                 </thead>
                 <tbody>
 
                 </tbody>
                 <tfoot>
                 <tr>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -38,37 +45,38 @@
 </div>
 
 @push('js2')
-<script>
-    $('#data{{ $type.$data["date"][$k] }}').DataTable({
-        processing: true,
-        responsive: true,
-        serverSide: false,
-        paging: true,
+    <script>
+        $('#data{{ $type.$data["date"][$k] }}').DataTable({
+            processing: true,
+            responsive: true,
+            serverSide: false,
+            paging: true,
 
-        columns: [
-            {data: 'author'},
-            {data: 'permlink'},
-            {data: 'VESTS'},
-            {data: 'timestamp'}
-        ],
-        "order": [[ 0, "desc" ]],
-        "footerCallback": function(row, data, start, end, display) {
-            var api = this.api();
+            columns: [
+                {data: 'author'},
+                {data: 'permlink'},
+                {data: 'VESTS'},
+                {data: 'SP'},
+                {data: 'timestamp'}
+            ],
+            "order": [[0, "desc"]],
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api();
 
-            api.columns('.sum', {
-                "filter": "applied"
-            }).every(function() {
-                var sum = this
-                    .data()
-                    .reduce(function(a, b) {
-                        var x = parseFloat(a) || 0;
-                        var y = parseFloat(b) || 0;
-                        return (x+y).toFixed(3);
-                    }, 0);
-                console.log(sum); //alert(sum);
-                $(this.footer()).html(sum);
-            });
-        }
-    });
-</script>
+                api.columns('.sum', {
+                    "filter": "applied"
+                }).every(function () {
+                    var sum = this
+                        .data()
+                        .reduce(function (a, b) {
+                            var x = parseFloat(a) || 0;
+                            var y = parseFloat(b) || 0;
+                            return (x + y).toFixed(3);
+                        }, 0);
+                    console.log(sum); //alert(sum);
+                    $(this.footer()).html(sum);
+                });
+            }
+        });
+    </script>
 @endpush
