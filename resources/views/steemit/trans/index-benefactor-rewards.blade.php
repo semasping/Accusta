@@ -105,11 +105,13 @@
             var table = $('#data'+type+month).DataTable();
             table.ajax.url( $(e.target).attr("data-href") ).load();
         })
-        $('#aOut').on('1show.bs.collapse', function (e) {
+        $('#aOut').on('show.bs.collapse', function (e) {
             var id  = $(e.target).attr('id');
             var month  = $(e.target).attr('data-month');
             var type = $(e.target).attr('data-type');
-            $(this).find("#body"+type+month).load($(e.target).attr("data-href"));
+            //$(this).find("#body"+type+month).load($(e.target).attr("data-href"));
+            var table = $('#data'+type+month).DataTable();
+            table.ajax.url( $(e.target).attr("data-href") ).load();
         })
     </script>
 @endprepend
