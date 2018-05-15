@@ -153,5 +153,6 @@
 
 @yield('js')
 @yield('js2')
+@stack('js2')
 </body>
 </html>

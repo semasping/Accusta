@@ -58,18 +58,30 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                {!! $chartRewardsIn->render() !!}
-                Sums All rewards: {!! $dataIn['allSP'] !!}
-                @foreach($dataIn['month'] as $k=>$m)
-                    <div class="">{!! $m !!}: {!! $dataIn['total'][$k] !!} Steem Power</div>
-                @endforeach
+                <div class="panel panel-default">
+                    <div class="panel-heading">Benefactor Rewards statistics for {{'@'.$acc}}</div>
+                    <div class="panel-body">{!! $chartRewardsIn->render() !!}</div>
+                    <div class="panel-footer">Sums All rewards: {!! $dataIn['allSP'] !!} Steem Power</div>
+                </div>
+                <div class="panel-group" id="aIn" role="tablist" aria-multiselectable="true">
+                    <?php krsort($dataIn['month']) ?>
+                    @foreach($dataIn['month'] as $k=>$m)
+                        @include('steemit.trans.data.benefactor-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
+                    @endforeach
+                </div>
             </div>
             <div class="col-md-6">
-                {!! $chartRewardsOut->render() !!}
-                Sums All rewards: {!! $dataOut['allSP'] !!}
-                @foreach($dataOut['month'] as $k=>$m)
-                    <div class="">{!! $m !!}: {!! $dataOut['total'][$k] !!} Steem Power</div>
-                @endforeach
+                <div class="panel panel-default">
+                    <div class="panel-heading">Benefactor Rewards from your post to others accounts</div>
+                    <div class="panel-body">{!! $chartRewardsOut->render() !!}</div>
+                    <div class="panel-footer">Sums All rewards: {!! $dataOut['allSP'] !!} Steem Power</div>
+                </div>
+                <div class="panel-group" id="aOut" role="tablist" aria-multiselectable="true">
+                    <?php krsort($dataOut['month']) ?>
+                    @foreach($dataOut['month'] as $k=>$m)
+                        @include('steemit.trans.data.benefactor-by-month', [$k, 'data'=>$dataOut, $m, 'type'=>'Out'])
+                    @endforeach
+                </div>
             </div>
 
         </div>
@@ -79,3 +91,25 @@
 
 
 @endsection
+
+@prepend('js2')
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $('#aIn').on('show.bs.collapse', function (e) {
+            var id  = $(e.target).attr('id');
+            var month  = $(e.target).attr('data-month');
+            var type = $(e.target).attr('data-type');
+            //alert(month + type);
+            //$(this).find("#body"+type+month).load($(e.target).attr("data-href"));
+            var table = $('#data'+type+month).DataTable();
+            table.ajax.url( $(e.target).attr("data-href") ).load();
+        })
+        $('#aOut').on('1show.bs.collapse', function (e) {
+            var id  = $(e.target).attr('id');
+            var month  = $(e.target).attr('data-month');
+            var type = $(e.target).attr('data-type');
+            $(this).find("#body"+type+month).load($(e.target).attr("data-href"));
+        })
+    </script>
+@endprepend

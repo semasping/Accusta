@@ -32,7 +32,7 @@ class CheckHistoryAcc
             $max = BchApi::getHistoryAccountLast($acc);
             //$current = BchApi::getCurrentProcessedHistoryTranzId($acc);
             $processed = BchApi::getCurrentProcessedHistoryTranzIdInDB($acc);
-            //dd($max,$processed);
+//            dump($max,$processed);
 
             if ($processed == 0){
                 //Artisan::call('BchApi:GetHistoryAccountFullInCache',['api'=>'golos','acc'=>$acc]);
@@ -48,8 +48,8 @@ class CheckHistoryAcc
 
 
                 return response(view(getenv('BCH_API').'.process-tranz', ['account' => $acc,'total'=>$max,'current'=>$processed ]));
-            }else{
-                $toUpdate = $max-$processed;
+            }elseif ($max-$processed>0) {
+
                 dispatch(new GetHistoryAccountUpdateInCache($acc,$processed, getenv('BCH_API')))->onQueue(getenv('BCH_API').'update_load');
                 //dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue('full_load');
                 /*if (!$request->has('skip'))
