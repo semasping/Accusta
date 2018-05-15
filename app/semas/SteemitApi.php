@@ -12,7 +12,7 @@ ini_set('memory_limit', '1204M');
 
 use GrapheneNodeClient\Commands\CommandQueryData;
 use GrapheneNodeClient\Commands\Commands;
-use GrapheneNodeClient\Connectors\Http\SteemitHttpConnector;
+use GrapheneNodeClient\Connectors\Http\SteemitHttpJsonRpcConnector;
 use GrapheneNodeClient\Connectors\WebSocket\SteemitWSConnector;
 use Illuminate\Support\Facades\Cache;
 use WebSocket\Exception;
@@ -21,6 +21,12 @@ use MongoDB;
 class SteemitApi
 {
     public static $attempt = 0;
+    private static $connector;
+
+    public static function getConnector(){
+        self::$connector = new SteemitHttpJsonRpcConnector();
+        return self::$connector;
+    }
 
     public static function getHistoryAccount($acc, $from, $limit = 2000)
     {
@@ -78,8 +84,8 @@ class SteemitApi
             }
         }
         try {
-            //$command = new GetAccountHistoryCommand(new SteemitWsConnector());
-            $command = new Commands(new SteemitWSConnector());
+            //$command = new GetAccountHistoryCommand(self::getConnector());
+            $command = new Commands(self::getConnector());
             $command = $command->get_account_history();
 
             $commandQuery = new CommandQueryData();
@@ -460,8 +466,8 @@ class SteemitApi
 
     public static function getVotes($acc)
     {
-        //$command = new GetAccountVotesCommand(new SteemitWsConnector());
-        $command = new Commands(new SteemitWsConnector());
+        //$command = new GetAccountVotesCommand(self::getConnector());
+        $command = new Commands(self::getConnector());
         $command = $command->get_account_votes();
 
         $commandQuery = new CommandQueryData();
@@ -475,8 +481,8 @@ class SteemitApi
     {
         $content = '';
         try {
-//            $command = new GetContentCommand(new SteemitWsConnector());
-            $command = new Commands(new SteemitWsConnector());
+//            $command = new GetContentCommand(self::getConnector());
+            $command = new Commands(self::getConnector());
             $command = $command->get_content();
 
             $commandQuery = new CommandQueryData();
@@ -497,8 +503,8 @@ class SteemitApi
     {
         $content = '';
         try {
-            //$command = new GetDiscussionsByBlogCommand(new SteemitWsConnector());
-            $command = new Commands(new SteemitWsConnector());
+            //$command = new GetDiscussionsByBlogCommand(self::getConnector());
+            $command = new Commands(self::getConnector());
             $command = $command->get_discussions_by_blog();
 
             $commandQuery = new CommandQueryData();
@@ -526,8 +532,8 @@ class SteemitApi
     {
         $content = '';
         try {
-            //$command = new GetContentCommand(new SteemitWsConnector());
-            $command = new Commands(new SteemitWsConnector());
+            //$command = new GetContentCommand(self::getConnector());
+            $command = new Commands(self::getConnector());
             $command = $command->get_content();
 
             $commandQuery = new CommandQueryData();
@@ -551,8 +557,8 @@ class SteemitApi
 
     public static function getAccountFull($acc)
     {
-        //$command = new GetAccountCommand(new SteemitWsConnector());
-        $command = new Commands(new SteemitWsConnector());
+        //$command = new GetAccountCommand(self::getConnector());
+        $command = new Commands(self::getConnector());
         $command = $command->get_accounts();
 
         $commandQuery = new CommandQueryData();
@@ -564,8 +570,8 @@ class SteemitApi
 
     public static function getAccountsCount()
     {
-        //$command = new GetAccountCountCommand(new SteemitWsConnector());
-        $command = new Commands(new SteemitWsConnector());
+        //$command = new GetAccountCountCommand(self::getConnector());
+        $command = new Commands(self::getConnector());
         $command = $command->get_account_count();
 
         $commandQuery = new CommandQueryData();
@@ -576,8 +582,8 @@ class SteemitApi
 
     public static function getCurrentPrice()
     {
-        //$command = new GetCurrentMedianHistoryPriceCommand(new SteemitWsConnector());
-        $command = new Commands(new SteemitWsConnector());
+        //$command = new GetCurrentMedianHistoryPriceCommand(self::getConnector());
+        $command = new Commands(self::getConnector());
         $command = $command->get_current_median_history_price();
 
         $commandQuery = new CommandQueryData();
@@ -588,8 +594,8 @@ class SteemitApi
 
     public static function getBlockHeader($block)
     {
-        //$command = new GetBlockHeaderCommand(new SteemitWsConnector());
-        $command = new Commands(new SteemitWsConnector());
+        //$command = new GetBlockHeaderCommand(self::getConnector());
+        $command = new Commands(self::getConnector());
         $command = $command->get_block_header();
 
         $commandQuery = new CommandQueryData();
@@ -601,7 +607,7 @@ class SteemitApi
 
     public static function getBlockHeader2($block)
     {
-        $command = new GetBlockHeaderCommand(new SteemitWsConnector());
+        $command = new GetBlockHeaderCommand(self::getConnector());
 
         $commandQuery = new CommandQueryData();
         $commandQuery->setParamByKey('0', $block);
@@ -613,7 +619,7 @@ class SteemitApi
 
     public static function disconnect()
     {
-        $connect = new SteemitWsConnector();
+        $connect = self::getConnector();
         $connect->destroyConnection();
         //echo 321;
     }
@@ -622,8 +628,8 @@ class SteemitApi
     {
         $content = '';
         try {
-            //$command = new GetDynamicGlobalPropertiesCommand(new SteemitWsConnector());
-            $command = new Commands(new SteemitWsConnector());
+            //$command = new GetDynamicGlobalPropertiesCommand(self::getConnector());
+            $command = new Commands(self::getConnector());
             $command = $command->get_dynamic_global_properties();
 
             $commandQuery = new CommandQueryData();
@@ -646,7 +652,7 @@ class SteemitApi
             $commandQuery->setParamByKey('0', $block_id);
 
         //$command = new GetBlockCommand(new GolosWSConnector());
-        $command = new Commands(new SteemitWsConnector());
+        $command = new Commands(self::getConnector());
         $command = $command->get_block();
 
             $content = $command->execute($commandQuery);
@@ -947,8 +953,8 @@ class SteemitApi
 
     public static function getFollowers($account)
     {
-        //$command = new GetFollowersCommand(new SteemitWsConnector());
-        $command = new Commands(new SteemitWsConnector());
+        //$command = new GetFollowersCommand(self::getConnector());
+        $command = new Commands(self::getConnector());
         $command = $command->get_followers();
 
         $commandQuery = new CommandQueryData();
