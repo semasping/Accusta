@@ -5,6 +5,7 @@ In this service you can see:
   * Author Rewards
   * Curations Rewards
   * Witness SP rewards
+  * Benefactor SP rewards
 * Steem Power down statistics
 * Full history of Account wallet with filters
 
@@ -20,9 +21,9 @@ In this service you can see:
 * ~~Steem power down statistic~~ ([Done, more info...](https://steemit.com/accusta/@semasping/accusta-update-new-functions-v-0-3))
 * ~~Full history of Account wallet with filters~~ ([Done, more info...](https://steemit.com/accusta/@semasping/accusta-new-functions-added-history-transaction-with-filters-v-0-4))
 * ~~Witness SP rewards~~
-* Benefactor SP rewards
+* ~~Benefactor SP rewards~~
 * rework post and authors rewards (to show together)
-* more graphs and charts
+* more graphs and charts (in process)
 
 
 ## License

@@ -374,11 +374,7 @@ class BenefactorRewardsController extends Controller
             ]
         ]);
         foreach ($data_by_monthes as $state) {
-            if ($state['op'][1]['author'] != $acc) {
-                //dd($state);
-                $r = 132;
-            }
-            //dd($state);
+
             if ($type == 'In') {
                 $arr['author'] = $state['op'][1]['author'];
             }
