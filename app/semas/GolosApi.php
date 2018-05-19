@@ -12,6 +12,7 @@ ini_set('memory_limit', '1204M');
 
 use GrapheneNodeClient\Commands\CommandQueryData;
 use GrapheneNodeClient\Commands\Commands;
+use GrapheneNodeClient\Connectors\WebSocket\GolosWSConnector;
 use Illuminate\Support\Facades\Cache;
 use WebSocket\Exception;
 use MongoDB;
@@ -19,6 +20,13 @@ use MongoDB;
 class GolosApi
 {
     public static $attempt = 0;
+
+    private static $connector;
+
+    public static function getConnector(){
+        self::$connector = new GolosWSConnector();
+        return self::$connector;
+    }
 
     public static function getHistoryAccount($acc, $from, $limit = 2000)
     {
@@ -75,8 +83,8 @@ class GolosApi
             }
         }
         try {
-            //$command = new GetAccountHistoryCommand(new GolosApiWsConnector());
-            $command = new Commands(new GolosApiWsConnector());
+            //$command = new GetAccountHistoryCommand(self::getConnector());
+            $command = new Commands(self::getConnector());
             $command = $command->get_account_history();
 
             $commandQuery = new CommandQueryData();
@@ -355,8 +363,8 @@ class GolosApi
 
     public static function getVotes($acc)
     {
-        //$command = new GetAccountVotesCommand(new GolosApiWsConnector());
-        $command = new Commands(new GolosApiWsConnector());
+        //$command = new GetAccountVotesCommand(self::getConnector());
+        $command = new Commands(self::getConnector());
         $command = $command->get_account_votes();
 
         $commandQuery = new CommandQueryData();
@@ -370,8 +378,8 @@ class GolosApi
     {
         $content = '';
         try {
-//            $command = new GetContentCommand(new GolosApiWsConnector());
-            $command = new Commands(new GolosApiWsConnector());
+//            $command = new GetContentCommand(self::getConnector());
+            $command = new Commands(self::getConnector());
             $command = $command->get_content();
 
             $commandQuery = new CommandQueryData();
@@ -392,8 +400,8 @@ class GolosApi
     {
         $content = '';
         try {
-            //$command = new GetDiscussionsByBlogCommand(new GolosApiWsConnector());
-            $command = new Commands(new GolosApiWsConnector());
+            //$command = new GetDiscussionsByBlogCommand(self::getConnector());
+            $command = new Commands(self::getConnector());
             $command = $command->get_discussions_by_blog();
 
             $commandQuery = new CommandQueryData();
@@ -421,8 +429,8 @@ class GolosApi
     {
         $content = '';
         try {
-            //$command = new GetContentCommand(new GolosApiWsConnector());
-            $command = new Commands(new GolosApiWsConnector());
+            //$command = new GetContentCommand(self::getConnector());
+            $command = new Commands(self::getConnector());
             $command = $command->get_content();
 
             $commandQuery = new CommandQueryData();
@@ -448,8 +456,8 @@ class GolosApi
 
     public static function getAccountFull($acc)
     {
-        //$command = new GetAccountCommand(new GolosApiWsConnector());
-        $command = new Commands(new GolosApiWsConnector());
+        //$command = new GetAccountCommand(self::getConnector());
+        $command = new Commands(self::getConnector());
         $command = $command->get_accounts();
 
         $commandQuery = new CommandQueryData();
@@ -461,8 +469,8 @@ class GolosApi
 
     public static function getAccountsCount()
     {
-        //$command = new GetAccountCountCommand(new GolosApiWsConnector());
-        $command = new Commands(new GolosApiWsConnector());
+        //$command = new GetAccountCountCommand(self::getConnector());
+        $command = new Commands(self::getConnector());
         $command = $command->get_account_count();
 
         $commandQuery = new CommandQueryData();
@@ -473,8 +481,8 @@ class GolosApi
 
     public static function getCurrentPrice()
     {
-        //$command = new GetCurrentMedianHistoryPriceCommand(new GolosApiWsConnector());
-        $command = new Commands(new GolosApiWsConnector());
+        //$command = new GetCurrentMedianHistoryPriceCommand(self::getConnector());
+        $command = new Commands(self::getConnector());
         $command = $command->get_current_median_history_price();
 
         $commandQuery = new CommandQueryData();
@@ -485,8 +493,8 @@ class GolosApi
 
     public static function getBlockHeader($block)
     {
-        //$command = new GetBlockHeaderCommand(new GolosApiWsConnector());
-        $command = new Commands(new GolosApiWsConnector());
+        //$command = new GetBlockHeaderCommand(self::getConnector());
+        $command = new Commands(self::getConnector());
         $command = $command->get_block_header();
 
         $commandQuery = new CommandQueryData();
@@ -498,9 +506,9 @@ class GolosApi
 
     public static function disconnect()
     {
-        $connect = new GolosApiWsConnector();
+        $connect = self::getConnector();
 
-        $connect->destroyConnection();
+        //$connect->destroyConnection();
         AdminNotify::send('GolosDisconnect');
     }
 
@@ -508,8 +516,8 @@ class GolosApi
     {
         $content = '';
         try {
-            //$command = new GetDynamicGlobalPropertiesCommand(new GolosApiWsConnector());
-            $command = new Commands(new GolosApiWsConnector());
+            //$command = new GetDynamicGlobalPropertiesCommand(self::getConnector());
+            $command = new Commands(self::getConnector());
             $command = $command->get_dynamic_global_properties();
 
             $commandQuery = new CommandQueryData();
@@ -532,7 +540,7 @@ class GolosApi
             $commandQuery->setParamByKey('0', $block_id);
 
         //$command = new GetBlockCommand(new GolosWSConnector());
-        $command = new Commands(new GolosApiWsConnector());
+        $command = new Commands(self::getConnector());
         $command = $command->get_block();
 
             $content = $command->execute($commandQuery);
@@ -831,8 +839,8 @@ class GolosApi
     static function getFollowers(
         $account
     ) {
-        //$command = new GetFollowersCommand(new GolosApiWsConnector());
-        $command = new Commands(new GolosApiWsConnector());
+        //$command = new GetFollowersCommand(self::getConnector());
+        $command = new Commands(self::getConnector());
         $command = $command->get_followers();
 
         $commandQuery = new CommandQueryData();
