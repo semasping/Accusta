@@ -16,14 +16,14 @@
                 <thead>
                 <tr>
                     @if($type=='In')
-                        <td>From</td>
+                        <td>Автор</td>
                     @endif
                     @if($type=='Out')
-                        <td>To</td>
+                        <td>Кому</td>
                     @endif
                     <td>Permlink</td>
-                    <td class="sum">VESTS</td>
-                    <td class="sum">SP</td>
+                    <td class="sum">GESTS</td>
+                    <td class="sum">СГ</td>
                     <td>Timestamp</td>
                 </tr>
                 </thead>

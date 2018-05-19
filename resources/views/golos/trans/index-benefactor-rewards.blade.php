@@ -59,9 +59,9 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Benefactor Rewards statistics for {{'@'.$acc}}</div>
+                    <div class="panel-heading">Бенефециарские вознаграждения аккаунта: {{'@'.$acc}}</div>
                     <div class="panel-body">{!! $chartRewardsIn->render() !!}</div>
-                    <div class="panel-footer">Sums All rewards: {!! $dataIn['allSP'] !!} Steem Power</div>
+                    <div class="panel-footer">Сумма всех вознаграждений: {!! $dataIn['allSP'] !!} Сила Голоса</div>
                 </div>
                 <div class="panel-group" id="aIn" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataIn['month']) ?>
@@ -72,9 +72,9 @@
             </div>
             <div class="col-md-6">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Benefactor Rewards from your post to others accounts</div>
+                    <div class="panel-heading">Бенефециарские вознаграждения с ваших постов другим аккаунтам</div>
                     <div class="panel-body">{!! $chartRewardsOut->render() !!}</div>
-                    <div class="panel-footer">Sums All rewards: {!! $dataOut['allSP'] !!} Steem Power</div>
+                    <div class="panel-footer">Сумма всех вознаграждений: {!! $dataOut['allSP'] !!} Сила Голоса</div>
                 </div>
                 <div class="panel-group" id="aOut" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataOut['month']) ?>
