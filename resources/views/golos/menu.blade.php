@@ -27,4 +27,9 @@
             Голосование за делегатов
         </a>
     @endif
+    @if(Route::has('trans_benefactor'))
+        <a class="navbar-brand" href="{{ route('trans_benefactor',[''.$account]) }}">
+            Статистика Бенефециарских вознаграждений
+        </a>
+    @endif
 </ul>
