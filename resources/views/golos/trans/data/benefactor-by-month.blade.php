@@ -3,7 +3,7 @@
         <h4 class="panel-title">
             <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
                href="#collapse{{ $type.$k }}" aria-expanded="false" aria-controls="collapse{{ $type.$k }}">
-                <div class="">{!! $m !!}: {!! $data['total'][$k] !!} Steem Power</div>
+                <div class="">{!! $m !!}: {!! $data['total'][$k] !!} Сила Голоса</div>
             </a>
         </h4>
     </div>
