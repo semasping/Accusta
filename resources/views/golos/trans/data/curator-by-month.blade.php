@@ -9,7 +9,7 @@
     </div>
     <div id="collapse{{ $type.$k }}" class="panel-collapse collapse" role="tabpanel"
          aria-labelledby="heading{{ $type.$k }}" data-month="{{ $data['date'][$k] }}" data-type="{{ $type }}"
-         data-href="/{{ '@'.$acc }}/benefactor/by_month/{{$type}}/{{$data['date'][$k]}}/">
+         data-href="/{{ '@'.$acc }}/curator/by_month/{{$type}}/{{$data['date'][$k]}}/">
         <div class="panel-body" id="body{{ $type.$data['date'][$k] }}">
 
             <table id="data{{ $type.$data['date'][$k] }}">

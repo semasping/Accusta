@@ -21,10 +21,15 @@ class GolosApi
 {
     public static $attempt = 0;
 
-    private static $connector;
+    private static $connector = null;
 
-    public static function getConnector(){
-        self::$connector = new GolosWSConnector();
+    public static function getConnector()
+    {
+        if (self::$connector == null) {
+            //self::$connector = new GolosWsConnector();
+            self::$connector = new GolosApiWsConnector();
+        }
+
         return self::$connector;
     }
 
@@ -97,7 +102,7 @@ class GolosApi
             $content = $command->execute($commandQuery);
             //dd($content);
         } catch (Exception $e) {
-            //dd($e);
+            dd($e);
             //self::disconnect();
             return self::checkResult($content, '_getAccHistory', [$acc, $from, $limit]);
         }
@@ -272,8 +277,8 @@ class GolosApi
             Cache::put($key2 . '_status', 'working', 1);
             $t = $max;
             $limit = 2000;
-            if ($t-$processed<2000){
-                $limit = $t-$processed;
+            if ($t - $processed < 2000) {
+                $limit = $t - $processed;
             }
             while ($processed <= $t) {
                 $timestart = microtime(true);
@@ -309,7 +314,7 @@ class GolosApi
                 //$time4 = microtime(true);
 
                 $t = $t - 2001;
-                $processed = $processed+$limit;
+                $processed = $processed + $limit;
                 if ($t > 0) {
                     if ($t < 2000) {
                         $limit = $t;
@@ -508,7 +513,7 @@ class GolosApi
     {
         $connect = self::getConnector();
 
-        //$connect->destroyConnection();
+        $connect->destroyConnection();
         AdminNotify::send('GolosDisconnect');
     }
 
@@ -539,9 +544,9 @@ class GolosApi
             $commandQuery = new CommandQueryData();
             $commandQuery->setParamByKey('0', $block_id);
 
-        //$command = new GetBlockCommand(new GolosWSConnector());
-        $command = new Commands(self::getConnector());
-        $command = $command->get_block();
+            //$command = new GetBlockCommand(new GolosWSConnector());
+            $command = new Commands(self::getConnector());
+            $command = $command->get_block();
 
             $content = $command->execute($commandQuery);
         } catch (Exception $e) {

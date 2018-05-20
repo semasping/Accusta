@@ -32,4 +32,9 @@
             Статистика Бенефециарских вознаграждений
         </a>
     @endif
+    @if(Route::has('trans_curator'))
+        <a class="navbar-brand" href="{{ route('trans_curator',[''.$account]) }}">
+            Статистика Кураторских вознаграждений
+        </a>
+    @endif
 </ul>
