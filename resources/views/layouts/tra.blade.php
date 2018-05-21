@@ -35,11 +35,11 @@
         }
 
         .footer {
-            position: fixed;
+            position: absolute;
             bottom: 0;
             width: 100%;
             /* Set the fixed height of the footer here */
-            height: 120px;
+
             background-color: #f5f5f5;
         }
 
@@ -63,6 +63,32 @@
         .ml10 {
             margin-left: 10px;
         }
+
+        .navbar-fixed-left {
+            width: 220px;
+            position: fixed;
+            border-radius: 0;
+            height: 100%;
+        }
+
+        .navbar-fixed-left .navbar-nav > li {
+            float: none;  /* Cancel default li float: left */
+            width: auto;
+        }
+
+        .navbar-fixed-left + .container-fluid {
+            padding-left: 240px;
+        }
+
+        /* On using dropdown menu (To right shift popuped) */
+        .navbar-fixed-left .navbar-nav > li > .dropdown-menu {
+            margin-top: -50px;
+            margin-left: 220px;
+        }
+
+        .navbar>.container-fluid .navbar-brand {
+            margin-left: 0px;
+        }
     </style>
 
 
@@ -76,7 +102,7 @@
 <body>
 <div id="app" class=" ">
     <div class="">
-        <nav class="navbar navbar-default navbar-fixed-top">
+        <nav class="navbar navbar-default navbar-fixed-left">
             <div class="container-fluid">
                 <div class="navbar-header">
 
@@ -94,7 +120,7 @@
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
-@include(getenv('BCH_API').'.menu')
+                    @include(getenv('BCH_API').'.menu')
 
                     <!-- Right Side Of Navbar -->
                     {{--<ul class="nav navbar-nav navbar-right">
@@ -127,16 +153,17 @@
                 </div>
             </div>
         </nav>
-        <br>
-        <br>
-        @yield('content')
+        <div class="container-fluid">
+            @yield('content')
+        </div>
+        @include(getenv('BCH_API').'.new-articles-modal')
+        @include(getenv('BCH_API').'.footer')
     </div>
 </div>
 
 
 <br>
-@include(getenv('BCH_API').'.new-articles-modal')
-@include(getenv('BCH_API').'.footer')
+
 <!-- Scripts -->
 <!-- jQuery -->
 <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>

@@ -45,7 +45,7 @@
 @endsection
 
 @section ('content')
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <ul>
                 @foreach($errors->all() as $error)
@@ -55,7 +55,7 @@
             @include(getenv('BCH_API').'.form')
         </div>
     </div>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-6">
                 <div class="panel panel-default">

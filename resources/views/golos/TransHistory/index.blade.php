@@ -58,7 +58,7 @@
 @section ('content')
 
     {!! $grid !!}
-    <div class="container">
+    <div class="container-fluid">
         @if (session('status'))
             <div class="alert alert-success">
                 {{ session('status') }}

@@ -4,7 +4,7 @@
 
 
 @section ('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row" >
         <div class="col-lg-12">
             {!! Form::open(array('action' => 'TransHistoryController@show_withdraw_example', 'class' => 'form-horizontal', 'method' => 'get')) !!}
@@ -20,7 +20,7 @@
         </div>
     </div>
 </div>
-<div class="container">
+<div class="container-fluid">
     <div class="row" >
         <div class="col-lg-12">
             {!! $grid !!}
