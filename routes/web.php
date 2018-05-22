@@ -106,6 +106,10 @@ if (getenv('BCH_API') == 'steemit') {
 
     Route::get('/@{acc}/sg', 'PowerUpDownController@showAll')->name('trans_sg')->middleware(CheckHistoryAcc::class);
 
+
+    Route::get('/@{acc}/curator', 'CuratorRewardsController@showAll')->name('trans_curator')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/curator/by_month/{type}/{date}', 'CuratorRewardsController@getDataTableRewardsByMonth')->name('trans_curator_by_mont')->middleware(CheckHistoryAcc::class);
+
     Route::get('/@{acc}/benefactor', 'BenefactorRewardsController@showAll')->name('trans_benefactor')->middleware(CheckHistoryAcc::class);
     Route::get('/@{acc}/benefactor/by_month/{type}/{date}', 'BenefactorRewardsController@getDataTableRewardsByMonth')->name('trans_benefactor_by_mont')->middleware(CheckHistoryAcc::class);
 

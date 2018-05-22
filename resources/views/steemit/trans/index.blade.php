@@ -44,7 +44,7 @@
 @stop
 
 @section ('content')
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <ul>
                 @foreach($errors->all() as $error)

@@ -1,6 +1,6 @@
 @extends ('layouts.tra')
 
-@section('title')Accusta  -  {{ '@'.$account }}: Benefactor rewards statistics @endsection
+@section('title')Accusta  -  {{ '@'.$account }}: Curator rewards statistics @endsection
 
 
 @section('style')
@@ -45,7 +45,7 @@
 @endsection
 
 @section ('content')
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <ul>
                 @foreach($errors->all() as $error)
@@ -55,31 +55,18 @@
             @include(getenv('BCH_API').'.form')
         </div>
     </div>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Benefactor Rewards statistics for {{'@'.$acc}}</div>
+                    <div class="panel-heading">Curator Rewards statistics for {{'@'.$acc}}</div>
                     <div class="panel-body">{!! $chartRewardsIn->render() !!}</div>
                     <div class="panel-footer">Sums All rewards: {!! $dataIn['allSP'] !!} Steem Power</div>
                 </div>
                 <div class="panel-group" id="aIn" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataIn['month']) ?>
                     @foreach($dataIn['month'] as $k=>$m)
-                        @include('steemit.trans.data.benefactor-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
-                    @endforeach
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Benefactor Rewards from your post to others accounts</div>
-                    <div class="panel-body">{!! $chartRewardsOut->render() !!}</div>
-                    <div class="panel-footer">Sums All rewards: {!! $dataOut['allSP'] !!} Steem Power</div>
-                </div>
-                <div class="panel-group" id="aOut" role="tablist" aria-multiselectable="true">
-                    <?php krsort($dataOut['month']) ?>
-                    @foreach($dataOut['month'] as $k=>$m)
-                        @include('steemit.trans.data.benefactor-by-month', [$k, 'data'=>$dataOut, $m, 'type'=>'Out'])
+                        @include('steemit.trans.data.curator-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
                     @endforeach
                 </div>
             </div>

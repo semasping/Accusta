@@ -5,7 +5,7 @@
         </a>
     </li>
     @if(Route::has('trans_by_month'))
-        <li {{ Route::is('trans_by_month')  ? ' class="active"' : null }}>
+        <li {{ Route::is('trans_by_month')  ? ' class=active' : null }}>
             <a href="{{ route('trans_by_month',[''.$account]) }}">
                 Статистика аккаунта по месяцам
             </a>

@@ -70,6 +70,9 @@
             border-radius: 0;
             height: 100%;
         }
+        .navbar-brand {
+            float: none;
+        }
 
         .navbar-fixed-left .navbar-nav > li {
             float: none;  /* Cancel default li float: left */

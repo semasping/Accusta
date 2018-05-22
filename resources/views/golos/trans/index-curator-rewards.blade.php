@@ -1,6 +1,6 @@
 @extends ('layouts.tra')
 
-@section('title')Accusta  -  {{ '@'.$account }}: Benefactor rewards statistics @endsection
+@section('title')Accusta  -  {{ '@'.$account }}: Кураторские вознаграждения @endsection
 
 
 @section('style')

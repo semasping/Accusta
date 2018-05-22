@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         @if (!empty($voteFor))
             <ul class="nav nav-tabs">
@@ -75,7 +75,7 @@
     </div>
 </div>
 <br>
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         @if (!empty($forWitness))
             <ul class="nav nav-tabs">
