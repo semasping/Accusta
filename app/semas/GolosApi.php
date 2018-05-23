@@ -513,7 +513,7 @@ class GolosApi
     {
         $connect = self::getConnector();
 
-        $connect->destroyConnection();
+        //$connect->destroyConnection();
         AdminNotify::send('GolosDisconnect');
     }
 
