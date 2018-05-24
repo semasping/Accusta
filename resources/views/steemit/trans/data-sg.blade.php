@@ -30,7 +30,7 @@
         <div class="row">
         @foreach($month as $key=>$month1)
             <?php if (isset ($wv_by_month[$key])) {
-                $wv = $wv_by_month[$key][0];
+                $wv = $wv_by_month[$key];
             } else {
                 $wv = collect([]);
             }?>
