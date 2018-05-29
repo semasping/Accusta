@@ -105,4 +105,29 @@ class BchApi
             return (new MongoDB\Client)->selectCollection('accusta', $account);
         }
     }
+
+
+
+    public static function GetDynamicGlobalProperties()
+    {
+        if (getenv('BCH_API') == 'golos') {
+            return GolosApi::GetDynamicGlobalProperties();
+        }
+
+        if (getenv('BCH_API') == 'steemit') {
+            return SteemitApi::GetDynamicGlobalProperties();
+        }
+    }
+
+
+    public static function getOpsInBlock($block_id)
+    {
+        if (getenv('BCH_API') == 'golos') {
+            return GolosApi::getOpsInBlock($block_id);
+        }
+
+        if (getenv('BCH_API') == 'steemit') {
+            return SteemitApi::getOpsInBlock($block_id);
+        }
+    }
 }
