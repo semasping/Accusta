@@ -1057,4 +1057,30 @@ class SteemitApi
             $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward_vests'])));
         }*/
     }
+
+    /**
+     * Receives all operations in the block
+     * @param $block_id
+     * @return array
+     */
+    public static function getOpsInBlock($block_id)
+    {
+        $content = '';
+        try {
+            $commandQuery = new CommandQueryData();
+            $commandQuery->setParamByKey('0', $block_id);
+
+            $command = new Commands(new GolosWsConnector());
+            $command = $command->get_ops_in_block();
+
+            $content = $command->execute($commandQuery);
+
+        }catch (Exception $e) {
+            GolosApi::disconnect();
+
+            return self::checkResult($content, 'getOpsInBlock', [$block_id]);
+        }
+
+        return self::checkResult($content, 'getOpsInBlock', [$block_id]);
+    }
 }
