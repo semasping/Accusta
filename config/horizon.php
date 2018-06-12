@@ -74,9 +74,16 @@ return [
         'production' => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ['default_accusta'],
+                'queue' => [getenv('BCH_API').'_default_accusta'],
                 'balance' => 'auto',
                 'processes' => 10,
+                'tries' => 3,
+            ],
+            'supervisor-author-rewards' => [
+                'connection' => 'redis',
+                'queue' => [getenv('BCH_API').'_process_author_rewards'],
+                'balance' => 'auto',
+                'processes' => 1,
                 'tries' => 3,
             ],
             'supervisor-update-load' => [
@@ -98,9 +105,16 @@ return [
         'local' => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ['default_accusta'],
+                'queue' => [getenv('BCH_API').'_default_accusta'],
                 'balance' => 'auto',
                 'processes' => 4,
+                'tries' => 3,
+            ],
+            'supervisor-author-rewards' => [
+                'connection' => 'redis',
+                'queue' => [getenv('BCH_API').'_process_author_rewards'],
+                'balance' => 'auto',
+                'processes' => 1,
                 'tries' => 3,
             ],
             'supervisor-update-load' => [
