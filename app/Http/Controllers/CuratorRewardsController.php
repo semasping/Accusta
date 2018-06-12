@@ -250,9 +250,6 @@ class CuratorRewardsController extends Controller
         if ($type == 'In') {
             $typeQ = '$eq';
         }
-        if ($type == 'Out') {
-            $typeQ = '$ne';
-        }
         if ($typeQ == '') {
             throw new Exception("Type is empty.");
         }
@@ -270,9 +267,6 @@ class CuratorRewardsController extends Controller
 
             if ($type == 'In') {
                 $arr['author'] = $state['op'][1]['comment_author'];
-            }
-            if ($type == 'Out') {
-                $arr['author'] = $state['op'][1]['benefactor'];
             }
 
             $arr['permlink'] = $state['op'][1]['comment_permlink'];

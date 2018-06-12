@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //GetHistoryAccountFullInCache::class
+
     ];
 
     /**
@@ -27,6 +28,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+            //->command('golos:getblock')->withoutOverlapping()->everyTenMinutes();
     }
 
     /**
