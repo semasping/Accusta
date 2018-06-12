@@ -130,4 +130,16 @@ class BchApi
             return SteemitApi::getOpsInBlock($block_id);
         }
     }
+
+    public static function getPost($author, $permlink)
+    {
+        echo 'GetPost for '.$author . '/'. $permlink . "\n";
+        if (getenv('BCH_API') == 'golos') {
+            return GolosApi::getContent($author,$permlink);
+        }
+
+        if (getenv('BCH_API') == 'steemit') {
+            return SteemitApi::getContent($author,$permlink);
+        }
+    }
 }

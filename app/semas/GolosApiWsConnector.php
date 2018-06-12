@@ -24,8 +24,17 @@ class GolosApiWsConnector extends WSConnectorAbstract
      *
      * @var string
      */
-    protected static $nodeURL = ['wss://api.golos.cf','wss://ws.golos.io','wss://ws17.golos.io'];
-    //protected $nodeURL = ['wss://ws.golos.io','wss://api.golos.cf'];
+    protected static $nodeURL = [
+        //'ws://80.241.216.146:8090',// не работаю никакие варианты
+        'wss://api.golos.cf',
+        'wss://ws17.golos.blog',
+        'wss://17.golos.cf',
+
+        //'wss://ws.golos.io',
+        //'wss://ws17.golos.io',
+
+    ];
+    //protected static $nodeURL = ['wss://ws.golos.io','wss://api.golos.cf'];
     //protected $nodeURL = 'wss://api.golos.cf';
     //protected static $nodeURL = 'ws://80.241.216.146:8090';// не работаю никакие варианты
 
