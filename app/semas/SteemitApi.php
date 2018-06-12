@@ -12,8 +12,10 @@ ini_set('memory_limit', '1204M');
 
 use GrapheneNodeClient\Commands\CommandQueryData;
 use GrapheneNodeClient\Commands\Commands;
+use GrapheneNodeClient\Commands\Single\BroadcastTransactionSynchronousCommand;
 use GrapheneNodeClient\Connectors\Http\SteemitHttpJsonRpcConnector;
 use GrapheneNodeClient\Connectors\WebSocket\SteemitWSConnector;
+use GrapheneNodeClient\Tools\Transaction;
 use Illuminate\Support\Facades\Cache;
 use WebSocket\Exception;
 use MongoDB;
@@ -1069,8 +1071,9 @@ class SteemitApi
         try {
             $commandQuery = new CommandQueryData();
             $commandQuery->setParamByKey('0', $block_id);
+            $commandQuery->setParamByKey('1', false);
 
-            $command = new Commands(new GolosWsConnector());
+            $command = new Commands(self::getConnector());
             $command = $command->get_ops_in_block();
 
             $content = $command->execute($commandQuery);
@@ -1082,5 +1085,53 @@ class SteemitApi
         }
 
         return self::checkResult($content, 'getOpsInBlock', [$block_id]);
+    }
+
+    /**
+     * Package sending STEEM/SBD  to any accounts
+     * @param array $accounts //example [['to'=>'semasping','amount'=>'0.001 STEEM','memo'=>'test'],['to'=>'semasping','amount'=>'0.002 STEEM','memo'=>'test2']]
+     * @param $from
+     * @param $wifFrom // active key
+     * @return bool
+     */
+    public static function sendTokenToMany($accounts, $from, $wifFrom)
+    {
+        $command = new BroadcastTransactionSynchronousCommand(self::getConnector());
+        $chainName = self::getConnector()->getPlatform();
+        $chunks = array_chunk($accounts, 50);
+        foreach ($chunks as $chunk) {
+            $tx = Transaction::init(self::getConnector());
+            $opNumber = 0;
+            foreach ($chunk as $data) {
+                $tx->setParamByKey(
+                    '0:operations:' . ($opNumber++),
+                    [
+                        'transfer',
+                        [
+                            'from' => $from,
+                            'to' => $data['to'],
+                            'amount' => $data['amount'],
+                            'memo' => $data['memo']
+                        ]
+                    ]
+                );
+
+            }
+            Transaction::sign($chainName, $tx, ['active' => $wifFrom]);
+            $answer = $command->execute(
+                $tx
+            );
+            if (isset($answer['result']['block_num']) && $answer['result']['block_num'] > 0) {
+                $m = PHP_EOL . date('Y.m.d H:i:s') . " - accounts got tokens in block {$answer['result']['block_num']}";
+                $return = $answer['result']['block_num'];
+            } else {
+                $m = PHP_EOL . date('Y.m.d H:i:s') . ' - error during sending tokens ';
+                $return = false;
+            }
+            echo $m;
+            AdminNotify::send($m);
+            return $return;
+        }
+
     }
 }
