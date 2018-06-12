@@ -96,7 +96,7 @@ return [
             'driver'   => 'mongodb',
             'host'     => env('MDB_HOST', 'localhost'),
             'port'     => env('MDB_PORT', 27017),
-            'database' => env('MDB_DATABASE', 'accusta'),
+            'database' => env('MDB_DATABASE', getenv('BCH_API').'_accusta_sys'),
             'username' => env('MDB_USERNAME'),
             'password' => env('MDB_PASSWORD'),
             'options'  => [

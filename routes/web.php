@@ -14,6 +14,7 @@
 
 use App\AccountTransaction;
 use App\Http\Middleware\CheckHistoryAcc;
+use App\semas\BchApi;
 use App\semas\GolosApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -48,10 +49,41 @@ Route::get('info',function (){
     phpinfo();
 });
 Route::get('mt',function (){
-    \App\semas\SteemitApi::getHistoryAccountFullInDBDesc('prc');
+    $rrr = BchApi::GetDynamicGlobalProperties();
+    dump($rrr);
+    $rrr = BchApi::getPost('golosboard','golosboard-notify-germanlifestyle-20180525t130726000z');
+    dump(($rrr));
     /*$at = new AccountTransaction();
     $tr = $at->where('account', 'semasping')->groupBy('type')->get(['type', 'block']);
     dump($tr->toArray());*/
+});
+Route::get('testSendToken', function (){
+    $accounts = [
+        0 => [
+            'to'=>'semasping',
+            'amount'=>'0.001 STEEM',
+            'memo'=>'test',
+        ],
+        1 => [
+            'to'=>'semasping',
+            'amount'=>'0.001 STEEM',
+            'memo'=>'test2',
+        ],
+        2 => [
+            'to'=>'semasping',
+            'amount'=>'0.001 STEEM',
+            'memo'=>'test3',
+        ],
+        3 => [
+            'to'=>'semasping',
+            'amount'=>'0.001 STEEM',
+            'memo'=>'test4',
+        ]
+    ];
+    $from = 'semasping';
+    $key = getenv('STEEM_SEMASPING_ACTIVE_WIF');
+    //$key = getenv('GOLOS_SEMASPING_ACTIVE_WIF');
+    \App\semas\SteemitApi::sendTokenToMany($accounts,$from,$key);
 });
 Route::get('mongo-test',function (){
     $transaction = \App\semas\SteemitApi::getHistoryAccount('semasping',1,0);
