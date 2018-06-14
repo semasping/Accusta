@@ -55,8 +55,8 @@ class CuratorRewardsController extends Controller
 
         if ($request->csv) {
             /*Tracker::trackEvent(['event' => 'CSV PowerUpDown']);*/
-            return true;
-            //return $this->exportToExcel($author->toArray(), 'BenefactorRewards', $acc);
+            $rewards = $this->getRewardsAll($acc);
+            return $this->exportToExcel($rewards->toArray(), 'CuratorRewards', $acc);
         }
 
         /*Tracker::trackEvent(['event' => 'PowerUpDown']);*/
@@ -273,6 +273,38 @@ class CuratorRewardsController extends Controller
             $arr['VESTS'] = $state['op'][1]['VESTS'];
             $arr['SP'] = BchApi::convertToSg($state['op'][1]['VESTS']);
             $arr['timestamp'] = $state['timestamp'];
+            $res_arr[] = $arr;
+        }
+        //dump($res_arr);
+        /*$grid = $this->getBenefactorInGrid($res_arr);
+        echo $grid;*/
+        return collect($res_arr);
+
+    }
+
+    public function getRewardsAll($acc)
+    {
+
+
+        $res_arr = [];
+        $collection = BchApi::getMongoDbCollection($acc);
+
+        $data_by_monthes = $collection->aggregate([
+            [
+                '$match' => [
+                    //'date' => ['$lt'=>$date_end],
+                    'type' => ['$eq' => 'curation_reward'],
+                    'op.curator' => ['$eq' => $acc]
+                ]
+            ]
+        ]);
+        foreach ($data_by_monthes as $state) {
+            $arr['author'] = $state['op'][1]['comment_author'];
+            $arr['permlink'] = $state['op'][1]['comment_permlink'];
+            $arr['VESTS'] = $state['op'][1]['VESTS'];
+            $arr['SP'] = BchApi::convertToSg($state['op'][1]['VESTS']);
+            $arr['timestamp'] = $state['timestamp'];
+
             $res_arr[] = $arr;
         }
         //dump($res_arr);

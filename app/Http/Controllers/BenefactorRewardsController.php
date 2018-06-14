@@ -55,8 +55,8 @@ class BenefactorRewardsController extends Controller
 
         if ($request->csv) {
             /*Tracker::trackEvent(['event' => 'CSV PowerUpDown']);*/
-            return true;
-            //return $this->exportToExcel($author->toArray(), 'BenefactorRewards', $acc);
+            $rewards = $this->getRewardsAll($acc,$request->type);
+            return $this->exportToExcel($rewards->toArray(), 'BenefactorRewards', $acc);
         }
 
         /*Tracker::trackEvent(['event' => 'PowerUpDown']);*/
@@ -394,6 +394,52 @@ class BenefactorRewardsController extends Controller
         return collect($res_arr);
 
     }
+    public function getRewardsAll($acc, $type)
+    {
+
+        $typeQ = '';
+        $res_arr = [];
+        $collection = BchApi::getMongoDbCollection($acc);
+        if ($type == 'In') {
+            $typeQ = '$eq';
+        }
+        if ($type == 'Out') {
+            $typeQ = '$ne';
+        }
+        if ($typeQ == '') {
+            throw new Exception("Type is empty.");
+        }
+        $data_by_monthes = $collection->aggregate([
+            [
+                '$match' => [
+                    //'date' => ['$lt'=>$date_end],
+                    'type' => ['$eq' => 'comment_benefactor_reward'],
+                    'op.benefactor' => [$typeQ => $acc]
+                ]
+            ]
+        ]);
+        foreach ($data_by_monthes as $state) {
+
+            if ($type == 'In') {
+                $arr['author'] = $state['op'][1]['author'];
+            }
+            if ($type == 'Out') {
+                $arr['author'] = $state['op'][1]['benefactor'];
+            }
+
+            $arr['permlink'] = $state['op'][1]['permlink'];
+            $arr['VESTS'] = $state['op'][1]['VESTS'];
+            $arr['SP'] = BchApi::convertToSg($state['op'][1]['VESTS']);
+            $arr['timestamp'] = $state['timestamp'];
+            $res_arr[] = $arr;
+        }
+        //dump($res_arr);
+        /*$grid = $this->getBenefactorInGrid($res_arr);
+        echo $grid;*/
+        return collect($res_arr);
+
+    }
+
 
     /**
      * @param $res_arr
