@@ -63,6 +63,10 @@
                     <div class="panel-body">{!! $chartRewardsIn->render() !!}</div>
                     <div class="panel-footer">Сумма всех вознаграждений: {!! $dataIn['allSP'] !!} Сила Голоса</div>
                 </div>
+                {!! link_to_route('trans_curator',
+        'Export Curator`s rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'curators'=>1, Request::getQueryString()],
+        ['class' => 'btn btn-info','role'=>"button"])
+        !!}
                 <div class="panel-group" id="aIn" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataIn['month']) ?>
                     @foreach($dataIn['month'] as $k=>$m)
