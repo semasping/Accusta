@@ -61,7 +61,14 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Benefactor Rewards statistics for {{'@'.$acc}}</div>
                     <div class="panel-body">{!! $chartRewardsIn->render() !!}</div>
-                    <div class="panel-footer">Sums All rewards: {!! $dataIn['allSP'] !!} Steem Power</div>
+                    <div class="panel-footer">
+                        Sums All rewards: {!! $dataIn['allSP'] !!} Steem Power
+                        {!! link_to_route('trans_benefactor',
+                                       'Export rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'type'=>'in', Request::getQueryString()],
+                                       ['class' => 'btn btn-info pull-right','role'=>"button"])
+                                       !!}
+                        <div class="clearfix"></div>
+                    </div>
                 </div>
                 <div class="panel-group" id="aIn" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataIn['month']) ?>
@@ -74,7 +81,14 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Benefactor Rewards from your post to others accounts</div>
                     <div class="panel-body">{!! $chartRewardsOut->render() !!}</div>
-                    <div class="panel-footer">Sums All rewards: {!! $dataOut['allSP'] !!} Steem Power</div>
+                    <div class="panel-footer">
+                        Sums All rewards: {!! $dataOut['allSP'] !!} Steem Power
+                        {!! link_to_route('trans_benefactor',
+               'Export rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'type'=>'out', Request::getQueryString()],
+               ['class' => 'btn btn-info pull-right','role'=>"button"])
+               !!}
+                        <div class="clearfix"></div>
+                    </div>
                 </div>
                 <div class="panel-group" id="aOut" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataOut['month']) ?>
@@ -93,25 +107,25 @@
 @endsection
 
 @prepend('js2')
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 
-    <script>
-        $('#aIn').on('show.bs.collapse', function (e) {
-            var id  = $(e.target).attr('id');
-            var month  = $(e.target).attr('data-month');
-            var type = $(e.target).attr('data-type');
-            //alert(month + type);
-            //$(this).find("#body"+type+month).load($(e.target).attr("data-href"));
-            var table = $('#data'+type+month).DataTable();
-            table.ajax.url( $(e.target).attr("data-href") ).load();
-        })
-        $('#aOut').on('show.bs.collapse', function (e) {
-            var id  = $(e.target).attr('id');
-            var month  = $(e.target).attr('data-month');
-            var type = $(e.target).attr('data-type');
-            //$(this).find("#body"+type+month).load($(e.target).attr("data-href"));
-            var table = $('#data'+type+month).DataTable();
-            table.ajax.url( $(e.target).attr("data-href") ).load();
-        })
-    </script>
+<script>
+    $('#aIn').on('show.bs.collapse', function (e) {
+        var id = $(e.target).attr('id');
+        var month = $(e.target).attr('data-month');
+        var type = $(e.target).attr('data-type');
+        //alert(month + type);
+        //$(this).find("#body"+type+month).load($(e.target).attr("data-href"));
+        var table = $('#data' + type + month).DataTable();
+        table.ajax.url($(e.target).attr("data-href")).load();
+    })
+    $('#aOut').on('show.bs.collapse', function (e) {
+        var id = $(e.target).attr('id');
+        var month = $(e.target).attr('data-month');
+        var type = $(e.target).attr('data-type');
+        //$(this).find("#body"+type+month).load($(e.target).attr("data-href"));
+        var table = $('#data' + type + month).DataTable();
+        table.ajax.url($(e.target).attr("data-href")).load();
+    })
+</script>
 @endprepend

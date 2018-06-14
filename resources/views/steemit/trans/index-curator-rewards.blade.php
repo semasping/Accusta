@@ -61,7 +61,16 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Curator Rewards statistics for {{'@'.$acc}}</div>
                     <div class="panel-body">{!! $chartRewardsIn->render() !!}</div>
-                    <div class="panel-footer">Sums All rewards: {!! $dataIn['allSP'] !!} Steem Power</div>
+                    <div class="panel-footer">
+                        Sums All rewards: {!! $dataIn['allSP'] !!} Steem Power
+                        {!! link_to_route('trans_curator',
+                   'Export Curator`s rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'curators'=>1, Request::getQueryString()],
+                   ['class' => 'btn btn-info pull-right','role'=>"button"])
+                   !!}
+                        <div class="clearfix"></div>
+
+                    </div>
+
                 </div>
                 <div class="panel-group" id="aIn" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataIn['month']) ?>

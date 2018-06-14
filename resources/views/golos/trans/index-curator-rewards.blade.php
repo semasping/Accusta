@@ -61,12 +61,17 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Кураторские вознаграждения аккаунта: {{'@'.$acc}}</div>
                     <div class="panel-body">{!! $chartRewardsIn->render() !!}</div>
-                    <div class="panel-footer">Сумма всех вознаграждений: {!! $dataIn['allSP'] !!} Сила Голоса</div>
-                </div>
-                {!! link_to_route('trans_curator',
+                    <div class="panel-footer">
+                        Сумма всех вознаграждений: {!! $dataIn['allSP'] !!} Сила Голоса
+                        {!! link_to_route('trans_curator',
         'Export Curator`s rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'curators'=>1, Request::getQueryString()],
-        ['class' => 'btn btn-info','role'=>"button"])
+        ['class' => 'btn btn-info pull-right','role'=>"button"])
         !!}
+                        <div class="clearfix"></div>
+
+                    </div>
+                </div>
+
                 <div class="panel-group" id="aIn" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataIn['month']) ?>
                     @foreach($dataIn['month'] as $k=>$m)
@@ -85,25 +90,25 @@
 @endsection
 
 @prepend('js2')
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 
-    <script>
-        $('#aIn').on('show.bs.collapse', function (e) {
-            var id  = $(e.target).attr('id');
-            var month  = $(e.target).attr('data-month');
-            var type = $(e.target).attr('data-type');
-            //alert(month + type);
-            //$(this).find("#body"+type+month).load($(e.target).attr("data-href"));
-            var table = $('#data'+type+month).DataTable();
-            table.ajax.url( $(e.target).attr("data-href") ).load();
-        })
-        $('#aOut').on('show.bs.collapse', function (e) {
-            var id  = $(e.target).attr('id');
-            var month  = $(e.target).attr('data-month');
-            var type = $(e.target).attr('data-type');
-            //$(this).find("#body"+type+month).load($(e.target).attr("data-href"));
-            var table = $('#data'+type+month).DataTable();
-            table.ajax.url( $(e.target).attr("data-href") ).load();
-        })
-    </script>
+<script>
+    $('#aIn').on('show.bs.collapse', function (e) {
+        var id = $(e.target).attr('id');
+        var month = $(e.target).attr('data-month');
+        var type = $(e.target).attr('data-type');
+        //alert(month + type);
+        //$(this).find("#body"+type+month).load($(e.target).attr("data-href"));
+        var table = $('#data' + type + month).DataTable();
+        table.ajax.url($(e.target).attr("data-href")).load();
+    })
+    $('#aOut').on('show.bs.collapse', function (e) {
+        var id = $(e.target).attr('id');
+        var month = $(e.target).attr('data-month');
+        var type = $(e.target).attr('data-type');
+        //$(this).find("#body"+type+month).load($(e.target).attr("data-href"));
+        var table = $('#data' + type + month).DataTable();
+        table.ajax.url($(e.target).attr("data-href")).load();
+    })
+</script>
 @endprepend
