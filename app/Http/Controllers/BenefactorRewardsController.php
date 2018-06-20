@@ -394,6 +394,14 @@ class BenefactorRewardsController extends Controller
         return collect($res_arr);
 
     }
+
+    /**
+     * get all existed rewards for export
+     * @param $acc
+     * @param $type
+     * @return \Illuminate\Support\Collection
+     * @throws Exception
+     */
     public function getRewardsAll($acc, $type)
     {
 
@@ -416,6 +424,11 @@ class BenefactorRewardsController extends Controller
                     'type' => ['$eq' => 'comment_benefactor_reward'],
                     'op.benefactor' => [$typeQ => $acc]
                 ]
+            ],
+            [
+                '$sort' => [
+                    'timestamp' => -1
+                ]
             ]
         ]);
         foreach ($data_by_monthes as $state) {
@@ -430,7 +443,8 @@ class BenefactorRewardsController extends Controller
             $arr['permlink'] = $state['op'][1]['permlink'];
             $arr['VESTS'] = $state['op'][1]['VESTS'];
             $arr['SP'] = BchApi::convertToSg($state['op'][1]['VESTS']);
-            $arr['timestamp'] = $state['timestamp'];
+            $arr['timestamp'] = Date::parse($state['timestamp'])->format('Y-m-d H:i:s');
+
             $res_arr[] = $arr;
         }
         //dump($res_arr);

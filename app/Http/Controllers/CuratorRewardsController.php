@@ -150,7 +150,6 @@ class CuratorRewardsController extends Controller
     }
 
 
-
     private function getChartRewardsIn($data, $acc)
     {
 
@@ -282,6 +281,11 @@ class CuratorRewardsController extends Controller
 
     }
 
+    /**
+     * get all existed rewards for export
+     * @param $acc
+     * @return \Illuminate\Support\Collection
+     */
     public function getRewardsAll($acc)
     {
 
@@ -294,7 +298,13 @@ class CuratorRewardsController extends Controller
                 '$match' => [
                     //'date' => ['$lt'=>$date_end],
                     'type' => ['$eq' => 'curation_reward'],
-                    'op.curator' => ['$eq' => $acc]
+                    'op.curator' => ['$eq' => $acc],
+
+                ]
+            ],
+            [
+                '$sort' => [
+                    'timestamp' => -1
                 ]
             ]
         ]);
@@ -303,7 +313,7 @@ class CuratorRewardsController extends Controller
             $arr['permlink'] = $state['op'][1]['comment_permlink'];
             $arr['VESTS'] = $state['op'][1]['VESTS'];
             $arr['SP'] = BchApi::convertToSg($state['op'][1]['VESTS']);
-            $arr['timestamp'] = $state['timestamp'];
+            $arr['timestamp'] = Date::parse($state['timestamp'])->format('Y-m-d H:i:s');
 
             $res_arr[] = $arr;
         }
