@@ -55,7 +55,7 @@ class BenefactorRewardsController extends Controller
 
         if ($request->csv) {
             /*Tracker::trackEvent(['event' => 'CSV PowerUpDown']);*/
-            $rewards = $this->getRewardsAll($acc,$request->type);
+            $rewards = $this->getRewardsAll($acc,$request->get('type'));
             return $this->exportToExcel($rewards->toArray(), 'BenefactorRewards', $acc);
         }
 
