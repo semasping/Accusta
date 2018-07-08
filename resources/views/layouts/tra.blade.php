@@ -41,6 +41,7 @@
             /* Set the fixed height of the footer here */
 
             background-color: #f5f5f5;
+            padding: 5px;
         }
 
         /* Custom page CSS
@@ -155,12 +156,13 @@
                     </ul>--}}
                 </div>
             </div>
+            @include(getenv('BCH_API').'.footer')
         </nav>
         <div class="container-fluid">
             @yield('content')
         </div>
         @include(getenv('BCH_API').'.new-articles-modal')
-        @include(getenv('BCH_API').'.footer')
+
     </div>
 </div>
 
