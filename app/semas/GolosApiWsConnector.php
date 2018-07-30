@@ -26,8 +26,9 @@ class GolosApiWsConnector extends WSConnectorAbstract
      */
     protected static $nodeURL = [
         //'ws://80.241.216.146:8090',// не работаю никакие варианты
-        'wss://ws.golos.blog',
+
         'wss://api.golos.cf',
+        'wss://ws.golos.blog',
         'wss://17.golos.cf',
 
         //'wss://ws.golos.io',
@@ -41,7 +42,7 @@ class GolosApiWsConnector extends WSConnectorAbstract
 
 
     public function destroyConnection() {
-        //self::$connection = null;
+        self::$connection = null;
     }
 
 

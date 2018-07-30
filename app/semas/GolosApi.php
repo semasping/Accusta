@@ -463,15 +463,24 @@ class GolosApi
 
     public static function getAccountFull($acc)
     {
-        //$command = new GetAccountCommand(self::getConnector());
-        $command = new Commands(self::getConnector());
-        $command = $command->get_accounts();
+        $content = '';
+        try {
+            //$command = new GetAccountCommand(self::getConnector());
+            $command = new Commands(self::getConnector());
+            $command = $command->get_accounts();
 
-        $commandQuery = new CommandQueryData();
-        $commandQuery->setParamByKey('0', [$acc]);
-        $content = $command->execute($commandQuery);
+            $commandQuery = new CommandQueryData();
+            $commandQuery->setParamByKey('0', [$acc]);
+            $content = $command->execute($commandQuery);
 
-        return $content;
+        } catch (Exception $e) {
+            GolosApi::disconnect();
+
+            return self::checkResult($content, 'getAccountFull', [$acc]);
+
+        }
+
+        return self::checkResult($content, 'getAccountFull', [$acc]);
     }
 
     public static function getAccountsCount()
@@ -515,7 +524,7 @@ class GolosApi
     {
         $connect = self::getConnector();
 
-        //$connect->destroyConnection();
+        $connect->destroyConnection();
         AdminNotify::send('GolosDisconnect');
     }
 
