@@ -93,6 +93,26 @@
         .navbar>.container-fluid .navbar-brand {
             margin-left: 0px;
         }
+
+        .slabel {
+            font-size: 12px;
+        }
+        .slabel .month {
+            display: inline-block;
+            width: 62px;
+        }
+        .slabel .gbg {
+            display: inline-block;
+            width: 110px;
+        }
+        .slabel .golos {
+            display: inline-block;
+            width: 130px;
+        }
+        .slabel .sg {
+            display: inline-block;
+
+        }
     </style>
 
 
