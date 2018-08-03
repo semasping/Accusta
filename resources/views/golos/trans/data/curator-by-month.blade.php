@@ -59,7 +59,7 @@
                 {data: 'SP'},
                 {data: 'timestamp'}
             ],
-            "order": [[0, "desc"]],
+            "order": [[4, "desc"]],
             "footerCallback": function (row, data, start, end, display) {
                 var api = this.api();
 
