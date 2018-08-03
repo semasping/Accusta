@@ -120,6 +120,11 @@ class CuratorRewardsController extends Controller
                     'count' => ['$sum' => 1]
                 ]
             ],
+            [
+                '$sort' => [
+                    'timestamp' => -1
+                ]
+            ]
         ]);
         foreach ($data_by_monthes as $state) {
             //dd($state);

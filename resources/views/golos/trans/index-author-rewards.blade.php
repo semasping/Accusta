@@ -62,7 +62,13 @@
                     <div class="panel-heading">Авторские вознаграждения аккаунта: {{'@'.$acc}}</div>
                     {{--<div class="panel-body">{!! $chartRewardsIn->render() !!}</div>--}}
                     <div class="panel-footer slabel">
-                        <span class="slabel all">Сумма всех вознаграждений</span><br>
+                        {!! link_to_route('trans_by_month',
+                                       'Export rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'type'=>'in'],
+                                       ['class' => 'btn btn-info pull-right','role'=>"button"])
+                                       !!}
+
+                        <span class="slabel all">Сумма всех вознаграждений</span>
+                        <br>
                         <span class="slabel gbg">| {!! $dataIn['allSBD'] !!} GBG</span>
                         <span class="slabel golos">| {!! $dataIn['allSTEEM'] !!} GOLOS </span>
                         <span class="slabel sg">| {!! $dataIn['allSP'] !!} СГ</span>

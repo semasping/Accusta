@@ -13,6 +13,7 @@ use App\semas\BchApi;
 use Exception;
 use Illuminate\Http\Request;
 use Jenssegers\Date\Date;
+use Maatwebsite\Excel\Facades\Excel;
 use MongoDB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
@@ -38,39 +39,13 @@ class AuthorRewardsController extends Controller
         $acc = str_replace('@', '', $acc);
         $acc = mb_strtolower($acc);
         $acc = trim($acc);
-        /*Tracker::trackEvent(['event' => 'AuthorRewards for @'.$acc]);
-        Tracker::trackEvent(['event' => 'AuthorRewards']);
-        Tracker::trackEvent(['event' => '@'.$acc]);*/
-        /*
-                $collection = BchApi::getMongoDbCollection($acc);
-                //$data = $collection->find(['op'=>'producer_reward']);
-                $rewards_by_monthes = $collection->aggregate([
-                    //['$group'=>['_id'=>['date'=>['M'=>['$month'=>'$date'], 'Y' => ['$year' => '$date']]]]],
-                    ['$match' => ['type' => ['$eq' => 'author_reward']]],
 
-                    //['$limit'=> 60],
-                    //['$unwind' => '$op'],
-                     //['$group' => ['_id' => ['date' => ['M' => ['$month' => '$date'], 'Y' => ['$year' => '$date'],]], 'total' => ['$sum' => '$op.VESTS'], 'total2' => ['$sum' => '$op.STEEM']]],
-                    //['$sort'=>['$date']]
-                ]);
-        //dd($rewards_by_monthes);
-                foreach ($rewards_by_monthes as $state) {
-          //          dd($state);
-                    $date = Date::parse($state['_id']['date']['d'] . $state['_id']['date']['M'] . '.' . $state['_id']['date']['Y']);
-                    //$arr['date'] = Date::parse($state['timestamp'])->format('Y F d h:i');
-                    $arr['timestamp'] = $state['timestamp'];
-                    $arr['permlink'] = $state['op']['1']['permlink'];
-                    //$arr['sbd_payout'] = $state['op']['1']['sbd_payout'];
-                    //$arr['steem_payout'] = $state['op']['1']['steem_payout'];
-                    //$arr['vesting_payout'] = $state['op']['1']['vesting_payout'];
-                    //$arr['VESTS'] = $state['op']['1']['VESTS'];
-                    $arr['GESTS'] = $state['op']['1']['VESTS'];
-                    $arr['GOLOS'] = $state['op']['1']['STEEM'];
-                    $arr['GBG'] = $state['op']['1']['SBD'];
-                    $arr['SP'] = BchApi::convertToSg($arr['GESTS']);
-                    $res_arr[] = $arr;
-                }
-                $author = collect($res_arr)->sortByDesc('timestamp');*/
+
+        if ($request->csv) {
+            /*Tracker::trackEvent(['event' => 'CSV PowerUpDown']);*/
+            $rewards = $this->getRewardsAll($acc);
+            return $this->exportToExcel($rewards->toArray(), 'AuthorRewards', $acc);
+        }
 
         $dataIn = $this->getRewardsIn($acc);
         $chartRewardsIn = $this->getChartRewardsIn($dataIn, $acc);
@@ -136,6 +111,11 @@ class AuthorRewardsController extends Controller
                     'count' => ['$sum' => 1]
                 ]
             ],
+            [
+                '$sort' => [
+                    'timestamp' => -1
+                ]
+            ]
         ]);
         foreach ($data_by_monthes as $state) {
             //dd($state);
@@ -282,6 +262,11 @@ class AuthorRewardsController extends Controller
                     'type' => ['$eq' => 'author_reward'],
                     'op.author' => [$typeQ => $acc]
                 ]
+            ],
+            [
+                '$sort' => [
+                    'timestamp' => -1
+                ]
             ]
         ]);
         foreach ($data_by_monthes as $state) {
@@ -293,6 +278,55 @@ class AuthorRewardsController extends Controller
                 $arr['author'] = $state['op'][1]['author'];
             }
 
+            $arr['permlink'] = $state['op'][1]['permlink'];
+            $arr['STEEM'] = $state['op'][1]['STEEM'];
+            $arr['SBD'] = $state['op'][1]['SBD'];
+            $arr['VESTS'] = $state['op'][1]['VESTS'];
+            $arr['SP'] = BchApi::convertToSg($state['op'][1]['VESTS']);
+            $arr['timestamp'] = $state['timestamp'];
+            $res_arr[] = $arr;
+        }
+        //dump($res_arr);
+        /*$grid = $this->getBenefactorInGrid($res_arr);
+        echo $grid;*/
+        return collect($res_arr);
+
+    }
+
+    /**
+     * get all existed rewards for export
+     * @param $acc
+     * @return \Illuminate\Support\Collection
+     */
+    public function getRewardsAll($acc)
+    {
+
+
+        $res_arr = [];
+        $collection = BchApi::getMongoDbCollection($acc);
+
+        $data_by_monthes = $collection->aggregate([
+            [
+                '$match' => [
+                    //'date' => ['$lt'=>$date_end],
+                    'type' => ['$eq' => 'author_reward'],
+                    'op.author' => ['$eq' => $acc],
+
+                ]
+            ],
+            [
+                '$sort' => [
+                    'timestamp' => -1
+                ]
+            ]
+        ]);
+        foreach ($data_by_monthes as $state) {
+            $arr['SBD'] = 0;
+            $arr['STEEM'] = 0;
+            $arr['VESTS'] = 0;
+            $arr['SP'] = 0;
+
+            $arr['author'] = $state['op'][1]['author'];
             $arr['permlink'] = $state['op'][1]['permlink'];
             $arr['STEEM'] = $state['op'][1]['STEEM'];
             $arr['SBD'] = $state['op'][1]['SBD'];
