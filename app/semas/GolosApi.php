@@ -8,7 +8,7 @@
 
 namespace App\semas;
 
-ini_set('memory_limit', '1204M');
+ini_set('memory_limit', '2500M');
 
 use GrapheneNodeClient\Commands\CommandQueryData;
 use GrapheneNodeClient\Commands\Commands;
@@ -708,7 +708,8 @@ class GolosApi
 
     public static function getData($acc, $max)
     {
-        return Cache::remember('tr' . $acc . $max, 1, function () use ($max, $acc) {
+        AdminNotify::send('tr' . $acc . $max);
+        return Cache::remember('tr' . $acc . $max, 10, function () use ($max, $acc) {
             $history = [];
             $data = [];
             $account_create = [];
@@ -753,13 +754,13 @@ class GolosApi
                             //    $reward = $this->processReward($item);
 
                             //$block = $item[1]['block'];
-                            //$permlink = $item[1]['op'][1]['permlink'];
-                            $author_data[$h]['block'] = $item[1]['block'];
-                            $author_data[$h]['timestamp'] = $item[1]['timestamp'];
-                            $author_data[$h]['permlink'] = $item[1]['op'][1]['permlink'];
-                            $author_data[$h]['GBG'] = str_replace(' GBG', '', $item[1]['op'][1]['sbd_payout']);
-                            $author_data[$h]['GOLOS'] = str_replace(' GOLOS', '', $item[1]['op'][1]['steem_payout']);
-                            $author_data[$h]['GESTS'] = str_replace(' GESTS', '', $item[1]['op'][1]['vesting_payout']);
+                            $permlink = $item[1]['op'][1]['permlink'];
+                            $author_data[$permlink]['block'] = $item[1]['block'];
+                            $author_data[$permlink]['timestamp'] = $item[1]['timestamp'];
+                            $author_data[$permlink]['permlink'] = $item[1]['op'][1]['permlink'];
+                            $author_data[$permlink]['GBG'] = str_replace(' GBG', '', $item[1]['op'][1]['sbd_payout']);
+                            $author_data[$permlink]['GOLOS'] = str_replace(' GOLOS', '', $item[1]['op'][1]['steem_payout']);
+                            $author_data[$permlink]['GESTS'] = str_replace(' GESTS', '', $item[1]['op'][1]['vesting_payout']);
 
                             //->delay($date);
                         }
@@ -770,12 +771,12 @@ class GolosApi
                             //    $reward = $this->processReward($item);
                             //$block = $item[1]['block'];
 
-                            //$permlink = $item[1]['op'][1]['permlink'];
-                            $kur_data[$h]['block'] = $item[1]['block'];
-                            $kur_data[$h]['timestamp'] = $item[1]['timestamp'];
-                            $kur_data[$h]['author'] = $item[1]['op'][1]['comment_author'];
-                            $kur_data[$h]['permlink'] = $item[1]['op'][1]['comment_permlink'];
-                            $kur_data[$h]['GESTS'] = str_replace(' GESTS', '', $item[1]['op'][1]['reward']);
+                            $permlink = $item[1]['op'][1]['comment_permlink'];
+                            $kur_data[$permlink]['block'] = $item[1]['block'];
+                            $kur_data[$permlink]['timestamp'] = $item[1]['timestamp'];
+                            $kur_data[$permlink]['author'] = $item[1]['op'][1]['comment_author'];
+                            $kur_data[$permlink]['permlink'] = $item[1]['op'][1]['comment_permlink'];
+                            $kur_data[$permlink]['GESTS'] = str_replace(' GESTS', '', $item[1]['op'][1]['reward']);
                             //->delay($date);
                         }
 
@@ -830,10 +831,12 @@ class GolosApi
                     break;
                 }
                 $qq++;
-                if ($qq > 10000) {
-                    AdminNotify::send('$qq > 10000 exit');
+                if ($qq > 100000) {
+                    AdminNotify::send('$qq > 100000 exit');
                     break;
                 }
+
+
             }
             $data['account_create'] = $account_create;
             $data['author_reward'] = $author_data;
@@ -846,7 +849,8 @@ class GolosApi
 
                 //dump($history['transfer'][$i]);
             }*/
-
+            AdminNotify::send('i' . $i);
+            //mail('semasping@gmail.com','laravel vp',print_r($post_data,true));
             return $data;
         });
     }
@@ -1040,4 +1044,133 @@ class GolosApi
 
     }
 
+    public static function vote($acc, $key, $permlink, $author)
+    {
+        $command = "node GolosVote.js --acc=$acc --pp=$permlink --pa=$author";
+        exec($command . " --key=$key", $o, $r);
+        dump($o, $r);
+        $alreadyVote = collect($o)->filter(function ($item) {
+            if (strpos($item, 'You have already voted in a similar way') !== false) {
+                return $item;
+            }
+        });
+        if ($alreadyVote->count() > 0) {
+            AdminNotify::send('Already voted:' . print_r($alreadyVote, true));
+
+            return true;
+        }
+        $errorVote = collect($o)->filter(function ($item) {
+            if (strpos($item, 'Error') !== false) {
+                return $item;
+            }
+        });
+        if ($errorVote->count() > 0) {
+            AdminNotify::send('Error vote:' . print_r($errorVote, true) . "\n" . $command);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function comment($acc, $key, $permlink, $author, $body)
+    {
+        //AdminNotify::send("node GolosComment.js --acc=$acc --key=.... --pp=$permlink --pa=$author --body='$body'");
+        //$author = str_replace('.','',$author);
+        $command = "node GolosComment.js --acc=$acc --pp=$permlink --pa=$author --body='$body'";
+        exec($command . " --key=$key", $o, $r);
+        dump($o, $r);
+        $errorComment = collect($o)->filter(function ($item) {
+            if (strpos($item, 'Error') !== false) {
+                return $item;
+            }
+        });
+        if ($errorComment->count() > 0) {
+            AdminNotify::send('Error comment:' . print_r($errorComment, true) . "\n" . $command . "\n" . 'body:' . $body);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function checkFollow($account, $author)
+    {
+        $followers = self::getFollowers($account);
+        //dump($followers);
+        $followers = collect($followers)->pluck('follower')->toArray();
+        //dump($followers);
+        if (in_array($author, $followers)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function getComments($author, $permlink)
+    {
+        $content = '';
+        try {
+            //$command = new GetContentRepliesCommand(new GolosWsConnector());
+
+            $commandQuery = new CommandQueryData();
+            $commandQuery->setParamByKey('0', $author);
+            $commandQuery->setParamByKey('1', $permlink);
+
+            $command = new Commands(self::getConnector());
+
+            $command = $command->get_content_replies();
+            $content = $command->execute($commandQuery);
+
+        } catch (Exception $e) {
+            GolosApi::disconnect();
+
+            return self::checkResult($content, 'getComments', [$author, $permlink]);
+        }
+
+        return self::checkResult($content, 'getComments', [$author, $permlink]);
+    }
+
+    public static function getPostVotes($author, $permlink)
+    {
+        $content = '';
+        try {
+
+            $commandQuery = new CommandQueryData();
+            $commandQuery->setParamByKey('0', $author);
+            $commandQuery->setParamByKey('1', $permlink);
+
+            $command = new Commands(self::getConnector());
+
+            $command = $command->get_active_votes();
+            $content = $command->execute($commandQuery);
+
+        } catch (Exception $e) {
+            self::disconnect();
+
+            return self::checkResult($content, 'getPostVotes', [$author, $permlink]);
+        }
+
+        return self::checkResult($content, 'getPostVotes', [$author, $permlink]);
+    }
+
+
+    /**
+     * @param $post
+     * @param $acc
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public static function check_comment($post, $acc)
+    {
+        $link = $post['link'];
+        $result = explode('/@', $link);
+        $permlink = explode("/", $result[1]);
+        $permlink = $permlink[1];
+        $comments = self::getComments($post['author'], $permlink);
+        $comments = collect($comments);
+        $comment = $comments->where('author', $acc);
+
+        return $comment;
+    }
 }

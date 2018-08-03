@@ -9,6 +9,10 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Queue\Jobs\Job;
 
+/**
+ * Class BchGetBlocks
+ * @package App\Console\Commands
+ */
 class BchGetBlocks extends Command
 {
     /**
@@ -76,7 +80,7 @@ class BchGetBlocks extends Command
     }
 
     /**
-     * @return array|bool|string
+     * @return integer
      */
     private function getLastProcessedBlock()
     {
