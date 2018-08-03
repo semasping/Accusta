@@ -37,11 +37,11 @@ class GolosApi
 
     public static function getHistoryAccount($acc, $from, $limit = 2000)
     {
-        $key = "2golos_getacchistory.$acc.$from";
+        $key = "3golos_getacchistory.$acc.$from";
         if (Cache::get($key . '_status') != 'working') {
             Cache::put($key . '_status', 'working', 2);
             if ($from % 2000 == 0) {
-                //AdminNotify::send("to set cache getHistoryAccount($acc, $from, $limit)");
+                //AdminNotify::send("to set cache getHistoryAccount($acc, $from, $limit) key:$key");
                 //if ($acc==' vp-bodyform')
                 //Cache::forget("2golos_getacchistory.vp-bodyform.$from");
 
