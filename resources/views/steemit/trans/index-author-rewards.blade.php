@@ -60,7 +60,11 @@
             <div class="col-md-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">Author Rewards statistics for {{'@'.$acc}}</div>
-                    {{--<div class="panel-body">{!! $chartRewardsIn->render() !!}</div>--}}
+                    <div class="panel-body">
+                        {!! $chartRewardsSP->render() !!}
+                        {!! $chartRewardsSTEEM->render() !!}
+                        {!! $chartRewardsSBD->render() !!}
+                    </div>
                     <div class="panel-footer slabel">
                         {!! link_to_route('trans_by_month',
                                        'Export rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'type'=>'in'],
