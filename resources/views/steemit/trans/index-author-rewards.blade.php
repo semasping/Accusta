@@ -1,6 +1,6 @@
 @extends ('layouts.tra')
 
-@section('title')Accusta  -  {{ '@'.$account }}: Curator rewards statistics @endsection
+@section('title')Accusta  -  {{ '@'.$account }}: Author rewards statistics @endsection
 
 
 @section('style')
@@ -59,14 +59,26 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Curator Rewards statistics for {{'@'.$acc}}</div>
-                    <div class="panel-body">{!! $chartRewardsIn->render() !!}</div>
-                    <div class="panel-footer">Sums All rewards: {!! $dataIn['allSP'] !!} Steem Power</div>
+                    <div class="panel-heading">Author Rewards statistics for {{'@'.$acc}}</div>
+                    {{--<div class="panel-body">{!! $chartRewardsIn->render() !!}</div>--}}
+                    <div class="panel-footer slabel">
+                        {!! link_to_route('trans_by_month',
+                                       'Export rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'type'=>'in'],
+                                       ['class' => 'btn btn-info pull-right','role'=>"button"])
+                                       !!}
+
+                        <span class="slabel all">Sums All rewards</span>
+                        <br>
+                        <span class="slabel gbg">| {!! $dataIn['allSBD'] !!} SBD</span>
+                        <span class="slabel golos">| {!! $dataIn['allSTEEM'] !!} STEEM </span>
+                        <span class="slabel sg">| {!! $dataIn['allSP'] !!} SP</span>
+
+                    </div>
                 </div>
                 <div class="panel-group" id="aIn" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataIn['month']) ?>
                     @foreach($dataIn['month'] as $k=>$m)
-                        @include('steemit.trans.data.curator-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
+                        @include('steemit.trans.data.author-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
                     @endforeach
                 </div>
             </div>

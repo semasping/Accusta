@@ -133,7 +133,9 @@ if (getenv('BCH_API') == 'golos') {
 
 if (getenv('BCH_API') == 'steemit') {
     Route::get('/@{acc}', 'TransAccController@index')->middleware(CheckHistoryAcc::class)->name('home');
-    Route::get('/@{acc}/by_month', 'TransAccController@index')->name('trans_by_month')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/by_month', 'AuthorRewardsController@showAll')->name('trans_by_month')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/author/by_month/{type}/{date}', 'AuthorRewardsController@getDataTableRewardsByMonth')->name('trans_author_by_mont')->middleware(CheckHistoryAcc::class);
+
     Route::get('/@{acc}/by_weeks', 'TransAccController@indexByWeek')->name('trans_by_week')->middleware(CheckHistoryAcc::class);
     Route::get('/@{acc}/transaction_history', 'TransHistoryController@show')->name('trans_history')->middleware(CheckHistoryAcc::class);
     Route::get('/@{acc}/_transaction_history', 'TransHistoryController@dt_show')->name('trans_history_dt_show')->middleware(CheckHistoryAcc::class);
