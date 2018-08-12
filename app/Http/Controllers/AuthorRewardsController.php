@@ -93,6 +93,8 @@ class AuthorRewardsController extends Controller
         $res_arr = [];
         $data['month'] = [];
         $data['total'] = [];
+        $data['total_steem'] = [];
+        $data['total_sbd'] = [];
         $data['count'] = [];
         $data['allSBD'] = 0;
         $data['allSTEEM'] = 0;
