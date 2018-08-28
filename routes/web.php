@@ -154,6 +154,10 @@ if (getenv('BCH_API') == 'steemit') {
 
     Route::get('/@{acc}/witness_votes', 'WitnessPageController@show')->name('witness_votes')->middleware(CheckHistoryAcc::class);
 
+    Route::get('/@{acc}/rewards', 'RewardsPageController@showAll')->name('rewards_page')->middleware(CheckHistoryAcc::class);
+
+
+
 }
 
 

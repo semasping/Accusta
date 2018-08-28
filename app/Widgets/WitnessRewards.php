@@ -26,37 +26,14 @@ class WitnessRewards extends AbstractWidget
     {
         $summs['all'] = 0;
 
-        $collection = BchApi::getMongoDbCollection($this->config['account']);
-        //$data = $collection->find(['op'=>'producer_reward']);
-        $sums_by_monthes = $collection->aggregate([
-            //['$group'=>['_id'=>['date'=>['month'=>['$month'=>'timestamp']]], 'total'=>['$sum'=>'block']]]
-            ['$match' => ['type' => ['$eq' => 'producer_reward']]],
-            ['$unwind' => '$op'],
-            ['$group' => ['_id' => ['date' => ['M' => ['$month' => '$date'], 'Y' => ['$year' => '$date'],]], 'total' => ['$sum' => '$op.VESTS']]],
-            //['$sort'=>['$date']]
-        ]);
-        $sums_all = $collection->aggregate([
-            //['$group'=>['_id'=>['date'=>['month'=>['$month'=>'timestamp']]], 'total'=>['$sum'=>'block']]]
-            ['$match' => ['type' => ['$eq' => 'producer_reward']]],
-            ['$unwind' => '$op'],
-            ['$group' => ['_id' => null, 'total' => ['$sum' => '$op.VESTS']]],
-        ]);
-        //dump(iterator_to_array($sums));
-        $monthes = [];
-        foreach ($sums_by_monthes as $state) {
-            //dump($state['total'],$state['_id']['date']['M'],$state['_id']['date']['Y']);
-            //mp($state);
-            $date = Date::parse('01.' . $state['_id']['date']['M'] . '.' . $state['_id']['date']['Y']);
-            $r['date'] = $date->format('Y F');
-            $r['value'] = $state['total'];
-            $monthes[$date->format('Ym')] = $r;
-        }
-        //dump($monthes);
-        krsort($monthes);
+        $data = $this->getRewardsIn($this->config['account']);
+        $sums_by_monthes = $data['sums_by_monthes'];
+        $summs = $data['allSP']['all'];
 
-        foreach ($sums_all as $state) {
-            $summs['all'] = $state['total'];
-        }
+        //dump(iterator_to_array($sums));
+
+
+
         //dd(1);
         //$data = collect($data->toArray());
         //dump($data,$acc,$date, $this->config   );
@@ -98,5 +75,47 @@ class WitnessRewards extends AbstractWidget
     public function placeholder()
     {
         return 'Check witness rewards...';
+    }
+
+    public function getRewardsIn($acc)
+    {
+
+        $collection = BchApi::getMongoDbCollection($acc);
+        //$data = $collection->find(['op'=>'producer_reward']);
+        $sums_by_monthes = $collection->aggregate([
+            //['$group'=>['_id'=>['date'=>['month'=>['$month'=>'timestamp']]], 'total'=>['$sum'=>'block']]]
+            ['$match' => ['type' => ['$eq' => 'producer_reward']]],
+            ['$unwind' => '$op'],
+            [
+                '$group' => [
+                    '_id' => ['date' => ['M' => ['$month' => '$date'], 'Y' => ['$year' => '$date'],]],
+                    'total' => ['$sum' => '$op.VESTS']
+                ]
+            ],
+            //['$sort'=>['$date']]
+        ]);
+        $monthes = [];
+        foreach ($sums_by_monthes as $state) {
+            //dump($state['total'],$state['_id']['date']['M'],$state['_id']['date']['Y']);
+            //mp($state);
+            $date = Date::parse('01.' . $state['_id']['date']['M'] . '.' . $state['_id']['date']['Y']);
+            $r['date'] = $date->format('Y F');
+            $r['value'] = $state['total'];
+            $monthes[$date->format('Ym')] = $r;
+        }
+        //dump($monthes);
+        krsort($monthes);
+
+        $summs['all'] = 0;
+        $sums_all = $collection->aggregate([
+            //['$group'=>['_id'=>['date'=>['month'=>['$month'=>'timestamp']]], 'total'=>['$sum'=>'block']]]
+            ['$match' => ['type' => ['$eq' => 'producer_reward']]],
+            ['$unwind' => '$op'],
+            ['$group' => ['_id' => null, 'total' => ['$sum' => '$op.VESTS']]],
+        ]);
+        foreach ($sums_all as $state) {
+            $summs['all'] = $state['total'];
+        }
+        return ['allSP' => $summs, 'sums_by_monthes' => $monthes];
     }
 }
