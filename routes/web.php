@@ -129,6 +129,10 @@ if (getenv('BCH_API') == 'golos') {
 
 
     Route::get('/@{acc}/authors_rewards', 'AuthorRewardsController@showAll')->name('author_rewards_all');//->middleware(CheckHistoryAcc::class);
+
+    //VOX-POPULI
+    Route::get('/vp-gp-curator-rewards', 'VPCuratorRewardsController@showGP')->name('vp_gp_curation_rewards');
+
 }
 
 if (getenv('BCH_API') == 'steemit') {
