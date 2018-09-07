@@ -25,40 +25,54 @@ class CheckHistoryAcc
         if ($request->acc) {
 
             $acc = ($request->acc);
-            $acc = str_replace('@', '', $acc);
-            $acc = mb_strtolower($acc);
-            $acc = trim($acc);
+            $checkResult = self::doCheck($acc);
             $request->acc = $acc;
-            $max = BchApi::getHistoryAccountLast($acc);
-            //$current = BchApi::getCurrentProcessedHistoryTranzId($acc);
-            $processed = BchApi::getCurrentProcessedHistoryTranzIdInDB($acc);
-//            dump($max,$processed);
-
-            if ($processed == 0){
-                //Artisan::call('BchApi:GetHistoryAccountFullInCache',['api'=>'golos','acc'=>$acc]);
-                //GolosApi::getHistoryAccountFullInCache($acc);
-
-                //dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue(getenv('BCH_API').'CheckHistoryAcc');
-                dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue(getenv('BCH_API').'full_load');
-                $params = $request->all();
-                $params['acc']=$acc;
-                //return redirect()-
-                $collection = BchApi::getMongoDbCollection($acc);
-                $processed = $collection->count();
-
-
-                return response(view(getenv('BCH_API').'.process-tranz', ['account' => $acc,'total'=>$max,'current'=>$processed ]));
-            }elseif ($max-$processed>0) {
-
-                dispatch(new GetHistoryAccountUpdateInCache($acc,$processed, getenv('BCH_API')))->onQueue(getenv('BCH_API').'update_load');
-                //dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue('full_load');
-                /*if (!$request->has('skip'))
-                return response(view(getenv('BCH_API').'.process-tranz', ['account' => $acc,'total'=>$max,'current'=>$processed ]));*/
-                sleep(5);
+            $params = $request->all();
+            $params['acc']=$acc;
+            if ($checkResult['result']==false){
+                return response(view(getenv('BCH_API').'.process-tranz', ['account' => $acc,'total'=>$checkResult['max'],'current'=>$checkResult['processed'] ]));
             }
-
-
         }
         return $next($request);
+    }
+
+    public static function doCheck($acc)
+    {
+        $result = ['result'=>false];
+        $acc = str_replace('@', '', $acc);
+        $acc = mb_strtolower($acc);
+        $acc = trim($acc);
+
+        $max = BchApi::getHistoryAccountLast($acc);
+        //$current = BchApi::getCurrentProcessedHistoryTranzId($acc);
+        $processed = BchApi::getCurrentProcessedHistoryTranzIdInDB($acc);
+//            dump($max,$processed);
+
+        if ($processed == 0){
+            //Artisan::call('BchApi:GetHistoryAccountFullInCache',['api'=>'golos','acc'=>$acc]);
+            //GolosApi::getHistoryAccountFullInCache($acc);
+
+            //dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue(getenv('BCH_API').'CheckHistoryAcc');
+            dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue(getenv('BCH_API').'full_load');
+
+            //return redirect()-
+            $collection = BchApi::getMongoDbCollection($acc);
+            $processed = $collection->count();
+
+            $result['max'] = $max;
+            $result['processed'] = $processed;
+
+            return $result;
+        }elseif ($max-$processed>0) {
+
+            dispatch(new GetHistoryAccountUpdateInCache($acc,$processed, getenv('BCH_API')))->onQueue(getenv('BCH_API').'update_load');
+            //dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue('full_load');
+            /*if (!$request->has('skip'))
+            return response(view(getenv('BCH_API').'.process-tranz', ['account' => $acc,'total'=>$max,'current'=>$processed ]));*/
+            sleep(5);
+            $result['result']=true;
+            return $result;
+        }
+
     }
 }
