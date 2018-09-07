@@ -2,6 +2,8 @@
 
 namespace App\Widgets;
 
+use App\Http\Controllers\CuratorRewardsController;
+use App\Http\Middleware\CheckHistoryAcc;
 use App\semas\BchApi;
 use Arrilot\Widgets\AbstractWidget;
 use Jenssegers\Date\Date;
@@ -17,13 +19,26 @@ class CurationsRewards extends AbstractWidget
     protected $config = [];
 
     /**
+     * The number of seconds before each reload.
+     *
+     * @var int|float
+     */
+    public $reloadTimeout = 10;
+
+
+    public function placeholder()
+    {
+        return 'Checking rewards...';
+    }
+
+    /**
      * Treat this method as a controller action.
      * Return view() or other content to display.
      */
     public function run()
     {
         //
-        $summs['all'] = 0;
+        /*$summs['all'] = 0;
 
         $collection = BchApi::getMongoDbCollection($this->config['account']);
         //$data = $collection->find(['op'=>'producer_reward']);
@@ -55,7 +70,26 @@ class CurationsRewards extends AbstractWidget
 
         foreach ($sums_all as $state) {
             $summs['all'] = $state['total'];
+        }*/
+
+        $checkResult = CheckHistoryAcc::doCheck($this->config['account']);
+        if ($checkResult['result'] == false) {
+            echo '
+            <div class="container-fluid">
+                <div class="row">
+                    <br>
+                    <br>
+                    Обрабатываю историю аккаунта. Ждите.<br>
+                    Обработано ' . $checkResult['processed'] . ' из ' . $checkResult['max'] . '.<br>
+                    Страница будет обновляться в процесс обработки.
+                </div>
+            </div>
+    ';
+            //return response(view(getenv('BCH_API').'.process-tranz', ['account' => $this->config['account'],'total'=>$checkResult['max'],'current'=>$checkResult['processed'] ]));
         }
+
+        $curatorRewards = (new CuratorRewardsController())->getRewardsIn($this->config['account']);
+        dump($curatorRewards);
 
         return view('widgets.curations_rewards', [
             'config' => $this->config,
