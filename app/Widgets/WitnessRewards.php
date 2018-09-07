@@ -67,7 +67,7 @@ class WitnessRewards extends AbstractWidget
             'config' => $this->config,
             'account' => $acc,
             'summs' => $summs,
-            'summs_by_monthes' => $monthes
+            'summs_by_monthes' => $sums_by_monthes
         ]);
 
     }
