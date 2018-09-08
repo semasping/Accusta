@@ -38,7 +38,7 @@ class CheckHistoryAcc
 
     public static function doCheck($acc)
     {
-        $result = ['result'=>false];
+        $result = ['result'=>true];
         $acc = str_replace('@', '', $acc);
         $acc = mb_strtolower($acc);
         $acc = trim($acc);
@@ -59,10 +59,11 @@ class CheckHistoryAcc
             $collection = BchApi::getMongoDbCollection($acc);
             $processed = $collection->count();
 
+            $result['result']=false;
             $result['max'] = $max;
             $result['processed'] = $processed;
 
-            return $result;
+
         }elseif ($max-$processed>0) {
 
             dispatch(new GetHistoryAccountUpdateInCache($acc,$processed, getenv('BCH_API')))->onQueue(getenv('BCH_API').'update_load');
@@ -71,8 +72,10 @@ class CheckHistoryAcc
             return response(view(getenv('BCH_API').'.process-tranz', ['account' => $acc,'total'=>$max,'current'=>$processed ]));*/
             sleep(5);
             $result['result']=true;
-            return $result;
+
         }
+        return $result;
+
 
     }
 }
