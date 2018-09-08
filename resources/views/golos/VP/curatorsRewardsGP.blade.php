@@ -72,7 +72,7 @@
             @foreach($acc_vp as $gp)
                 @if(!empty($gp))
                     <tr>
-                        <td>{{ $gp }}</td>
+                        <td><a href="http://golos.accusta.tk/{{ $gp }}/curator">{{ $gp }}...</a></td>
                         <td>@asyncWidget('CurationsRewards', ['account'=>$gp])</td>
                     </tr>
                 @endif
