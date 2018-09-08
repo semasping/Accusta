@@ -25,7 +25,7 @@ class CurationsRewards extends AbstractWidget
      *
      * @var int|float
      */
-    public $reloadTimeout = 60;
+    public $reloadTimeout = 600;
 
     /**
      * The number of minutes before cache expires.
@@ -33,7 +33,7 @@ class CurationsRewards extends AbstractWidget
      *
      * @var int|float|bool
      */
-    public $cacheTime = 60;
+    //public $cacheTime = 60;
 
     /**
      * Cache tags allow you to tag related items in the cache
@@ -70,7 +70,7 @@ class CurationsRewards extends AbstractWidget
                 </div>
             </div>
     ';
-                Cache::tags($this->config['account'])->flush();
+
             }
 
         }
