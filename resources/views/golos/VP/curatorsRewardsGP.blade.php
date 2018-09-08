@@ -57,18 +57,32 @@
     </div>
 
 
+    <table class="table-bordered table-hover table-condensed">
+        <thead>
+        <tr>
+            <th>Аккаунт</th>
+            <th>СГ</th>
+        </tr>
+        </thead>
+        <tbody>
 
-    {{--@asyncWidget('WitnessSupportVotes', ['account'=>$account])--}}
-    @foreach($accounts_vp as $acc_vp)
-        @foreach($acc_vp as $gp)
-            {{ $gp }}
+
+        {{--@asyncWidget('WitnessSupportVotes', ['account'=>$account])--}}
+        @foreach($accounts_vp as $acc_vp)
+            @foreach($acc_vp as $gp)
+                @if(!empty($gp))
+                    <tr>
+                        <td>{{ $gp }}</td>
+                        <td>@asyncWidget('CurationsRewards', ['account'=>$gp])</td>
+                    </tr>
+                @endif
+            @endforeach
         @endforeach
-    @endforeach
 
-    <br>
-    <br>
-    <br>
-    @asyncWidget('CurationsRewards', ['account'=>'lengalenga'])
+
+        </tbody>
+    </table>
+
 
 
 

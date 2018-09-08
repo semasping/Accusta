@@ -4,8 +4,10 @@ namespace App\Widgets;
 
 use App\Http\Controllers\CuratorRewardsController;
 use App\Http\Middleware\CheckHistoryAcc;
+use App\Repositories\CuratorRewards;
 use App\semas\BchApi;
 use Arrilot\Widgets\AbstractWidget;
+use Illuminate\Support\Facades\Cache;
 use Jenssegers\Date\Date;
 use MongoDB;
 
@@ -23,8 +25,23 @@ class CurationsRewards extends AbstractWidget
      *
      * @var int|float
      */
-    public $reloadTimeout = 10;
+    public $reloadTimeout = 60;
 
+    /**
+     * The number of minutes before cache expires.
+     * False means no caching at all.
+     *
+     * @var int|float|bool
+     */
+    public $cacheTime = 60;
+
+    /**
+     * Cache tags allow you to tag related items in the cache
+     * and then flush all cached values that assigned a given tag.
+     *
+     * @var array
+     */
+    public $cacheTags = ['vpgp', 'curation_rewards'];
 
     public function placeholder()
     {
@@ -37,44 +54,12 @@ class CurationsRewards extends AbstractWidget
      */
     public function run()
     {
-        //
-        /*$summs['all'] = 0;
 
-        $collection = BchApi::getMongoDbCollection($this->config['account']);
-        //$data = $collection->find(['op'=>'producer_reward']);
-        $sums_by_monthes = $collection->aggregate([
-            //['$group'=>['_id'=>['date'=>['month'=>['$month'=>'timestamp']]], 'total'=>['$sum'=>'block']]]
-            ['$match' => ['type' => ['$eq' => 'curation_reward']]],
-            ['$unwind' => '$op'],
-            ['$group' => ['_id' => ['date' => ['M' => ['$month' => '$date'], 'Y' => ['$year' => '$date'],]], 'total' => ['$sum' => '$op.VESTS']]],
-            //['$sort'=>['$date']]
-        ]);
-        $sums_all = $collection->aggregate([
-            //['$group'=>['_id'=>['date'=>['month'=>['$month'=>'timestamp']]], 'total'=>['$sum'=>'block']]]
-            ['$match' => ['type' => ['$eq' => 'curation_reward']]],
-            ['$unwind' => '$op'],
-            ['$group' => ['_id' => null, 'total' => ['$sum' => '$op.VESTS']]],
-        ]);
-        //dump(iterator_to_array($sums));
-        $monthes = [];
-        foreach ($sums_by_monthes as $state) {
-            //dump($state['total'],$state['_id']['date']['M'],$state['_id']['date']['Y']);
-            //mp($state);
-            $date = Date::parse('01.' . $state['_id']['date']['M'] . '.' . $state['_id']['date']['Y']);
-            $r['date'] = $date->format('Y F');
-            $r['value'] = $state['total'];
-            $monthes[$date->format('Ym')] = $r;
-        }
-        dump($monthes);
-        krsort($monthes);
-
-        foreach ($sums_all as $state) {
-            $summs['all'] = $state['total'];
-        }*/
-
-        $checkResult = CheckHistoryAcc::doCheck($this->config['account']);
-        if ($checkResult['result'] == false) {
-            echo '
+        if (getenv('APP_ENV') == 'production') {
+            $this->cacheTags[] = $this->config['account'];
+            $checkResult = CheckHistoryAcc::doCheck($this->config['account']);
+            if ($checkResult['result'] == false) {
+                echo '
             <div class="container-fluid">
                 <div class="row">
                     <br>
@@ -85,14 +70,19 @@ class CurationsRewards extends AbstractWidget
                 </div>
             </div>
     ';
-            //return response(view(getenv('BCH_API').'.process-tranz', ['account' => $this->config['account'],'total'=>$checkResult['max'],'current'=>$checkResult['processed'] ]));
+                Cache::tags($this->config['account'])->flush();
+            }
+
         }
 
-        $curatorRewards = (new CuratorRewardsController())->getRewardsIn($this->config['account']);
-        dump($curatorRewards);
+        $curatorRewards = CuratorRewards::get($this->config['account'], Date::createFromDate('2017', '09', '01'),
+            Date::createFromDate('2018', '08', '01')->endOfMonth());
+        //dump($curatorRewards);
 
-        return view('widgets.curations_rewards', [
+        return view('golos.VP.widgets.curations_rewards', [
             'config' => $this->config,
+            'acc' => $this->config['account'],
+            'data' => $curatorRewards,
         ]);
     }
 }
