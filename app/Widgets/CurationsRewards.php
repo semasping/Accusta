@@ -41,7 +41,7 @@ class CurationsRewards extends AbstractWidget
      *
      * @var array
      */
-    public $cacheTags = ['vpgp', 'curation_rewards'];
+    //public $cacheTags = ['vpgp', 'curation_rewards'];
 
     public function placeholder()
     {
@@ -56,7 +56,10 @@ class CurationsRewards extends AbstractWidget
     {
 
         if (getenv('APP_ENV') == 'production') {
-            $this->cacheTags[] = $this->config['account'];
+            //$this->cacheTags[] = $this->config['account'];
+            $acc = str_replace('@', '', $this->config['account']);
+            $acc = mb_strtolower($acc);
+            $this->config['account'] = trim($acc);
             $checkResult = CheckHistoryAcc::doCheck($this->config['account']);
             if ($checkResult['result'] == false) {
                 echo '
