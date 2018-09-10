@@ -71,7 +71,7 @@
                             </h4>
                         </div>
                         <div id="collapse_{{ str_replace('@','',$gp) }}" class="panel-collapse collapse">
-                            <div class="panel-body">@asyncWidget('VPTransactions', ['account'=>'lengalenga'])</div>
+                            <div class="panel-body">@asyncWidget('VPTransactions', ['account'=>$gp])</div>
 
                         </div>
                     </div>
