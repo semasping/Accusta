@@ -5,13 +5,15 @@ namespace App\Widgets;
 use App\Http\Controllers\CuratorRewardsController;
 use App\Http\Middleware\CheckHistoryAcc;
 use App\Repositories\CuratorRewards;
+use App\Repositories\TransferToVesting;
 use App\semas\BchApi;
 use Arrilot\Widgets\AbstractWidget;
 use Illuminate\Support\Facades\Cache;
 use Jenssegers\Date\Date;
 use MongoDB;
+use phpDocumentor\Reflection\Types\Integer;
 
-class CurationsRewards extends AbstractWidget
+class VPTransactions extends AbstractWidget
 {
     /**
      * The configuration array.
@@ -45,7 +47,7 @@ class CurationsRewards extends AbstractWidget
 
     public function placeholder()
     {
-        return 'Checking rewards...';
+        return 'Checking transactions...';
     }
 
     /**
@@ -78,14 +80,19 @@ class CurationsRewards extends AbstractWidget
 
         }
 
-        $curatorRewards = CuratorRewards::get($this->config['account'], Date::createFromDate('2017', '08', '01'),
+        $transfers = TransferToVesting::get($this->config['account'], Date::createFromDate('2017', '08', '01'),
             Date::createFromDate('2018', '08', '01')->endOfMonth());
-        //dump($curatorRewards);
+        //dump($transfers);
+        $sum = 0;
+        foreach ($transfers as $item){
+            $sum = $sum + str_replace(' GOLOS','',$item['amount']);
+    }
 
-        return view('golos.VP.widgets.curations_rewards', [
+        return view('golos.VP.widgets.transactions', [
             'config' => $this->config,
             'acc' => $this->config['account'],
-            'data' => $curatorRewards,
+            'data' => $transfers,
+            'sum' => $sum,
         ]);
     }
 }

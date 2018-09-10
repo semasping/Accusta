@@ -132,6 +132,7 @@ if (getenv('BCH_API') == 'golos') {
 
     //VOX-POPULI
     Route::get('/vp-gp-curator-rewards', 'VPCuratorRewardsController@showGP')->name('vp_gp_curation_rewards');
+    Route::get('/vp-gp-transactions', 'VPTransactionsController@showGP')->name('vp_gp_transactions');
 
 }
 
