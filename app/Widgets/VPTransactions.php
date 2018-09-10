@@ -84,9 +84,18 @@ class VPTransactions extends AbstractWidget
             Date::createFromDate('2018', '08', '01')->endOfMonth());
         //dump($transfers);
         $sum = 0;
-        foreach ($transfers as $item){
-            $sum = $sum + str_replace(' GOLOS','',$item['amount']);
-    }
+        foreach ($transfers as $item) {
+            $sum = $sum + str_replace(' GOLOS', '', $item['amount']);
+        }
+        $transfers = (collect($transfers))->map(function ($item){
+            $arr = $item;
+            $arr['sum'] = str_replace(' GOLOS', '', $item['amount']);
+            $arr['date_diff'] = Date::createFromDate('2018','08','1')->endOfMonth()->diffInDays(Date::createFromFormat('Y F d h:i',$arr['date']));
+            //$arr['date_diff'] = Date::createFromDate('2018','08','1')->endOfMonth()->diffInDays(Date::createFromTimeString($arr['date']));
+            $arr['perc'] = $arr['date_diff']*0.0169;
+            $arr['itog'] = ($arr['sum']*$arr['perc']/100)+$arr['sum'];
+            return $arr;
+        });
 
         return view('golos.VP.widgets.transactions', [
             'config' => $this->config,

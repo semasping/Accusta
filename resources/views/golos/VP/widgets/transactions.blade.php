@@ -4,6 +4,9 @@
         <th>От</th>
         <th>Сумма</th>
         <th>Дата</th>
+        <th>Дней работы</th>
+        <th>Процент</th>
+        <th>Итого</th>
 
     </tr>
     </thead>
@@ -13,6 +16,9 @@
         <td>{{ $item['from'] }}</td>
         <td>{{ $item['amount'] }}</td>
         <td>{{ $item['date'] }}</td>
+        <td>{{ $item['date_diff'] }}</td>
+        <td>{{ $item['perc'] }}</td>
+        <td>{{ $item['itog'] }}</td>
 
     </tr>
 @endforeach
