@@ -24,4 +24,6 @@
 @endforeach
     </tbody>
 </table>
-Итого:{{ $sum }}
+Итого:{{ $sum }}<br>
+На аккануте: GOLOS: {{ $golos }} Сила Голоса: {{ $sp }}  GBG: {{ $gbg }}
+

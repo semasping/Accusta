@@ -7,6 +7,7 @@ use App\Http\Middleware\CheckHistoryAcc;
 use App\Repositories\CuratorRewards;
 use App\Repositories\TransferToVesting;
 use App\semas\BchApi;
+use App\semas\GolosApi;
 use Arrilot\Widgets\AbstractWidget;
 use Illuminate\Support\Facades\Cache;
 use Jenssegers\Date\Date;
@@ -97,11 +98,21 @@ class VPTransactions extends AbstractWidget
             return $arr;
         });
 
+        $account_data = GolosApi::getAccountFull($this->config['account']);
+        $vs = $account_data['result'][0]['vesting_shares'];
+        $sp = SteemitApi::convertToSg((int)$vs);
+        $golos = $account_data['result'][0]['balance'];
+        $gbg = $account_data['result'][0]['sbd_balance'];
+
+
         return view('golos.VP.widgets.transactions', [
             'config' => $this->config,
             'acc' => $this->config['account'],
             'data' => $transfers,
             'sum' => $sum,
+            'sp' =>$sp,
+            'golos' =>$golos,
+            'gbg' =>$gbg,
         ]);
     }
 }
