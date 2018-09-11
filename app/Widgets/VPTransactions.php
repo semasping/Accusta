@@ -98,7 +98,7 @@ class VPTransactions extends AbstractWidget
             return $arr;
         });
 
-        $account_data = GolosApi::getAccountFull($this->config['account']);
+        $account_data = Cache::rememberForever($this->config['account'], GolosApi::getAccountFull($this->config['account']));
         $vs = $account_data[0]['vesting_shares'];
         $sp = GolosApi::convertToSg((int)$vs);
         $golos = $account_data[0]['balance'];
