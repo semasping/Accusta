@@ -67,10 +67,10 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" href="#collapse_{{ $loop->index.$key }}">{{ $gp }}</a>
+                                <a data-toggle="collapse" href="#collapse_{{ $loop->parent->index.$key }}">{{ $gp }}</a>
                             </h4>
                         </div>
-                        <div id="collapse_{{ $loop->index.$key }}" class="panel-collapse collapse">
+                        <div id="collapse_{{ $loop->parent->index.$key }}" class="panel-collapse collapse">
                             <div class="panel-body">@asyncWidget('VPTransactions', ['account'=>$gp])</div>
 
                         </div>
