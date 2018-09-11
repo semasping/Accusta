@@ -60,17 +60,17 @@
 
 
 
-    @foreach($accounts_vp as $acc_vp)
+    @foreach($accounts_vp as $key0=>$acc_vp)
         @foreach($acc_vp as $key=>$gp)
             @if(!empty($gp))
                 <div class="panel-group">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" href="#collapse_{{ $key }}">{{ $gp }}</a>
+                                <a data-toggle="collapse" href="#collapse_{{ $key0.$key }}">{{ $gp }}</a>
                             </h4>
                         </div>
-                        <div id="collapse_{{ $key }}" class="panel-collapse collapse">
+                        <div id="collapse_{{ $key0.$key }}" class="panel-collapse collapse">
                             <div class="panel-body">@asyncWidget('VPTransactions', ['account'=>$gp])</div>
 
                         </div>
