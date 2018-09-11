@@ -99,10 +99,10 @@ class VPTransactions extends AbstractWidget
         });
 
         $account_data = GolosApi::getAccountFull($this->config['account']);
-        $vs = $account_data['result'][0]['vesting_shares'];
+        $vs = $account_data[0]['vesting_shares'];
         $sp = SteemitApi::convertToSg((int)$vs);
-        $golos = $account_data['result'][0]['balance'];
-        $gbg = $account_data['result'][0]['sbd_balance'];
+        $golos = $account_data[0]['balance'];
+        $gbg = $account_data[0]['sbd_balance'];
 
 
         return view('golos.VP.widgets.transactions', [
