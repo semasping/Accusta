@@ -88,17 +88,20 @@ class VPTransactions extends AbstractWidget
         foreach ($transfers as $item) {
             $sum = $sum + str_replace(' GOLOS', '', $item['amount']);
         }
-        $transfers = (collect($transfers))->map(function ($item){
+        $transfers = (collect($transfers))->map(function ($item) {
             $arr = $item;
             $arr['sum'] = str_replace(' GOLOS', '', $item['amount']);
-            $arr['date_diff'] = Date::createFromDate('2018','08','1')->endOfMonth()->diffInDays(Date::createFromFormat('Y F d h:i',$arr['date']));
+            $arr['date_diff'] = Date::createFromDate('2018', '08',
+                '1')->endOfMonth()->diffInDays(Date::createFromFormat('Y F d h:i', $arr['date']));
             //$arr['date_diff'] = Date::createFromDate('2018','08','1')->endOfMonth()->diffInDays(Date::createFromTimeString($arr['date']));
-            $arr['perc'] = $arr['date_diff']*0.0169;
-            $arr['itog'] = ($arr['sum']*$arr['perc']/100)+$arr['sum'];
+            $arr['perc'] = $arr['date_diff'] * 0.0169;
+            $arr['itog'] = ($arr['sum'] * $arr['perc'] / 100) + $arr['sum'];
             return $arr;
         });
 
-        $account_data = Cache::rememberForever($this->config['account'], GolosApi::getAccountFull($this->config['account']));
+        $account_data = Cache::rememberForever($this->config['account'], function () {
+            return GolosApi::getAccountFull($this->config['account']);
+        });
         $vs = $account_data[0]['vesting_shares'];
         $sp = GolosApi::convertToSg((int)$vs);
         $golos = $account_data[0]['balance'];
@@ -110,9 +113,9 @@ class VPTransactions extends AbstractWidget
             'acc' => $this->config['account'],
             'data' => $transfers,
             'sum' => $sum,
-            'sp' =>$sp,
-            'golos' =>$golos,
-            'gbg' =>$gbg,
+            'sp' => $sp,
+            'golos' => $golos,
+            'gbg' => $gbg,
         ]);
     }
 }
