@@ -1,3 +1,4 @@
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/><link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap.min.css" rel="stylesheet"/>
 <div class="container-fluid">
     <div class="row">
         @if (!empty($voteFor))
@@ -153,8 +154,9 @@
 
     </div>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/dataTables.bootstrap.min.js"></script>
 <script>
+
     $(document).ready(function() {
         $('#v2').DataTable();
     });
