@@ -10,7 +10,8 @@ namespace App\Repositories;
 
 
 use App\semas\BchApi;
-use Illuminate\Filesystem\Cache;
+use Illuminate\Support\Facades\Cache;
+
 
 class FullCurrentDataOfAccount
 {
