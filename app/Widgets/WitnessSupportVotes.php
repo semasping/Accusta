@@ -65,7 +65,7 @@ class WitnessSupportVotes extends AbstractWidget
                     }else{
                         $accountData = FullCurrentDataOfAccount::get($arr['account']);
                         $power = $accountData[0]['vesting_shares'];
-                        $forWitness[$arr['account']]['power'] = $power;
+                        $forWitness[$arr['account']]['power'] = round(str_replace(' GESTS','', $power),0);
                     }
                 }
 
