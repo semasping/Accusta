@@ -158,7 +158,7 @@
 
 <script>
 
-    $(document).ready(function() {
+    $().ready(function() {
         $('#table_v2').DataTable({
             "columns": [
                 null,
