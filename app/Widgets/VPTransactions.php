@@ -58,12 +58,16 @@ class VPTransactions extends AbstractWidget
     public function run()
     {
 
-        if (getenv('APP_ENV') == 'production') {
+        //uncomment this on 1 december!!!!!!!!!!!!!!!!!!
+
+        /*if (getenv('APP_ENV') == 'production') {
             //$this->cacheTags[] = $this->config['account'];
             $acc = str_replace('@', '', $this->config['account']);
             $acc = mb_strtolower($acc);
             $this->config['account'] = trim($acc);
-            $checkResult = CheckHistoryAcc::doCheck($this->config['account']);
+            //$checkResult = CheckHistoryAcc::doCheck($this->config['account']);
+            $checkResult = [];
+            $checkResult['result'] == true;
             if ($checkResult['result'] == false) {
                 echo '
             <div class="container-fluid">
@@ -79,7 +83,7 @@ class VPTransactions extends AbstractWidget
 
             }
 
-        }
+        }*/
 
         $transfers = TransferToVesting::get($this->config['account'], Date::createFromDate('2017', '08', '01'),
             Date::createFromDate('2018', '08', '01')->endOfMonth());
