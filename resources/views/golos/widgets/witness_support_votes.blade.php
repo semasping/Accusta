@@ -91,9 +91,9 @@
                                 <table class="table" id="table_v2">
                                     <thead>
                                     <tr>
-                                        <th>Date<i class="fa fa-sort float-right" aria-hidden="true"></i></th>
-                                        <th>Voted account<i class="fa fa-sort float-right" aria-hidden="true"></i></th>
-                                        <th>VS<i class="fa fa-sort float-right" aria-hidden="true"></i></th>
+                                        <th>Date</th>
+                                        <th>Voted account</th>
+                                        <th>VS</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -147,6 +147,7 @@
                     </div>
                 </div>
             </div>
+
 
 
 
