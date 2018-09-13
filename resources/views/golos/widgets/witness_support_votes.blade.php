@@ -90,9 +90,9 @@
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th>Date</th>
-                                        <th>Voted account</th>
-                                        <th></th>
+                                        <th>Date<i class="fa fa-sort float-right" aria-hidden="true"></i></th>
+                                        <th>Voted account<i class="fa fa-sort float-right" aria-hidden="true"></i></th>
+                                        <th>VS<i class="fa fa-sort float-right" aria-hidden="true"></i></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -104,7 +104,7 @@
                                                     <span class="glyphicon glyphicon-log-out"><img class="logo" src="/golos_icon_15.png"></span>
                                                 </a>
                                             </td>
-                                            <td></td>
+                                            <td>{{ $vote['power'] }}</td>
                                         </tr>
                                     @endforeach
                                     <tr>
@@ -154,4 +154,9 @@
     </div>
 </div>
 
+<script>
+    $(document).ready(function() {
+        $('#v2').DataTable();
+    });
+</script>
 

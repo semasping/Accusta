@@ -142,4 +142,16 @@ class BchApi
             return SteemitApi::getContent($author,$permlink);
         }
     }
+
+    public static function getFullAccount($account)
+    {
+
+        if (getenv('BCH_API') == 'golos') {
+            return GolosApi::getAccountFull($account);
+        }
+
+        if (getenv('BCH_API') == 'steemit') {
+            return SteemitApi::getAccountFull($account);
+        }
+    }
 }

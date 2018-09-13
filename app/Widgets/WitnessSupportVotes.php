@@ -2,6 +2,7 @@
 
 namespace App\Widgets;
 
+use App\Repositories\FullCurrentDataOfAccount;
 use App\semas\BchApi;
 use Arrilot\Widgets\AbstractWidget;
 use Jenssegers\Date\Date;
@@ -61,6 +62,10 @@ class WitnessSupportVotes extends AbstractWidget
                     $forWitnessHistory[] = $arr;
                     if ($datum['op'][1]['approve'] == false) {
                         unset($forWitness[$arr['account']]);
+                    }else{
+                        $accountData = FullCurrentDataOfAccount::get($arr['account']);
+                        $power = $accountData[0]['vesting_shares'];
+                        $forWitness[$arr['account']]['power'] = $power;
                     }
                 }
 

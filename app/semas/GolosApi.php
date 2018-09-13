@@ -474,7 +474,7 @@ class GolosApi
             $content = $command->execute($commandQuery);
 
         } catch (Exception $e) {
-            GolosApi::disconnect();
+            self::disconnect();
 
             return self::checkResult($content, 'getAccountFull', [$acc]);
 
