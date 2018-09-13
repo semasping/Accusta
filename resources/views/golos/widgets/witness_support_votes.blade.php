@@ -93,7 +93,7 @@
                                     <tr>
                                         <th>Date</th>
                                         <th>Voted account</th>
-                                        <th>VS</th>
+                                        <th>Vesting Shares, GESTS</th>
                                     </tr>
                                     </thead>
                                     <tbody>
