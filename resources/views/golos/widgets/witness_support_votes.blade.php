@@ -1,4 +1,4 @@
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/><link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap.min.css" rel="stylesheet"/>
+
 <div class="container-fluid">
     <div class="row">
         @if (!empty($voteFor))
@@ -156,16 +156,5 @@
     </div>
 </div>
 
-<script>
 
-    $().ready(function() {
-        $('#table_v2').DataTable({
-            "columns": [
-                null,
-                { "orderable": false },
-                null
-            ]
-        });
-    });
-</script>
 
