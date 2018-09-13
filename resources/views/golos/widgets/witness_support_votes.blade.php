@@ -159,7 +159,13 @@
 <script>
 
     $(document).ready(function() {
-        $('#table_v2').DataTable();
+        $('#table_v2').DataTable({
+            "columns": [
+                null,
+                { "orderable": false },
+                null
+            ]
+        });
     });
 </script>
 
