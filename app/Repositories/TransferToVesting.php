@@ -24,6 +24,7 @@ class TransferToVesting
     public static function get($acc, $from = '', $to = '')
     {
 
+        $res_arr = [];
 
         $date_start = new MongoDB\BSON\UTCDateTime(($from));
         $date_end = new MongoDB\BSON\UTCDateTime(($to));
