@@ -88,7 +88,7 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table" id="table_v2">
                                     <thead>
                                     <tr>
                                         <th>Date<i class="fa fa-sort float-right" aria-hidden="true"></i></th>
@@ -158,7 +158,7 @@
 <script>
 
     $(document).ready(function() {
-        $('#v2').DataTable();
+        $('#table_v2').DataTable();
     });
 </script>
 
