@@ -93,7 +93,8 @@
                                     <tr>
                                         <th>Date</th>
                                         <th>Voted account</th>
-                                        <th>Vesting Shares, GESTS</th>
+                                        <th>Vesting Shares, GESTS {{ $allPow }}</th>
+                                        <th>Vesting Shares+ received from delegations, GESTS {{ $allPowRe }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -106,6 +107,7 @@
                                                 </a>
                                             </td>
                                             <td>{{ $vote['power'] }}</td>
+                                            <td>{{ $vote['power_received'] }}</td>
                                         </tr>
                                     @endforeach
                                     <tr>
