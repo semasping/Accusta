@@ -37,10 +37,10 @@ class GolosApi
 
     public static function getHistoryAccount($acc, $from, $limit = 2000)
     {
-        $key = "3golos_getacchistory.$acc.$from";
+        $key = "3golos_getacchistory.$acc.$from.$limit";
         if (Cache::get($key . '_status') != 'working') {
             Cache::put($key . '_status', 'working', 2);
-            if ($from % 2000 == 0) {
+            if ($from % $limit == 0) {
                 //AdminNotify::send("to set cache getHistoryAccount($acc, $from, $limit) key:$key");
                 //if ($acc==' vp-bodyform')
                 //Cache::forget("2golos_getacchistory.vp-bodyform.$from");
@@ -104,7 +104,7 @@ class GolosApi
             $content = $command->execute($commandQuery);
             //dd($content);
         } catch (Exception $e) {
-            dd($e);
+            dump($e);
             //self::disconnect();
             return self::checkResult($content, '_getAccHistory', [$acc, $from, $limit]);
         }
@@ -224,7 +224,7 @@ class GolosApi
             dump($key2);
             Cache::put($key2 . '_status', 'working', 1);
             $t = $max;
-            $limit = 2000;
+            $limit = 10000;
             while ($t >= 0) {
                 $timestart = microtime(true);
                 if ($transactions = self::getHistoryAccount($acc, $t, $limit)) {
@@ -258,8 +258,8 @@ class GolosApi
                 }
                 //$time4 = microtime(true);
 
-                $t = $t - 2001;
-                if ($t < 2000) {
+                $t = $t - 10001;
+                if ($t < 10000) {
                     $limit = $t;
                 }
             }
