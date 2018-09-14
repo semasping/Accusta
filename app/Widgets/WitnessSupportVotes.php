@@ -28,6 +28,8 @@ class WitnessSupportVotes extends AbstractWidget
         $voteForHistory = [];
         $forWitness = [];
         $forWitnessHistory = [];
+        $allPow =0;
+        $allPowRe =0;
 
         //account_witness_vote
         $collection = BchApi::getMongoDbCollection($this->config['account']);
@@ -65,7 +67,11 @@ class WitnessSupportVotes extends AbstractWidget
                     }else{
                         $accountData = FullCurrentDataOfAccount::get($arr['account']);
                         $power = $accountData[0]['vesting_shares'];
+                        $received = str_replace(' GESTS','',$accountData[0]['received_vesting_shares']);
                         $forWitness[$arr['account']]['power'] = round(str_replace(' GESTS','', $power),0);
+                        $forWitness[$arr['account']]['power_received'] = round(str_replace(' GESTS','', $power)+$received,0);
+                        $allPow = $allPow + $forWitness[$arr['account']]['power'];
+                        $allPowRe = $allPowRe + $forWitness[$arr['account']]['power_received'];
                     }
                 }
 
