@@ -85,7 +85,7 @@ class WitnessSupportVotes extends AbstractWidget
 
         $voteFor = collect($voteFor)->sortByDesc('timestamp');
         $voteForHistory = collect($voteForHistory)->sortByDesc('timestamp');
-        $forWitness = collect($forWitness)->sortByDesc('power');
+        $forWitness = collect($forWitness)->sortByDesc('proxy');
         $forWitnessHistory = collect($forWitnessHistory)->sortByDesc('timestamp');
         $allPowPrx = $forWitness->sum('proxy');
         //dump($voteFor, $forWitness);
