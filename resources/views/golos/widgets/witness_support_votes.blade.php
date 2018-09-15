@@ -93,9 +93,7 @@
                                     <tr>
                                         <th>Date</th>
                                         <th>Voted account</th>
-                                        <th>Vesting Shares, GESTS<br> {{ $allPow }}M</th>
-                                        <th>Vesting Shares+ received from delegations, GESTS<br> {{ $allPowRe }}M</th>
-                                        <th>Vesting Shares+ proxy, GESTS<br> {{ $allPowPrx }}M</th>
+                                        <th>Vesting Shares, GESTS<br> {{ $allPowPrx }}M</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -107,8 +105,6 @@
                                                     <span class="glyphicon glyphicon-log-out"><img class="logo" src="/golos_icon_15.png"></span>
                                                 </a>
                                             </td>
-                                            <td>{{ $vote['power'] }}</td>
-                                            <td>{{ $vote['power_received'] }}</td>
                                             <td>{{ $vote['proxy'] }}</td>
                                         </tr>
                                     @endforeach

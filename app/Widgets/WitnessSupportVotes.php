@@ -73,12 +73,9 @@ class WitnessSupportVotes extends AbstractWidget
                     } else {
                         $accountData = FullCurrentDataOfAccount::get($arr['account']);
 
-                        $proxy = $accountData[0]['proxied_vsf_votes']['0']/1000000;
                         $power = str_replace(' GESTS', '', $accountData[0]['vesting_shares']);
-                        $received = str_replace(' GESTS', '', $accountData[0]['received_vesting_shares']);
-                        $forWitness[$arr['account']]['power'] = round($power, 0);
-                        $forWitness[$arr['account']]['power_received'] = round($power + $received, 0);
-                        $forWitness[$arr['account']]['proxy'] = round($proxy + $power);
+                        $proxy = $accountData[0]['proxied_vsf_votes']['0']/1000000;
+                        $forWitness[$arr['account']]['proxy'] = number_format(round($proxy + $power),0,'.',' ');
                     }
                 }
 
@@ -90,8 +87,6 @@ class WitnessSupportVotes extends AbstractWidget
         $voteForHistory = collect($voteForHistory)->sortByDesc('timestamp');
         $forWitness = collect($forWitness)->sortByDesc('power');
         $forWitnessHistory = collect($forWitnessHistory)->sortByDesc('timestamp');
-        $allPow = $forWitness->sum('power');
-        $allPowRe = $forWitness->sum('power_received');
         $allPowPrx = $forWitness->sum('proxy');
         //dump($voteFor, $forWitness);
         //dump($forWitnessHistory[''])
@@ -103,8 +98,6 @@ class WitnessSupportVotes extends AbstractWidget
             'forWitnessHistory' => $forWitnessHistory->toArray(),
             'voteForHistory' => $voteForHistory->toArray(),
             'allPowPrx' => number_format($allPowPrx/1000000,0,'.',' '),
-            'allPowRe' => number_format($allPowRe/1000000,0,'.',' '),
-            'allPow' => number_format($allPow/1000000,0,'.',' '),
         ]);
     }
 }

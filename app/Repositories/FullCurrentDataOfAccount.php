@@ -17,7 +17,7 @@ class FullCurrentDataOfAccount
 {
     public static function get($account)
     {
-        return Cache::remember('fulldata' . $account, 10, function () use ($account) {
+        return Cache::remember('fulldata' . $account, 100, function () use ($account) {
             return BchApi::getFullAccount($account);
         });
     }
