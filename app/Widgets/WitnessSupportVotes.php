@@ -75,7 +75,7 @@ class WitnessSupportVotes extends AbstractWidget
 
                         $power = str_replace(' GESTS', '', $accountData[0]['vesting_shares']);
                         $proxy = $accountData[0]['proxied_vsf_votes']['0']/1000000;
-                        $forWitness[$arr['account']]['proxy'] = number_format(round($proxy + $power),0,'.',' ');
+                        $forWitness[$arr['account']]['proxy'] = round($proxy + $power);
                     }
                 }
 

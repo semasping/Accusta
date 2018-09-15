@@ -105,7 +105,7 @@
                                                     <span class="glyphicon glyphicon-log-out"><img class="logo" src="/golos_icon_15.png"></span>
                                                 </a>
                                             </td>
-                                            <td>{{ $vote['proxy'] }}</td>
+                                            <td>{{ number_format($vote['proxy'],0,'.',' ') }}</td>
                                         </tr>
                                     @endforeach
                                     <tr>
