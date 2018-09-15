@@ -18,6 +18,12 @@ class WitnessSupportVotes extends AbstractWidget
      */
     protected $config = [];
 
+
+    public function placeholder()
+    {
+        return 'Checking transactions...';
+    }
+
     /**
      * Treat this method as a controller action.
      * Return view() or other content to display.
