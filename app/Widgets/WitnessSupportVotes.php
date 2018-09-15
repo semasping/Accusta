@@ -72,12 +72,13 @@ class WitnessSupportVotes extends AbstractWidget
                     } else {
                         $accountData = FullCurrentDataOfAccount::get($arr['account']);
                         $power = $accountData[0]['vesting_shares'];
+                        $proxy = $accountData[0]['proxied_vsf_votes']['0'];
+                        $power = str_replace(' GESTS', '', $accountData[0]['vesting']);
                         $received = str_replace(' GESTS', '', $accountData[0]['received_vesting_shares']);
-                        $forWitness[$arr['account']]['power'] = round(str_replace(' GESTS', '', $power), 0);
-                        $forWitness[$arr['account']]['power_received'] = round(str_replace(' GESTS', '',
-                                $power) + $received, 0);
-                        $allPow = $allPow + $forWitness[$arr['account']]['power'];
-                        $allPowRe = $allPowRe + $forWitness[$arr['account']]['power_received'];
+                        $received = str_replace(' GESTS', '', $accountData[0]['received_vesting_shares']);
+                        $forWitness[$arr['account']]['power'] = round($power, 0);
+                        $forWitness[$arr['account']]['power_received'] = round($power + $received, 0);
+                        $forWitness[$arr['account']]['proxy'] = round($proxy/1000000 + $power);
                     }
                 }
 
@@ -91,6 +92,7 @@ class WitnessSupportVotes extends AbstractWidget
         $forWitnessHistory = collect($forWitnessHistory)->sortByDesc('timestamp');
         $allPow = $forWitness->sum('power');
         $allPowRe = $forWitness->sum('power_received');
+        $allPowPrx = $forWitness->sum('proxy');
         //dump($voteFor, $forWitness);
         //dump($forWitnessHistory[''])
         return view(getenv('BCH_API') . '.widgets.witness_support_votes', [

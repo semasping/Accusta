@@ -95,6 +95,7 @@
                                         <th>Voted account</th>
                                         <th>Vesting Shares, GESTS {{ $allPow }}</th>
                                         <th>Vesting Shares+ received from delegations, GESTS {{ $allPowRe }}</th>
+                                        <th>Vesting Shares+ proxy, GESTS {{ $allPowPrx }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -108,6 +109,7 @@
                                             </td>
                                             <td>{{ $vote['power'] }}</td>
                                             <td>{{ $vote['power_received'] }}</td>
+                                            <td>{{ $vote['proxy'] }}</td>
                                         </tr>
                                     @endforeach
                                     <tr>
