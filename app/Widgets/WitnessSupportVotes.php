@@ -36,6 +36,7 @@ class WitnessSupportVotes extends AbstractWidget
         $forWitnessHistory = [];
         $allPow = 0;
         $allPowRe = 0;
+        $allPowPrx = 0;
 
         //account_witness_vote
         $collection = BchApi::getMongoDbCollection($this->config['account']);
@@ -103,6 +104,7 @@ class WitnessSupportVotes extends AbstractWidget
             'voteForHistory' => $voteForHistory->toArray(),
             'allPow' => $allPow,
             'allPowRe' => $allPowRe,
+            'allPowPrx' => $allPowPrx,
         ]);
     }
 }
