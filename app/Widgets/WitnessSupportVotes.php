@@ -71,14 +71,13 @@ class WitnessSupportVotes extends AbstractWidget
                         unset($forWitness[$arr['account']]);
                     } else {
                         $accountData = FullCurrentDataOfAccount::get($arr['account']);
-                        $power = $accountData[0]['vesting_shares'];
-                        $proxy = $accountData[0]['proxied_vsf_votes']['0'];
-                        $power = str_replace(' GESTS', '', $accountData[0]['vesting']);
-                        $received = str_replace(' GESTS', '', $accountData[0]['received_vesting_shares']);
+
+                        $proxy = $accountData[0]['proxied_vsf_votes']['0']/1000000;
+                        $power = str_replace(' GESTS', '', $accountData[0]['vesting_shares']);
                         $received = str_replace(' GESTS', '', $accountData[0]['received_vesting_shares']);
                         $forWitness[$arr['account']]['power'] = round($power, 0);
                         $forWitness[$arr['account']]['power_received'] = round($power + $received, 0);
-                        $forWitness[$arr['account']]['proxy'] = round($proxy/1000000 + $power);
+                        $forWitness[$arr['account']]['proxy'] = round($proxy + $power);
                     }
                 }
 
