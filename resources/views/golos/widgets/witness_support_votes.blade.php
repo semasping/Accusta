@@ -93,9 +93,9 @@
                                     <tr>
                                         <th>Date</th>
                                         <th>Voted account</th>
-                                        <th>Vesting Shares, GESTS {{ $allPow }}</th>
-                                        <th>Vesting Shares+ received from delegations, GESTS {{ $allPowRe }}</th>
-                                        <th>Vesting Shares+ proxy, GESTS {{ $allPowPrx }}</th>
+                                        <th>Vesting Shares, GESTS<br> {{ $allPow }}M</th>
+                                        <th>Vesting Shares+ received from delegations, GESTS<br> {{ $allPowRe }}M</th>
+                                        <th>Vesting Shares+ proxy, GESTS<br> {{ $allPowPrx }}M</th>
                                     </tr>
                                     </thead>
                                     <tbody>

@@ -102,9 +102,9 @@ class WitnessSupportVotes extends AbstractWidget
             'account' => $this->config['account'],
             'forWitnessHistory' => $forWitnessHistory->toArray(),
             'voteForHistory' => $voteForHistory->toArray(),
-            'allPow' => $allPow,
-            'allPowRe' => $allPowRe,
-            'allPowPrx' => $allPowPrx,
+            'allPowPrx' => number_format($allPowPrx/1000000,0,'.',' '),
+            'allPowRe' => number_format($allPowRe/1000000,0,'.',' '),
+            'allPow' => number_format($allPow/1000000,0,'.',' '),
         ]);
     }
 }
