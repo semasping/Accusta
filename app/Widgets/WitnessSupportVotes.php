@@ -28,8 +28,8 @@ class WitnessSupportVotes extends AbstractWidget
         $voteForHistory = [];
         $forWitness = [];
         $forWitnessHistory = [];
-        $allPow =0;
-        $allPowRe =0;
+        $allPow = 0;
+        $allPowRe = 0;
 
         //account_witness_vote
         $collection = BchApi::getMongoDbCollection($this->config['account']);
@@ -44,10 +44,10 @@ class WitnessSupportVotes extends AbstractWidget
                 $arr['approve'] = $datum['op'][1]['approve'];
                 $arr['timestamp'] = $datum['timestamp'];
                 $arr['date'] = Date::parse($datum['timestamp'])->format('Y F d H:i:s');
-                if ($arr['approve']==true){
+                if ($arr['approve'] == true) {
                     $arr['status'] = 'Approve';
                 }
-                if ($arr['approve']==false){
+                if ($arr['approve'] == false) {
                     $arr['status'] = 'Disapprove';
                 }
 
@@ -58,18 +58,18 @@ class WitnessSupportVotes extends AbstractWidget
                     if ($datum['op'][1]['approve'] == false) {
                         unset($voteFor[$arr['witness']]);
                     }
-                }
-                else { // votes for witness
+                } else { // votes for witness
                     $forWitness[$arr['account']] = $arr;
                     $forWitnessHistory[] = $arr;
                     if ($datum['op'][1]['approve'] == false) {
                         unset($forWitness[$arr['account']]);
-                    }else{
+                    } else {
                         $accountData = FullCurrentDataOfAccount::get($arr['account']);
                         $power = $accountData[0]['vesting_shares'];
-                        $received = str_replace(' GESTS','',$accountData[0]['received_vesting_shares']);
-                        $forWitness[$arr['account']]['power'] = round(str_replace(' GESTS','', $power),0);
-                        $forWitness[$arr['account']]['power_received'] = round(str_replace(' GESTS','', $power)+$received,0);
+                        $received = str_replace(' GESTS', '', $accountData[0]['received_vesting_shares']);
+                        $forWitness[$arr['account']]['power'] = round(str_replace(' GESTS', '', $power), 0);
+                        $forWitness[$arr['account']]['power_received'] = round(str_replace(' GESTS', '',
+                                $power) + $received, 0);
                         $allPow = $allPow + $forWitness[$arr['account']]['power'];
                         $allPowRe = $allPowRe + $forWitness[$arr['account']]['power_received'];
                     }
@@ -77,10 +77,14 @@ class WitnessSupportVotes extends AbstractWidget
 
             }
         }
+
+
         $voteFor = collect($voteFor)->sortByDesc('timestamp');
         $voteForHistory = collect($voteForHistory)->sortByDesc('timestamp');
         $forWitness = collect($forWitness)->sortByDesc('power');
         $forWitnessHistory = collect($forWitnessHistory)->sortByDesc('timestamp');
+        $allPow = $forWitness->sum('power');
+        $allPowRe = $forWitness->sum('power_received');
         //dump($voteFor, $forWitness);
         //dump($forWitnessHistory[''])
         return view(getenv('BCH_API') . '.widgets.witness_support_votes', [
@@ -90,8 +94,8 @@ class WitnessSupportVotes extends AbstractWidget
             'account' => $this->config['account'],
             'forWitnessHistory' => $forWitnessHistory->toArray(),
             'voteForHistory' => $voteForHistory->toArray(),
-                'allPow' =>$allPow,
-                'allPowRe' =>$allPowRe,
+            'allPow' => $allPow,
+            'allPowRe' => $allPowRe,
         ]);
     }
 }
