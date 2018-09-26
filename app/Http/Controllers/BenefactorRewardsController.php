@@ -408,10 +408,10 @@ class BenefactorRewardsController extends Controller
         $typeQ = '';
         $res_arr = [];
         $collection = BchApi::getMongoDbCollection($acc);
-        if ($type == 'In') {
+        if ($type == 'in') {
             $typeQ = '$eq';
         }
-        if ($type == 'Out') {
+        if ($type == 'out') {
             $typeQ = '$ne';
         }
         if ($typeQ == '') {
