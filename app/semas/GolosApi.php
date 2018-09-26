@@ -51,7 +51,8 @@ class GolosApi
 
                         return self::_getAccHistory($acc, $from, $limit);
                     });
-                if (!$history) {
+                if (count($history)!=$limit) {
+                    AdminNotify::send('count($history)='.count($history));
                     Cache::forget($key);
                     Cache::put($key . '_status', 'fail', 2);
                     return self::getHistoryAccount($acc, $from, $limit);
@@ -224,7 +225,7 @@ class GolosApi
             dump($key2);
             Cache::put($key2 . '_status', 'working', 1);
             $t = $max;
-            $limit = 10000;
+            $limit = 5000;
             while ($t >= 0) {
                 $timestart = microtime(true);
                 if ($transactions = self::getHistoryAccount($acc, $t, $limit)) {
@@ -258,8 +259,8 @@ class GolosApi
                 }
                 //$time4 = microtime(true);
 
-                $t = $t - 10001;
-                if ($t < 10000) {
+                $t = $t - 5001;
+                if ($t < 5000) {
                     $limit = $t;
                 }
             }
@@ -278,8 +279,8 @@ class GolosApi
             dump($key2);
             Cache::put($key2 . '_status', 'working', 1);
             $t = $max;
-            $limit = 2000;
-            if ($t - $processed < 2000) {
+            $limit = 500;
+            if ($t - $processed < $limit) {
                 $limit = $t - $processed;
             }
             while ($processed <= $t) {
@@ -315,10 +316,10 @@ class GolosApi
                 }
                 //$time4 = microtime(true);
 
-                $t = $t - 2001;
+                $t = $t - ($limit+1);
                 $processed = $processed + $limit;
                 if ($t > 0) {
-                    if ($t < 2000) {
+                    if ($t < $limit) {
                         $limit = $t;
                     }
                 }
