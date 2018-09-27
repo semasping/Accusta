@@ -36,7 +36,7 @@ class SteemitApi
         if (Cache::get($key . '_status') != 'working') {
             Cache::put($key . '_status', 'working', 2);
             //dump($key.' start working');
-            if ($from % 2000 == 0) {
+            if ($from % $limit == 0) {
                 //AdminNotify::send("to set cache getHistoryAccount($acc, $from, $limit)");
                 //if ($acc==' vp-bodyform')
                 //Cache::forget("2golos_getacchistory.vp-bodyform.$from");
@@ -47,7 +47,8 @@ class SteemitApi
 
                         return self::_getAccHistory($acc, $from, $limit);
                     });
-                if (!$history) {
+
+                if (count($history) <= ($limit)) {
                     Cache::forget($key);
                     Cache::put($key . '_status', 'fail', 2);
                     return self::getHistoryAccount($acc, $from, $limit);
