@@ -52,7 +52,7 @@ class GolosApi
 
                         return self::_getAccHistory($acc, $from, $limit);
                     });
-                if (count($history)!=$limit) {
+                if (count($history)!=$limit+1) {
                     AdminNotify::send('count($history)='.count($history));
                     dump('count($history)='.count($history));
                     Cache::forget($key);
