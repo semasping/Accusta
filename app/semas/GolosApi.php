@@ -37,7 +37,8 @@ class GolosApi
 
     public static function getHistoryAccount($acc, $from, $limit = 2000)
     {
-        $key = "3golos_getacchistory.$acc.$from.$limit";
+        $key = "golos_getacchistory.$acc.$from.$limit";
+        dump($key);
         if (Cache::get($key . '_status') != 'working') {
             Cache::put($key . '_status', 'working', 2);
             if ($from % $limit == 0) {
@@ -53,6 +54,7 @@ class GolosApi
                     });
                 if (count($history)!=$limit) {
                     AdminNotify::send('count($history)='.count($history));
+                    dump('count($history)='.count($history));
                     Cache::forget($key);
                     Cache::put($key . '_status', 'fail', 2);
                     return self::getHistoryAccount($acc, $from, $limit);
