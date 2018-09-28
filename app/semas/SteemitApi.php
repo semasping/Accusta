@@ -50,7 +50,7 @@ class SteemitApi
 
                 if (count($history) <= ($limit)) {
                     Cache::forget($key);
-                    Cache::put($key . '_status', 'fail', 2);
+                    Cache::forget($key . '_status');
                     return self::getHistoryAccount($acc, $from, $limit);
                     //dump($acc,$history);
                 }
@@ -70,8 +70,8 @@ class SteemitApi
                 return self::_getAccHistory($acc, $from, $limit);
             }
         } else {
-            sleep(5);
-            //dump($key.' wait');
+            dump($key.' wait');
+            sleep(20);
 
             return self::getHistoryAccount($acc, $from, $limit);
         }
@@ -637,7 +637,7 @@ class SteemitApi
     public static function disconnect()
     {
         $connect = self::getConnector();
-        $connect->destroyConnection();
+        //$connect->destroyConnection();
         //echo 321;
     }
 
