@@ -74,6 +74,7 @@ class WitnessSupportVotes extends AbstractWidget
                         $accountData = FullCurrentDataOfAccount::get($arr['account']);
 
                         $power = str_replace(' GESTS', '', $accountData[0]['vesting_shares']);
+                        $power = str_replace(' VESTS', '', $power);
                         $proxy = $accountData[0]['proxied_vsf_votes']['0']/1000000;
                         $forWitness[$arr['account']]['proxy'] = round($proxy + $power);
                     }
