@@ -1056,7 +1056,7 @@ class SteemitApi
             $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '',
                 $trns['op'][1]['vesting_payout'])));
         }
-        if ($trns['op'][0] == 'comment_benefactor_reward') {
+        if ($trns['op'][0] == 'comment_benefactor_reward' and isset($trns['op'][1]['reward'])) {
             $trns['op'][1]['VESTS'] = (double)((str_replace(' VESTS', '', $trns['op'][1]['reward'])));
         }
         if ($trns['op'][0] == 'curation_reward') {
