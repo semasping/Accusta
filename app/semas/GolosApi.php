@@ -121,7 +121,7 @@ class GolosApi
 
         //AdminNotify::send("max = getHistoryAccountLast($acc) = " . print_r($res[0][0], true));
 //dump($res);
-        dump('LAST:',$res);
+        ///dump('LAST:',$res);
         return $res[0][0];
     }
 
