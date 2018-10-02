@@ -65,7 +65,8 @@ class WitnessSupportVotes extends AbstractWidget
                     if ($datum['op'][1]['approve'] == false) {
                         unset($voteFor[$arr['witness']]);
                     }
-                } else { // votes for witness
+                }
+                if (($datum['op'][1]['account'] != $this->config['account'])||($datum['op'][1]['account']==$arr['witness'])){ // votes for witness
                     $forWitness[$arr['account']] = $arr;
                     $forWitnessHistory[] = $arr;
                     if ($datum['op'][1]['approve'] == false) {
