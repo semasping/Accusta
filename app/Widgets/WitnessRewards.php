@@ -32,7 +32,9 @@ class WitnessRewards extends AbstractWidget
         $sums_by_monthes = $data['sums_by_monthes'];
         $summs = $data['allSP'];
 
-        foreach ($sums_by_monthes as $key => $sums_by_month) {
+        $res_arr = $sums_by_monthes;
+        ksort($res_arr);
+        foreach ($res_arr as $key => $sums_by_month) {
             $fm = Date::parse($key . '01')->format('Y M');
 
             $dataChart['month'][] = $fm;
