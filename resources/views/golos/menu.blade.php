@@ -7,15 +7,9 @@
     @if(Route::has('trans_by_month'))
         <li {{ Route::is('trans_by_month')  ? ' class=active' : null }}>
             <a href="{{ route('trans_by_month',[''.$account]) }}">
-                Статистика аккаунта по месяцам
+                Авторские вознаграждения
             </a>
         </li>
-    @endif
-    @if(Route::has('trans_by_week'))
-        <li {{ Route::is('trans_by_week')  ? ' class=active' : null }}>
-            <a href="{{ route('trans_by_week',[''.$account]) }}">
-                Статистика аккаунта по неделям
-            </a></li>
     @endif
     @if(Route::has('trans_history'))
         <li {{ Route::is('trans_history')  ? ' class=active' : null }}>
@@ -28,7 +22,7 @@
         <li {{ Route::is('trans_sg')  ? ' class=active' : null }}>
 
         <a href="{{ route('trans_sg',[''.$account]) }}">
-                Статистика понижения СГ
+                Понижения СГ
             </a></li>
     @endif
     @if(Route::has('witness_votes'))
@@ -41,14 +35,14 @@
     @if(Route::has('trans_benefactor'))
         <li {{ Route::is('trans_benefactor')  ? ' class=active' : null }}>
             <a href="{{ route('trans_benefactor',[''.$account]) }}">
-                Статистика Бенефециарских вознаграждений
+                Бенефециарские вознаграждения
             </a></li>
     @endif
     @if(Route::has('trans_curator'))
         <li {{Route::is('trans_curator')  ? ' class=active' : null }}>
 
         <a href="{{ route('trans_curator',[''.$account]) }}">
-                Статистика Кураторских вознаграждений
+                Кураторские вознаграждения
             </a></li>
     @endif
 </ul>

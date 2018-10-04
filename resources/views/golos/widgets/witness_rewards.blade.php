@@ -21,9 +21,9 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th>Time</th>
+                                <th>Время</th>
                                 <th>GESTS</th>
-                                <th>Сила Голоса (Расчитана для текущего значения <b>steem_per_mvests</b> )</th>
+                                <th>Сила Голоса (для текущего значения <b>steem_per_mvests</b>)</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -37,7 +37,7 @@
                             <tr>
 
 
-                                <td>За всё время делегатсва</td>
+                                <td>За всё время делегатства</td>
                                 <td>{{ $summs['all'] }}</td>
                                 <td>~ {{ \App\semas\SteemitApi::convertToSg($summs['all']) }}</td>
                             </tr>
