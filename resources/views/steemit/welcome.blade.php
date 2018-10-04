@@ -42,7 +42,7 @@
             {!! Form::label('Account Name: @') !!}
             {!! Form::text('acc', null,
                 array('required','class'=>'form-control','placeholder'=>'Account name')) !!}
-            {!! Form::hidden('controller', 'TransAccController@index') !!}
+            {!! Form::hidden('controller', 'AuthorRewardsController@showAll') !!}
 
         </div>
         {!! Form::submit('View statistics',  array('class'=>'btn btn-primary', 'data-after-submit-value'=>"Loading transactions. It`s takes for a while&hellip;")) !!}
