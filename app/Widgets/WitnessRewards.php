@@ -26,6 +26,7 @@ class WitnessRewards extends AbstractWidget
     {
         $summs['all'] = 0;
         $dataChart = [];
+        $chartRewardsSP = [];
         $acc = $this->config['account'];
 
         $data = $this->getRewardsIn($this->config['account']);
@@ -43,8 +44,9 @@ class WitnessRewards extends AbstractWidget
             $dataChart['count'][] = $sums_by_month['count'];
 
         }
-
-        $chartRewardsSP = $this->getChartRewardsIn($dataChart, $this->config['account']);
+        if (!empty($dataChart)) {
+            $chartRewardsSP = $this->getChartRewardsIn($dataChart, $this->config['account']);
+        }
 
 
         //dd(1);
