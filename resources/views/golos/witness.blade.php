@@ -57,6 +57,7 @@
     </div>
 
 
+    @asyncWidget('witnessRewards', ['account'=>$account,'date'=>$date], $account, $date )
 
     @asyncWidget('WitnessSupportVotes', ['account'=>$account])
    {{-- @asyncWidget('CurationsRewards', ['account'=>$account])--}}
