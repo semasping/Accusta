@@ -87,12 +87,12 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table" id="table_v2">
                                     <thead>
                                     <tr>
                                         <th>Date</th>
                                         <th>Voted account</th>
-                                        <th></th>
+                                        <th>Vesting Shares, VESTS<br> {{ $allPowPrx }}M</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -104,7 +104,7 @@
                                                     <span class="glyphicon glyphicon-log-out"><img class="logo" src="/golos_icon_15.png"></span>
                                                 </a>
                                             </td>
-                                            <td></td>
+                                            <td>{{ number_format($vote['proxy'],0,'.',' ') }}</td>
                                         </tr>
                                     @endforeach
                                     <tr>
