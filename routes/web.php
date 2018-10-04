@@ -137,7 +137,7 @@ if (getenv('BCH_API') == 'golos') {
 }
 
 if (getenv('BCH_API') == 'steemit') {
-    Route::get('/@{acc}', 'TransAccController@index')->middleware(CheckHistoryAcc::class)->name('home');
+    Route::get('/@{acc}', 'AuthorRewardsController@showAll')->middleware(CheckHistoryAcc::class)->name('home');
     Route::get('/@{acc}/by_month', 'AuthorRewardsController@showAll')->name('trans_by_month')->middleware(CheckHistoryAcc::class);
     Route::get('/@{acc}/author/by_month/{type}/{date}', 'AuthorRewardsController@getDataTableRewardsByMonth')->name('trans_author_by_mont')->middleware(CheckHistoryAcc::class);
 
