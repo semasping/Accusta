@@ -1,6 +1,19 @@
 @if (($summs['all']!=0))
     <div class="container-fluid">
         <div class="row">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Witness Rewards statistics for {{'@'.$acc}}</div>
+                    <div class="panel-body">
+                        {!! $chartRewardsSP->render() !!}
+                    </div>
+                </div>
+
+
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
             <div class="panel panel-default">
                 <div class="panel-heading">Witness rewards</div>
                 <div class="panel-body">

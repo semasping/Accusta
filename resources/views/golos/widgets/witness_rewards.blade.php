@@ -1,6 +1,19 @@
 @if (($summs['all']!=0))
     <div class="container-fluid">
         <div class="row">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Witness Rewards statistics for {{'@'.$acc}}</div>
+                    <div class="panel-body">
+                        {!! $chartRewardsSP->render() !!}
+                    </div>
+                </div>
+
+
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
             <div class="panel panel-default">
                 <div class="panel-heading">Witness rewards</div>
                 <div class="panel-body">
@@ -9,8 +22,8 @@
                             <thead>
                             <tr>
                                 <th>Time</th>
-                                <th>Vests</th>
-                                <th>SteemPower (Calculated for current <b>steem_per_mvests</b> )</th>
+                                <th>GESTS</th>
+                                <th>Сила Голоса (Расчитана для текущего значения <b>steem_per_mvests</b> )</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -24,7 +37,7 @@
                             <tr>
 
 
-                                <td>Whole witness time</td>
+                                <td>За всё время делегатсва</td>
                                 <td>{{ $summs['all'] }}</td>
                                 <td>~ {{ \App\semas\SteemitApi::convertToSg($summs['all']) }}</td>
                             </tr>
