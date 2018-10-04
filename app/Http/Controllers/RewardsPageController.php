@@ -40,7 +40,7 @@ class RewardsPageController extends Controller
         $acc = trim($acc);
 
         $account_data = SteemitApi::getAccountFull($acc);
-        $vs = $account_data['result'][0]['vesting_shares'];
+        $vs = $account_data[0]['vesting_shares'];
         $sp = SteemitApi::convertToSg((int)$vs);
 
 
