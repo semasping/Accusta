@@ -55,9 +55,7 @@ class CuratorRewards
             ]
         ]);
         foreach ($data_by_monthes as $state) {
-            //dd($state);
             $date = Date::parse('01.' . $state['_id']['date']['M'] . '.' . $state['_id']['date']['Y']);
-            //$arr['date'] = Date::parse($state['timestamp'])->format('Y F d h:i');
 
             $arr['total'] = $state['total'];
             $arr['count'] = $state['count'];
@@ -65,7 +63,6 @@ class CuratorRewards
             $res_arr[$date->format('Ym')] = $arr;
 
         }
-        //dump($res_arr);
         ksort($res_arr);
         foreach ($res_arr as $key => $item) {
             $fm = Date::parse($key . '01')->format('Y M');
@@ -76,7 +73,6 @@ class CuratorRewards
             $data['date'][] = Date::parse($key . '01')->timestamp;
             $data['allSP'] = $data['allSP'] + BchApi::convertToSg($item['total']);
         }
-        //dd($data);
 
 
         return $data;

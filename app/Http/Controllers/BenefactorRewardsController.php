@@ -35,6 +35,7 @@ class BenefactorRewardsController extends Controller
         $res_arr = [];
         $month = [];
         $acc = $request->get('acc');
+
         if (empty($acc)) {
             if (empty($_acc)) {
                 return view(getenv('BCH_API') . '.trans.notfound', [
@@ -49,28 +50,18 @@ class BenefactorRewardsController extends Controller
         $acc = mb_strtolower($acc);
         $acc = trim($acc);
 
-        /*        Tracker::trackEvent(['event' => 'PowerUpDown for @'.$acc]);
-                Tracker::trackEvent(['event' => '@'.$acc]);*/
-
-
         if ($request->csv) {
             /*Tracker::trackEvent(['event' => 'CSV PowerUpDown']);*/
             $rewards = $this->getRewardsAll($acc,$request->get('type'));
             return $this->exportToExcel($rewards->toArray(), 'BenefactorRewards', $acc);
         }
 
-        /*Tracker::trackEvent(['event' => 'PowerUpDown']);*/
-
-
         $dataIn = $this->getRewardsIn($acc);
         $chartRewardsIn = $this->getChartRewardsIn($dataIn, $acc);
         $dataOut = $this->getRewardsOut($acc);
         $chartRewardsOut = $this->getChartRewardsOut($dataOut, $acc);
-        //dd($wv_by_month);
-        $key = $acc;
-        $account = $acc;
-        $date = Date::now();
         $form_action = 'BenefactorRewardsController@showAll';
+
         return view(getenv('BCH_API') . '.trans.index-benefactor-rewards', [
             'account' => $acc,
             'acc' => $acc,
@@ -84,8 +75,6 @@ class BenefactorRewardsController extends Controller
             'chartRewardsIn' => $chartRewardsIn,
             'chartRewardsOut' => $chartRewardsOut,
         ]);
-        //return view(env('BCH_API').'.rewards', compact('author', 'key','account','date','form_action'));
-        //dump($res_arr);
     }
 
     public function exportToExcel($data, $type, $acc)
@@ -126,10 +115,7 @@ class BenefactorRewardsController extends Controller
             ],
         ]);
         foreach ($data_by_monthes as $state) {
-            //dd($state);
             $date = Date::parse('01.' . $state['_id']['date']['M'] . '.' . $state['_id']['date']['Y']);
-            //$arr['date'] = Date::parse($state['timestamp'])->format('Y F d h:i');
-
             $arr['total'] = $state['total'];
             $arr['count'] = $state['count'];
             $arr['date'] = $date->endOfMonth();
@@ -146,7 +132,6 @@ class BenefactorRewardsController extends Controller
             $data['date'][] = Date::parse($key . '01')->timestamp;
             $data['allSP'] = $data['allSP'] + BchApi::convertToSg($item['total']);
         }
-
 
         return $data;
     }
@@ -176,10 +161,7 @@ class BenefactorRewardsController extends Controller
             ],
         ]);
         foreach ($data_by_monthes as $state) {
-            //dd($state);
             $date = Date::parse('01.' . $state['_id']['date']['M'] . '.' . $state['_id']['date']['Y']);
-            //$arr['date'] = Date::parse($state['timestamp'])->format('Y F d h:i');
-
             $arr['total'] = $state['total'];
             $arr['count'] = $state['count'];
             $arr['date'] = $date->endOfMonth();
@@ -196,13 +178,11 @@ class BenefactorRewardsController extends Controller
             $data['allSP'] = $data['allSP'] + BchApi::convertToSg($item['total']);
         }
 
-
         return $data;
     }
 
     private function getChartRewardsIn($data, $acc)
     {
-
         $chartjs = app()->chartjs
             ->name('lineChartTest')
             ->type('line')
@@ -341,11 +321,7 @@ class BenefactorRewardsController extends Controller
 
     public function getRewardsByMonth($acc, $type, $date)
     {
-        /*$acc = $request->get('acc');
-        $date  = $request->get('date');
-        $type  = $request->get('type');*/
 
-        //dump($acc,$date,$type);
         $date = Date::createFromTimestamp($date);
         $date_start = new MongoDB\BSON\UTCDateTime(($date->startOfMonth()));
         $date_end = new MongoDB\BSON\UTCDateTime(($date->endOfMonth()));
@@ -388,11 +364,9 @@ class BenefactorRewardsController extends Controller
             $arr['timestamp'] = $state['timestamp'];
             $res_arr[] = $arr;
         }
-        //dump($res_arr);
-        /*$grid = $this->getBenefactorInGrid($res_arr);
-        echo $grid;*/
-        return collect($res_arr);
 
+
+        return collect($res_arr);
     }
 
     /**
@@ -447,11 +421,8 @@ class BenefactorRewardsController extends Controller
 
             $res_arr[] = $arr;
         }
-        //dump($res_arr);
-        /*$grid = $this->getBenefactorInGrid($res_arr);
-        echo $grid;*/
-        return collect($res_arr);
 
+        return collect($res_arr);
     }
 
 

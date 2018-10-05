@@ -60,7 +60,6 @@ class RewardsPageController extends Controller
 
         $sp_other = $sp - $sums;
 
-        //dump($sp_authorRewards,$sp_curatorRewards,$sp_benefactorRewards,$sp_witnessRewards,$sums, $sp_other);
 
         $chartsData=[$sp_authorRewards,$sp_curatorRewards,$sp_benefactorRewards,$sp_witnessRewards,$sp_other];
 
@@ -75,14 +74,6 @@ class RewardsPageController extends Controller
             'form_action' => $form_action,
             'date' => false,
             'chartjs' => $chartjs,
-
-            //'wv_by_month' => $wv_by_month,
-            /*'month' => $month,
-            'week' => true,
-            'dataIn' => $dataIn,
-            'chartRewardsSP' => $chartRewardsSP,
-            'chartRewardsSTEEM' => $chartRewardsSTEEM,
-            'chartRewardsSBD' => $chartRewardsSBD,*/
         ]);
     }
 

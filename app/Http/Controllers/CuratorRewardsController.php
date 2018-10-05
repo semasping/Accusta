@@ -35,6 +35,7 @@ class CuratorRewardsController extends Controller
         $res_arr = [];
         $month = [];
         $acc = $request->get('acc');
+
         if (empty($acc)) {
             if (empty($_acc)) {
                 return view(getenv('BCH_API') . '.trans.notfound', [
@@ -45,43 +46,30 @@ class CuratorRewardsController extends Controller
             $acc = $_acc;
 
         }
+
         $acc = str_replace('@', '', $acc);
         $acc = mb_strtolower($acc);
         $acc = trim($acc);
 
-        /*        Tracker::trackEvent(['event' => 'PowerUpDown for @'.$acc]);
-                Tracker::trackEvent(['event' => '@'.$acc]);*/
-
-
         if ($request->csv) {
-            /*Tracker::trackEvent(['event' => 'CSV PowerUpDown']);*/
             $rewards = $this->getRewardsAll($acc);
             return $this->exportToExcel($rewards->toArray(), 'CuratorRewards', $acc);
         }
 
-        /*Tracker::trackEvent(['event' => 'PowerUpDown']);*/
-
-
         $dataIn = $this->getRewardsIn($acc);
         $chartRewardsIn = $this->getChartRewardsIn($dataIn, $acc);
-        //dd($wv_by_month);
-        $key = $acc;
-        $account = $acc;
-        $date = Date::now();
         $form_action = 'CuratorRewardsController@showAll';
+
         return view(getenv('BCH_API') . '.trans.index-curator-rewards', [
             'account' => $acc,
             'acc' => $acc,
             'form_action' => $form_action,
             'date' => false,
-            //'wv_by_month' => $wv_by_month,
             'month' => $month,
             'week' => true,
             'dataIn' => $dataIn,
             'chartRewardsIn' => $chartRewardsIn,
         ]);
-        //return view(env('BCH_API').'.rewards', compact('author', 'key','account','date','form_action'));
-        //dump($res_arr);
     }
 
     public function exportToExcel($data, $type, $acc)
@@ -137,7 +125,7 @@ class CuratorRewardsController extends Controller
             $res_arr[$date->format('Ym')] = $arr;
 
         }
-        //dump($res_arr);
+
         ksort($res_arr);
         foreach ($res_arr as $key => $item) {
             $fm = Date::parse($key . '01')->format('Y M');
@@ -148,8 +136,6 @@ class CuratorRewardsController extends Controller
             $data['date'][] = Date::parse($key . '01')->timestamp;
             $data['allSP'] = $data['allSP'] + BchApi::convertToSg($item['total']);
         }
-        //dd($data);
-
 
         return $data;
     }
@@ -238,15 +224,10 @@ class CuratorRewardsController extends Controller
 
     public function getRewardsByMonth($acc, $type, $date)
     {
-        /*$acc = $request->get('acc');
-        $date  = $request->get('date');
-        $type  = $request->get('type');*/
 
-        //dump($acc,$date,$type);
         $date = Date::createFromTimestamp($date);
         $date_start = new MongoDB\BSON\UTCDateTime(($date->startOfMonth()));
         $date_end = new MongoDB\BSON\UTCDateTime(($date->endOfMonth()));
-        //$date_end = $date->endOfMonth()->timestamp;
 
         $typeQ = '';
         $res_arr = [];
@@ -279,9 +260,7 @@ class CuratorRewardsController extends Controller
             $arr['timestamp'] = $state['timestamp'];
             $res_arr[] = $arr;
         }
-        //dump($res_arr);
-        /*$grid = $this->getBenefactorInGrid($res_arr);
-        echo $grid;*/
+
         return collect($res_arr);
 
     }
@@ -322,9 +301,7 @@ class CuratorRewardsController extends Controller
 
             $res_arr[] = $arr;
         }
-        //dump($res_arr);
-        /*$grid = $this->getBenefactorInGrid($res_arr);
-        echo $grid;*/
+
         return collect($res_arr);
 
     }

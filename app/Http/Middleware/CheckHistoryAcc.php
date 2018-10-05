@@ -44,18 +44,12 @@ class CheckHistoryAcc
         $acc = trim($acc);
 
         $max = BchApi::getHistoryAccountLast($acc);
-        //$current = BchApi::getCurrentProcessedHistoryTranzId($acc);
         $processed = BchApi::getCurrentProcessedHistoryTranzIdInDB($acc);
-//            dump($max,$processed);
 
         if ($processed == 0){
-            //Artisan::call('BchApi:GetHistoryAccountFullInCache',['api'=>'golos','acc'=>$acc]);
-            //GolosApi::getHistoryAccountFullInCache($acc);
 
-            //dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue(getenv('BCH_API').'CheckHistoryAcc');
             dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue(getenv('BCH_API').'full_load');
 
-            //return redirect()-
             $collection = BchApi::getMongoDbCollection($acc);
             $processed = $collection->count();
 
@@ -67,9 +61,7 @@ class CheckHistoryAcc
         }elseif ($max-$processed>0) {
 
             dispatch(new GetHistoryAccountUpdateInCache($acc,$processed, getenv('BCH_API')))->onQueue(getenv('BCH_API').'update_load');
-            //dispatch(new GetHistoryAccountFullInCache($acc, getenv('BCH_API')))->onQueue('full_load');
-            /*if (!$request->has('skip'))
-            return response(view(getenv('BCH_API').'.process-tranz', ['account' => $acc,'total'=>$max,'current'=>$processed ]));*/
+
             sleep(5);
             $result['result']=true;
 

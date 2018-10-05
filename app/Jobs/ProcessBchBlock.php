@@ -52,7 +52,6 @@ class ProcessBchBlock implements ShouldQueue
                         $this->checkAuthorsRewards($transaction);
                         $this->checkPosts($transaction);
 
-                        //$oper[] = $operation;
 
                     }
                 }

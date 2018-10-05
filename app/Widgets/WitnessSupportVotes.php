@@ -38,14 +38,11 @@ class WitnessSupportVotes extends AbstractWidget
         $allPowRe = 0;
         $allPowPrx = 0;
 
-        //account_witness_vote
         $collection = BchApi::getMongoDbCollection($this->config['account']);
         $data = $collection->find(['op' => 'account_witness_vote'], ['sort' => ['timestamp' => 1]]);
         if ($data) {
-            //dump($data->toArray());
 
             foreach ($data as $datum) {
-                //dump(collect($datum));
                 $arr['witness'] = $datum['op'][1]['witness'];
                 $arr['account'] = $datum['op'][1]['account'];
                 $arr['approve'] = $datum['op'][1]['approve'];
@@ -90,8 +87,7 @@ class WitnessSupportVotes extends AbstractWidget
         $forWitness = collect($forWitness)->sortByDesc('proxy');
         $forWitnessHistory = collect($forWitnessHistory)->sortByDesc('timestamp');
         $allPowPrx = $forWitness->sum('proxy');
-        //dump($voteFor, $forWitness);
-        //dump($forWitnessHistory[''])
+
         return view(getenv('BCH_API') . '.widgets.witness_support_votes', [
             'config' => $this->config,
             'voteFor' => $voteFor->toArray(),
