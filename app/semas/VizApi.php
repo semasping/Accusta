@@ -941,21 +941,25 @@ class VizApi
 
             $known = false;
 
+            $known_types = [
+                'content',
+                'account_witness_vote',
+                'vote',
+                'shutdown_witness',
+                'witness_update',
+                'committee_vote_request',
+                'account_update',
+                'chain_properties_update',
+                '',
+            ];
+
+            if (in_array($trns['op'][0],$known_types)){
+                $known = true;
+            }
+
             if ($trns['op'][0] == 'witness_reward') {
                 $trns['op'][1]['SHARES'] = (double)((str_replace(' SHARES', '',
                     $trns['op'][1]['shares'])));
-                $known = true;
-            }
-            if ($trns['op'][0]=='content'){
-                $known = true;
-            }
-            if ($trns['op'][0]=='account_witness_vote'){
-                $known = true;
-            }
-            if ($trns['op'][0]=='vote'){
-                $known = true;
-            }
-            if ($trns['op'][0]=='shutdown_witness'){
                 $known = true;
             }
             if ($trns['op'][0]=='committee_worker_create_request'){
