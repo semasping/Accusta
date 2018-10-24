@@ -20,6 +20,9 @@ class BchApi
         if (getenv('BCH_API') == 'steemit') {
             return SteemitApi::getHistoryAccountFirst($acc);
         }
+        if (getenv('BCH_API') == 'viz') {
+            return VizApi::getHistoryAccountFirst($acc);
+        }
     }
 
 
@@ -31,6 +34,10 @@ class BchApi
 
         if (getenv('BCH_API') == 'steemit') {
             return SteemitApi::getTransaction($acc, $type);
+        }
+
+        if (getenv('BCH_API') == 'viz') {
+            return VizApi::getTransaction($acc, $type);
         }
 
     }
@@ -45,6 +52,10 @@ class BchApi
             return SteemitApi::convertToSg($gests);
         }
 
+        if (getenv('BCH_API') == 'viz') {
+            return VizApi::convertToSg($gests);
+        }
+
     }
 
     public static function getHistoryAccountLast($acc)
@@ -55,6 +66,10 @@ class BchApi
 
         if (getenv('BCH_API') == 'steemit') {
             return SteemitApi::getHistoryAccountLast($acc);
+        }
+
+        if (getenv('BCH_API') == 'viz') {
+            return VizApi::getHistoryAccountLast($acc);
         }
     }
 
@@ -67,6 +82,10 @@ class BchApi
         if (getenv('BCH_API') == 'steemit') {
 
             return SteemitApi::getCurrentProcessedHistoryTranzId($acc);
+        }
+
+        if (getenv('BCH_API') == 'viz') {
+            return VizApi::getCurrentProcessedHistoryTranzId($acc);
         }
     }
 
@@ -86,10 +105,11 @@ class BchApi
             $max = 0;
         }
         $current = $collection->count();
-        //dump($current);
+        //dump($current, $max);
         if ($current == ($max) + 1) {
             return ($max);
         } else {
+            //$collection->drop();
             AdminNotify::send('GetCurrentWithError(getCurrentProcessedHistoryTranzIdInDB) for account:'.$acc.' $max='.$max.' $current='.$current);
             return 0;
         }
@@ -99,6 +119,9 @@ class BchApi
     public static function getMongoDbCollection($account)
     {
         if (getenv('BCH_API') == 'golos') {
+            return (new MongoDB\Client)->selectCollection(getenv('BCH_API') . '_accusta', $account);
+        }
+        if (getenv('BCH_API') == 'viz') {
             return (new MongoDB\Client)->selectCollection(getenv('BCH_API') . '_accusta', $account);
         }
         if (getenv('BCH_API') == 'steemit') {
@@ -117,6 +140,10 @@ class BchApi
         if (getenv('BCH_API') == 'steemit') {
             return SteemitApi::GetDynamicGlobalProperties();
         }
+
+        if (getenv('BCH_API') == 'viz') {
+            return VizApi::GetDynamicGlobalProperties();
+        }
     }
 
 
@@ -128,6 +155,10 @@ class BchApi
 
         if (getenv('BCH_API') == 'steemit') {
             return SteemitApi::getOpsInBlock($block_id);
+        }
+
+        if (getenv('BCH_API') == 'viz') {
+            return VizApi::getOpsInBlock($block_id);
         }
     }
 
@@ -141,6 +172,10 @@ class BchApi
         if (getenv('BCH_API') == 'steemit') {
             return SteemitApi::getContent($author,$permlink);
         }
+
+        if (getenv('BCH_API') == 'viz') {
+            return VizApi::getContent($author,$permlink);
+        }
     }
 
     public static function getFullAccount($account)
@@ -152,6 +187,10 @@ class BchApi
 
         if (getenv('BCH_API') == 'steemit') {
             return SteemitApi::getAccountFull($account);
+        }
+
+        if (getenv('BCH_API') == 'viz') {
+            return VizApi::getAccountFull($account);
         }
     }
 }
