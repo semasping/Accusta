@@ -32,6 +32,9 @@ class CheckHistoryAcc
             if ($checkResult['result']==false){
                 return response(view(getenv('BCH_API').'.process-tranz', ['account' => $acc,'total'=>$checkResult['max'],'current'=>$checkResult['processed'] ]));
             }
+            if ($checkResult['result']==='wait updates'){
+                return response(view(getenv('BCH_API').'.wait-update-tranz', ['account' => $acc]));
+            }
         }
         return $next($request);
     }
@@ -56,15 +59,11 @@ class CheckHistoryAcc
             $result['result']=false;
             $result['max'] = $max;
             $result['processed'] = $processed;
-
-
         }elseif ($max-$processed>0) {
 
             dispatch(new GetHistoryAccountUpdateInCache($acc,$processed, getenv('BCH_API')))->onQueue(getenv('BCH_API').'update_load');
 
-            sleep(5);
-            $result['result']=true;
-
+            $result['result']='wait updates';
         }
         return $result;
 
