@@ -21,7 +21,7 @@
         "predis/predis": "^1.1",
         "rollbar/rollbar-laravel": "^2.2",
         "sentry/sentry-laravel": "^0.8.0",
-        "t3ran13/php-graphene-node-client": "^4.0",
+        "t3ran13/php-graphene-node-client": "^5.1",
         "view-components/grids": "^0.5.9",
         "yajra/laravel-datatables": "^1.0"
     },
