@@ -3,10 +3,9 @@
         <div class="row links ">
             <center>
                 <p class="text-muted links">Разработкой сервиса занят:<a
-                            href="https://golos.io/@semasping"><b>@semasping</b></a>. </p>
+                            href="https://viz.world/@semasping"><b>@semasping</b></a>. </p>
                 <p class="links"> Поддержите<br> <b>Делегата Semasping</b>: <a
-                            href="https://golos.io/~witnesses">https://golos.io/~witnesses</a> или <a
-                            href="https://goldvoice.club/witnesses/">https://goldvoice.club/witnesses/</a></p>
+                            href="https://viz.world/witnesses/semasping/">https://viz.world/witnesses/semasping/</a></p>
 
             </center>
         </div>

@@ -73,6 +73,7 @@ class WitnessSupportVotes extends AbstractWidget
 
                         $power = str_replace(' GESTS', '', $accountData[0]['vesting_shares']);
                         $power = str_replace(' VESTS', '', $power);
+                        $power = str_replace(' SHARES', '', $power);
                         $proxy = $accountData[0]['proxied_vsf_votes']['0']/1000000;
                         $forWitness[$arr['account']]['proxy'] = round($proxy + $power);
                     }
@@ -95,7 +96,7 @@ class WitnessSupportVotes extends AbstractWidget
             'account' => $this->config['account'],
             'forWitnessHistory' => $forWitnessHistory->toArray(),
             'voteForHistory' => $voteForHistory->toArray(),
-            'allPowPrx' => number_format($allPowPrx/1000000,0,'.',' '),
+            'allPowPrx' => number_format($allPowPrx/1000000,3,'.',' '),
         ]);
     }
 }

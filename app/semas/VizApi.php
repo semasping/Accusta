@@ -598,10 +598,10 @@ class VizApi
                 $q1 = str_replace(' VIZ', '', $resp['total_vesting_fund']);
                 $q2 = str_replace(' SHARES', '', $resp['total_vesting_shares']);
                 //AdminNotify::send($q1 .'/'. $q2);
-                $p = $q1 / $q2;
-                AdminNotify::send($p * 1000000);
+                $p = $q1 / $q2 * 1000000;
+                AdminNotify::send($p);
 
-                return round($p * 1000000, 3, PHP_ROUND_HALF_DOWN);
+                return round($p, 3, PHP_ROUND_HALF_DOWN);
             }
 
             return false;
@@ -960,6 +960,9 @@ class VizApi
             if ($trns['op'][0] == 'witness_reward') {
                 $trns['op'][1]['SHARES'] = (double)((str_replace(' SHARES', '',
                     $trns['op'][1]['shares'])));
+                $trns['op'][1]['VESTS'] = (double)((str_replace(' SHARES', '',
+                    $trns['op'][1]['shares'])));
+                $trns['type'] = 'producer_reward';
                 $known = true;
             }
             if ($trns['op'][0]=='committee_worker_create_request'){
@@ -977,16 +980,22 @@ class VizApi
             if ($trns['op'][0] == 'author_reward') {
                 $trns['op'][1]['VIZ'] = (double)((str_replace(' VIZ', '',
                     $trns['op'][1]['token_payout'])));
+                $trns['op'][1]['STEEM'] = (double)((str_replace(' VIZ', '',
+                    $trns['op'][1]['token_payout'])));
                 $trns['op'][1]['SHARES'] = (double)((str_replace(' SHARES', '',
+                    $trns['op'][1]['vesting_payout'])));
+                $trns['op'][1]['VESTS'] = (double)((str_replace(' SHARES', '',
                     $trns['op'][1]['vesting_payout'])));
                 $known = true;
             }
             if ($trns['op'][0] == 'content_benefactor_reward') {
                 $trns['op'][1]['SHARES'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['reward'])));
+                $trns['op'][1]['VESTS'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['reward'])));
                 $known = true;
             }
             if ($trns['op'][0] == 'curation_reward') {
                 $trns['op'][1]['SHARES'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['reward'])));
+                $trns['op'][1]['VESTS'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['reward'])));
                 $known = true;
             }
             if ($known==false){

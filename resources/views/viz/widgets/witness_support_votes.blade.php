@@ -93,7 +93,7 @@
                                     <tr>
                                         <th>Date</th>
                                         <th>Voted account</th>
-                                        <th>Vesting Shares, GESTS<br> {{ $allPowPrx }}M</th>
+                                        <th>Vesting Shares, SHARES<br> {{ $allPowPrx }}M</th>
                                     </tr>
                                     </thead>
                                     <tbody>

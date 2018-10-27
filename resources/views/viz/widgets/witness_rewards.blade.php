@@ -22,8 +22,8 @@
                             <thead>
                             <tr>
                                 <th>Время</th>
-                                <th>GESTS</th>
-                                <th>Сила Голоса (для текущего значения <b>steem_per_mvests</b>)</th>
+                                <th>SHARES</th>
+
                             </tr>
                             </thead>
                             <tbody>
@@ -31,7 +31,7 @@
                                 <tr>
                                     <td>{{ $month['date'] }}</td>
                                     <td>{{ $month['value'] }}</td>
-                                    <td>~ {{ \App\semas\SteemitApi::convertToSg($month['value']) }}</td>
+
                                 </tr>
                             @endforeach
                             <tr>
@@ -39,7 +39,7 @@
 
                                 <td>За всё время делегатства</td>
                                 <td>{{ $summs['all'] }}</td>
-                                <td>~ {{ \App\semas\SteemitApi::convertToSg($summs['all']) }}</td>
+
                             </tr>
                             </tbody>
                         </table>
