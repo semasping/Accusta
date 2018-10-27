@@ -951,6 +951,10 @@ class VizApi
                 'account_update',
                 'chain_properties_update',
                 'custom',
+                'transfer_to_vesting',
+                'account_create',
+                'delegate_vesting_shares',
+                'set_withdraw_vesting_route',
             ];
 
             if (in_array($trns['op'][0],$known_types)){
@@ -997,6 +1001,28 @@ class VizApi
             if ($trns['op'][0] == 'curation_reward') {
                 $trns['op'][1]['SHARES'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['reward'])));
                 $trns['op'][1]['VESTS'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['reward'])));
+                $known = true;
+            }
+            if ($trns['op'][0] == 'transfer_to_vesting') {
+                $trns['op'][1]['VIZ'] = (double)((str_replace(' VIZ', '', $trns['op'][1]['amount'])));
+                $trns['op'][1]['STEEM'] = (double)((str_replace(' VIZ', '', $trns['op'][1]['amount'])));
+                $known = true;
+            }
+            if ($trns['op'][0] == 'delegate_vesting_shares') {
+                $trns['op'][1]['SHARES'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['vesting_shares'])));
+                $trns['op'][1]['VESTS'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['vesting_shares'])));
+                $known = true;
+            }
+            if ($trns['op'][0] == 'withdraw_vesting') {
+                $trns['op'][1]['SHARES'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['vesting_shares'])));
+                $trns['op'][1]['VESTS'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['vesting_shares'])));
+                $known = true;
+            }
+            if ($trns['op'][0] == 'fill_vesting_withdraw') {
+                $trns['op'][1]['withdrawn_SHARES'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['withdrawn'])));
+                $trns['op'][1]['withdrawn_VESTS'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['withdrawn'])));
+                $trns['op'][1]['deposited_VIZ'] = (double)((str_replace(' VIZ', '', $trns['op'][1]['deposited'])));
+                $trns['op'][1]['deposited_STEEM'] = (double)((str_replace(' VIZ', '', $trns['op'][1]['deposited'])));
                 $known = true;
             }
             if ($known==false){
