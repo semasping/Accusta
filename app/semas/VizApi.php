@@ -950,7 +950,7 @@ class VizApi
                 'committee_vote_request',
                 'account_update',
                 'chain_properties_update',
-                '',
+                'custom',
             ];
 
             if (in_array($trns['op'][0],$known_types)){
