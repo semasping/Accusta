@@ -19,18 +19,19 @@
         </div>
 
         <div class="links">
-            <a href="#">Сервис статистики аккаунтов в блокчейне Голос</a>
+            <a href="#">Сервис статистики аккаунтов в блокчейне VIZ</a>
         </div>
 
         <div class="text">
             <h3>Возможности сервиса:</h3>
-            <p>Статистика понижения Силы голоса</p>
+            <p>Статистика понижения SHARES</p>
             <p>Фильтр истории транзакций</p>
             <p>Группировка данных по месяцам или неделям:</p>
             <ul>
                 <li> * Посты</li>
                 <li> * Выплаты за посты</li>
                 <li> * Кураторские</li>
+                <li> * Делегатские</li>
             </ul>
 
 
@@ -51,10 +52,10 @@
         <div class="container-fluid">
             <div class="row links ">
                 <center>
-                    <p class="text-muted links">Разработкой сервиса занят:<a href="https://golos.io/@semasping">@semasping</a>. </p>
+                    <p class="text-muted links">Разработкой сервиса занят:<a href="https://viz.world/@semasping">@semasping</a>. </p>
 
 
-                    <p class="links"> Проголосовать за <b>Делегата Semasping</b> вы можете <a href="https://golos.io/~witnesses">https://golos.io/~witnesses</a> или <a href="https://goldvoice.club/witnesses/">https://goldvoice.club/witnesses/</a></p>
+                    <p class="links"> Проголосовать за <b>Делегата Semasping</b> вы можете <a href="https://viz.world/witnesses/semasping/">https://viz.world/witnesses/semasping/</a></p>
 
                 </center>
             </div>
