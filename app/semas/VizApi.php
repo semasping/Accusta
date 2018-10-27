@@ -986,6 +986,7 @@ class VizApi
                     $trns['op'][1]['vesting_payout'])));
                 $trns['op'][1]['VESTS'] = (double)((str_replace(' SHARES', '',
                     $trns['op'][1]['vesting_payout'])));
+                $trns['op'][1]['SBD'] = 0;
                 $known = true;
             }
             if ($trns['op'][0] == 'content_benefactor_reward') {

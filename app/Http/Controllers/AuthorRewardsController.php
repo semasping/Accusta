@@ -364,8 +364,6 @@ class AuthorRewardsController extends Controller
     }
 
 
-
-
     public function getDataTableRewardsByMonth(Request $request, Builder $htmlBuilder)
     {
         return DataTables::collection($this->getRewardsByMonth($request->acc, $request->type,
@@ -415,7 +413,9 @@ class AuthorRewardsController extends Controller
 
             $arr['permlink'] = $state['op'][1]['permlink'];
             $arr['STEEM'] = $state['op'][1]['STEEM'];
-            $arr['SBD'] = $state['op'][1]['SBD'];
+            if (isset($state['op'][1]['SBD'])) {
+                $arr['SBD'] = $state['op'][1]['SBD'];
+            }
             $arr['VESTS'] = $state['op'][1]['VESTS'];
             $arr['SP'] = BchApi::convertToSg($state['op'][1]['VESTS']);
             $arr['timestamp'] = $state['timestamp'];
