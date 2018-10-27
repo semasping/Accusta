@@ -955,6 +955,8 @@ class VizApi
                 'account_create',
                 'delegate_vesting_shares',
                 'set_withdraw_vesting_route',
+                'committee_worker_cancel_request',
+                'transfer',
             ];
 
             if (in_array($trns['op'][0],$known_types)){
