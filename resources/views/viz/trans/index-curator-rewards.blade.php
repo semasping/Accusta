@@ -75,7 +75,7 @@
                 <div class="panel-group" id="aIn" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataIn['month']) ?>
                     @foreach($dataIn['month'] as $k=>$m)
-                        @include('golos.trans.data.curator-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
+                        @include('viz.trans.data.curator-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
                     @endforeach
                 </div>
             </div>

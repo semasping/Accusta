@@ -73,6 +73,9 @@ class WitnessRewards extends AbstractWidget
             ['$match' => ['type' => ['$eq' => 'producer_reward']]],
             ['$unwind' => '$op'],
             [
+                '$match' => ['op.VESTS'=>['$gte'=>0]],
+            ],
+            [
                 '$group' => [
                     '_id' => ['date' => ['M' => ['$month' => '$date'], 'Y' => ['$year' => '$date'],]],
                     'total' => ['$sum' => '$op.VESTS'],

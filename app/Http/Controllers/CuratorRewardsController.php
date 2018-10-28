@@ -94,6 +94,7 @@ class CuratorRewardsController extends Controller
         $data['allSP'] = 0;
         $collection = BchApi::getMongoDbCollection($acc);
         $data_by_monthes = $collection->aggregate([
+
             [
                 '$match' => [
                     'type' => ['$eq' => 'curation_reward'],
@@ -101,6 +102,9 @@ class CuratorRewardsController extends Controller
                 ]
             ],
             ['$unwind' => '$op'],
+            [
+                '$match' => ['op.VESTS'=>['$gte'=>0]],
+            ],
             [
                 '$group' => [
                     '_id' => ['date' => ['M' => ['$month' => '$date'], 'Y' => ['$year' => '$date'],]],

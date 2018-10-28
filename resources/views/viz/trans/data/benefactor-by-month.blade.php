@@ -3,7 +3,7 @@
         <h4 class="panel-title">
             <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
                href="#collapse{{ $type.$k }}" aria-expanded="false" aria-controls="collapse{{ $type.$k }}">
-                <div class="">{!! $m !!}: {!! $data['total'][$k] !!} Сила Голоса</div>
+                <div class="">{!! $m !!}: {!! $data['total'][$k] !!} shares</div>
             </a>
         </h4>
     </div>
@@ -22,8 +22,7 @@
                         <td>Кому</td>
                     @endif
                     <td>Permlink</td>
-                    <td class="sum">GESTS</td>
-                    <td class="sum">СГ</td>
+                    <td class="sum">SHARES</td>
                     <td>Timestamp</td>
                 </tr>
                 </thead>
@@ -32,7 +31,6 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -56,10 +54,9 @@
                 {data: 'author'},
                 {data: 'permlink'},
                 {data: 'VESTS'},
-                {data: 'SP'},
                 {data: 'timestamp'}
             ],
-            "order": [[4, "desc"]],
+            "order": [[3, "desc"]],
             "footerCallback": function (row, data, start, end, display) {
                 var api = this.api();
 

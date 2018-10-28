@@ -996,11 +996,14 @@ class VizApi
                 $known = true;
             }
             if ($trns['op'][0] == 'content_benefactor_reward') {
+                $trns['type'] = 'comment_benefactor_reward';
                 $trns['op'][1]['SHARES'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['reward'])));
                 $trns['op'][1]['VESTS'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['reward'])));
                 $known = true;
             }
             if ($trns['op'][0] == 'curation_reward') {
+                $trns['op'][1]['comment_author'] =  $trns['op'][1]['content_author'];
+                $trns['op'][1]['comment_permlink'] =  $trns['op'][1]['content_permlink'];
                 $trns['op'][1]['SHARES'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['reward'])));
                 $trns['op'][1]['VESTS'] = (double)((str_replace(' SHARES', '', $trns['op'][1]['reward'])));
                 $known = true;

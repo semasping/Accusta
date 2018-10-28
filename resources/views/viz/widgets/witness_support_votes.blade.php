@@ -57,7 +57,7 @@
                                         <tr>
                                             <td>{{ $vote['date'] }}</td>
                                             <td>{{ $vote['witness'] }}
-                                                <a target="_blank" href="https://golos.io/{{ '@'.$vote['witness'] }}/transfers">
+                                                <a target="_blank" href="https://viz.world/{{ '@'.$vote['witness'] }}/transfers">
                                                     <span class="glyphicon glyphicon-log-out"><img class="logo" src="/golos_icon_15.png"></span>
                                                 </a>
                                             </td>
@@ -101,7 +101,7 @@
                                         <tr>
                                             <td>{{ $vote['date'] }}</td>
                                             <td>{{ $vote['account'] }}
-                                                <a target="_blank" href="https://golos.io/{{ '@'.$vote['account'] }}/transfers">
+                                                <a target="_blank" href="https://viz.world/{{ '@'.$vote['account'] }}/transfers">
                                                     <span class="glyphicon glyphicon-log-out"><img class="logo" src="/golos_icon_15.png"></span>
                                                 </a>
                                             </td>
@@ -132,7 +132,7 @@
                                         <tr>
                                             <td>{{ $vote['date'] }}</td>
                                             <td>{{ $vote['account'] }}
-                                                <a target="_blank" href="https://golos.io/{{ '@'.$vote['account'] }}/transfers">
+                                                <a target="_blank" href="https://viz.world/{{ '@'.$vote['account'] }}/transfers">
                                                     <span class="glyphicon glyphicon-log-out"><img class="logo" src="/golos_icon_15.png"></span>
                                                 </a>
                                             </td>

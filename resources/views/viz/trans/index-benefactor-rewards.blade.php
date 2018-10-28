@@ -62,7 +62,7 @@
                     <div class="panel-heading">Бенефециарские вознаграждения аккаунта: {{'@'.$acc}}</div>
                     <div class="panel-body">{!! $chartRewardsIn->render() !!}</div>
                     <div class="panel-footer">
-                        Сумма всех вознаграждений: {!! $dataIn['allSP'] !!} Сила Голоса
+                        Сумма всех вознаграждений: {!! $dataIn['allSP'] !!} SHARES
                         {!! link_to_route('trans_benefactor',
                'Export rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'type'=>'in', Request::getQueryString()],
                ['class' => 'btn btn-info pull-right','role'=>"button"])
@@ -73,7 +73,7 @@
                 <div class="panel-group" id="aIn" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataIn['month']) ?>
                     @foreach($dataIn['month'] as $k=>$m)
-                        @include('golos.trans.data.benefactor-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
+                        @include('viz.trans.data.benefactor-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
                     @endforeach
                 </div>
             </div>
@@ -82,7 +82,7 @@
                     <div class="panel-heading">Бенефециарские вознаграждения с ваших постов другим аккаунтам</div>
                     <div class="panel-body">{!! $chartRewardsOut->render() !!}</div>
                     <div class="panel-footer">
-                        Сумма всех вознаграждений: {!! $dataOut['allSP'] !!} Сила Голоса
+                        Сумма всех вознаграждений: {!! $dataOut['allSP'] !!} SHARES
                         {!! link_to_route('trans_benefactor',
                'Export rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'type'=>'out', Request::getQueryString()],
                ['class' => 'btn btn-info pull-right','role'=>"button"])
@@ -95,7 +95,7 @@
                 <div class="panel-group" id="aOut" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataOut['month']) ?>
                     @foreach($dataOut['month'] as $k=>$m)
-                        @include('golos.trans.data.benefactor-by-month', [$k, 'data'=>$dataOut, $m, 'type'=>'Out'])
+                        @include('viz.trans.data.benefactor-by-month', [$k, 'data'=>$dataOut, $m, 'type'=>'Out'])
                     @endforeach
                 </div>
             </div>
