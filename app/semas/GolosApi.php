@@ -107,7 +107,7 @@ class GolosApi
             $content = $command->execute($commandQuery);
             //dd($content);
         } catch (Exception $e) {
-            dump($e);
+            //dump($e);
             //self::disconnect();
             return self::checkResult($content, '_getAccHistory', [$acc, $from, $limit]);
         }
