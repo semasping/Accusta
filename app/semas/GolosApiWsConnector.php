@@ -32,7 +32,7 @@ class GolosApiWsConnector extends WSConnectorAbstract
         'wss://ws.golos.blog',
         //'wss://17.golos.cf',
 
-        //'wss://ws.golos.io',
+        'wss://ws.golos.io',
         //'wss://ws17.golos.io',
 
     ];
