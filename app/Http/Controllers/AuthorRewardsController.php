@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use App\semas\BchApi;
+use App\Services\Charts;
 use Exception;
 use Illuminate\Http\Request;
 use Jenssegers\Date\Date;
@@ -149,221 +150,41 @@ class AuthorRewardsController extends Controller
 
     private function getChartRewardsSP($data, $acc)
     {
+        $labels = [
+            'dataset1' => __(getenv('BCH_API') .'.shares'),
+            'dataset2' => __(getenv('BCH_API') .'.count_rewards'),
+            'title' => __(getenv('BCH_API') .'.title_author_rewards_shares'),
+            'name' => 'spChart'
+        ];
 
-        $chartjs = app()->chartjs
-            ->name('spChart')
-            ->type('line')
-            ->size(['width' => 400, 'height' => 75])
-            ->labels($data['month'])
-            ->datasets([
-                [
-                    "label" => "Steem Power",
-                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
-                    'borderColor' => "rgba(38, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => $data['total'],
-                    'yAxisID' => 'y-axis-1',
-
-                ],
-                [
-                    "label" => "Count of rewards",
-                    'backgroundColor' => "rgba(138, 185, 154, 0.31)",
-                    'borderColor' => "rgba(138, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(138, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(138, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => $data['count'],
-                    'yAxisID' => 'y-axis-2',
-                ]
-            ])
-            ->optionsRaw("{
-                            responsive: true,
-                            tooltips: {
-                                mode: 'index',
-                                intersect: false
-                            },
-                            hover: {
-                                mode: 'index',
-                                intersect: false
-                            },
-                            stacked: false,
-                            title: {
-                                display: true,
-                                text: 'Author Steem Power Rewards statistics for @" . $acc . "'
-                            },
-                            
-                            scales: {
-                                yAxes: [{
-                                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                                    display: true,
-                                    position: 'left',
-                                    id: 'y-axis-1',
-                                    scaleLabel: {display: true, labelString: 'SP Reward'},
-                                }, {
-                                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                                    display: true,
-                                    position: 'right',
-                                    id: 'y-axis-2',
-                                    scaleLabel: {display: true, labelString: 'Count rewards'},
-        
-                                    // grid line settings
-                                    gridLines: {
-                                        drawOnChartArea: false, // only want the grid lines for one axis to show up
-                                    },
-                                }],
-                            }
-					    }");
-        return $chartjs;
+        return Charts::getChartRewards($data,$acc,$labels);
     }
 
     private function getChartRewardsSBD($data, $acc)
     {
+        $labels = [
+            'dataset1' => __(getenv('BCH_API') .'.peg'),
+            'dataset2' => __(getenv('BCH_API') .'.count_rewards'),
+            'title' => __(getenv('BCH_API') .'.title_author_rewards_peg'),
+            'name' => 'sbdChart'
+        ];
 
-        $chartjs = app()->chartjs
-            ->name('sbdChart')
-            ->type('line')
-            ->size(['width' => 400, 'height' => 75])
-            ->labels($data['month'])
-            ->datasets([
-                [
-                    "label" => "SBD",
-                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
-                    'borderColor' => "rgba(38, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => $data['total_sbd'],
-                    'yAxisID' => 'y-axis-1',
+        return Charts::getChartRewards($data,$acc,$labels);
 
-                ],
-                [
-                    "label" => "Count of rewards",
-                    'backgroundColor' => "rgba(138, 185, 154, 0.31)",
-                    'borderColor' => "rgba(138, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(138, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(138, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => $data['count'],
-                    'yAxisID' => 'y-axis-2',
-                ]
-            ])
-            ->optionsRaw("{
-                            responsive: true,
-                            tooltips: {
-                                mode: 'index',
-                                intersect: false
-                            },
-                            hover: {
-                                mode: 'index',
-                                intersect: false
-                            },
-                            stacked: false,
-                            title: {
-                                display: true,
-                                text: 'Author SBD Rewards statistics for @" . $acc . "'
-                            },
-                            
-                            scales: {
-                                yAxes: [{
-                                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                                    display: true,
-                                    position: 'left',
-                                    id: 'y-axis-1',
-                                    scaleLabel: {display: true, labelString: 'SBD Reward'},
-                                }, {
-                                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                                    display: true,
-                                    position: 'right',
-                                    id: 'y-axis-2',
-                                    scaleLabel: {display: true, labelString: 'Count rewards'},
-        
-                                    // grid line settings
-                                    gridLines: {
-                                        drawOnChartArea: false, // only want the grid lines for one axis to show up
-                                    },
-                                }],
-                            }
-					    }");
-        return $chartjs;
+
     }
 
     private function getChartRewardsSTEEM($data, $acc)
     {
+        $labels = [
+            'dataset1' => __(getenv('BCH_API') .'.token'),
+            'dataset2' => __(getenv('BCH_API') .'.count_rewards'),
+            'title' => __(getenv('BCH_API') .'.title_author_rewards_token'),
+            'name' => 'steemChart'
+        ];
 
-        $chartjs = app()->chartjs
-            ->name('steemChart')
-            ->type('line')
-            ->size(['width' => 400, 'height' => 75])
-            ->labels($data['month'])
-            ->datasets([
-                [
-                    "label" => "STEEM",
-                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
-                    'borderColor' => "rgba(38, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => $data['total_steem'],
-                    'yAxisID' => 'y-axis-1',
+        return Charts::getChartRewards($data,$acc,$labels);
 
-                ],
-                [
-                    "label" => "Count of rewards",
-                    'backgroundColor' => "rgba(138, 185, 154, 0.31)",
-                    'borderColor' => "rgba(138, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(138, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(138, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => $data['count'],
-                    'yAxisID' => 'y-axis-2',
-                ]
-            ])
-            ->optionsRaw("{
-                            responsive: true,
-                            tooltips: {
-                                mode: 'index',
-                                intersect: false
-                            },
-                            hover: {
-                                mode: 'index',
-                                intersect: false
-                            },
-                            stacked: false,
-                            title: {
-                                display: true,
-                                text: 'Author STEEM Rewards statistics for @" . $acc . "'
-                            },
-                            
-                            scales: {
-                                yAxes: [{
-                                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                                    display: true,
-                                    position: 'left',
-                                    id: 'y-axis-1',
-                                    scaleLabel: {display: true, labelString: 'STEEM Reward'},
-                                }, {
-                                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                                    display: true,
-                                    position: 'right',
-                                    id: 'y-axis-2',
-                                    scaleLabel: {display: true, labelString: 'Count rewards'},
-        
-                                    // grid line settings
-                                    gridLines: {
-                                        drawOnChartArea: false, // only want the grid lines for one axis to show up
-                                    },
-                                }],
-                            }
-					    }");
-        return $chartjs;
     }
 
 
