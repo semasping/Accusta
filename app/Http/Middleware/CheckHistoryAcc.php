@@ -13,6 +13,15 @@ use Illuminate\Support\Facades\Artisan;
 class CheckHistoryAcc
 {
     use DispatchesJobs;
+
+    private static function doCheckAcc($acc)
+    {
+        if (BchApi::getFullAccount($acc)){
+            return true;
+        };
+        return false;
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -25,6 +34,10 @@ class CheckHistoryAcc
         if ($request->acc) {
 
             $acc = ($request->acc);
+            if (!self::doCheckAcc($acc)){
+                return response(view(getenv('BCH_API').'.no-account', ['account' => $acc, 'form_action'=>$request->get('controller','AuthorRewardsController@showAll')]));
+            };
+
             $checkResult = self::doCheck($acc);
             $request->acc = $acc;
             $params = $request->all();
