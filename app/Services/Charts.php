@@ -66,7 +66,7 @@ class Charts
                                     display: true,
                                     position: 'left',
                                     id: 'y-axis-1',
-                                    scaleLabel: {display: true, labelString: 'SP Reward'},
+                                    scaleLabel: {display: true, labelString: '".$labels['dataset1']."'},
                                 }, {
                                     type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                                     display: true,
