@@ -7,15 +7,15 @@
  */
 
 return [
-    'shares' => 'Steem Power',
-    'token' => 'STEEM',
-    'peg' => 'SBD',
-    'count_rewards' => 'Count rewards',
-    'title_curator' => 'Curator Rewards statistics' ,
-    'title_benefactor_in' => 'Benefactor Steem Power Rewards statistics',
-    'title_benefactor_out' => 'Benefactor Rewards from your post to others accounts',
-    'title_author_rewards_shares' => 'Author Steem Power Rewards statistics',
-    'title_author_rewards_peg' => 'Author SBD Rewards statistics',
-    'title_author_rewards_token' => 'Author STEEM Rewards statistics',
-    'title_witness_rewards_shares' => 'Witness Steem Power Rewards statistics',
+    'shares' => 'Сила Голоса',
+    'token' => 'GOLOS',
+    'peg' => 'GBG',
+    'count_rewards' => 'Количество вознаграждений',
+    'title_curator' => 'Кураторские' ,
+    'title_benefactor_in' => 'Бенефециарские вознаграждения аккаунта',
+    'title_benefactor_out' => 'Бенефециарские вознаграждения с ваших постов другим аккаунтам',
+    'title_author_rewards_shares' => 'Авторские вознаграждения аккаунта: Сила голоса',
+    'title_author_rewards_peg' => 'Авторские вознаграждения аккаунта: GBG',
+    'title_author_rewards_token' => 'Авторские вознаграждения аккаунта: GOLOS',
+    'title_witness_rewards_shares' => 'Вознаграждение за подписание блоков делегатом',
 ];
