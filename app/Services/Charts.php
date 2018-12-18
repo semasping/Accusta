@@ -72,7 +72,7 @@ class Charts
                                     display: true,
                                     position: 'right',
                                     id: 'y-axis-2',
-                                    scaleLabel: {display: true, labelString: 'Count rewards'},
+                                    scaleLabel: {display: true, labelString: '".$labels['dataset2']."'},
         
                                     // grid line settings
                                     gridLines: {
