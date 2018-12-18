@@ -194,6 +194,35 @@ if (getenv('BCH_API') == 'steemit') {
 
 }
 
+if (getenv('BCH_API') == 'whaleshares') {
+    Route::get('/@{acc}', 'AuthorRewardsController@showAll')->middleware(CheckHistoryAcc::class)->name('home');
+    Route::get('/@{acc}/by_month', 'AuthorRewardsController@showAll')->name('trans_by_month')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/author/by_month/{type}/{date}', 'AuthorRewardsController@getDataTableRewardsByMonth')->name('trans_author_by_mont');
+
+    Route::get('/@{acc}/by_weeks', 'TransAccController@indexByWeek')->name('trans_by_week')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/transaction_history', 'TransHistoryController@show')->name('trans_history')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/_transaction_history', 'TransHistoryController@dt_show')->name('trans_history_dt_show')->middleware(CheckHistoryAcc::class);
+
+    Route::get('/@{acc}/sg', 'PowerUpDownController@showAll')->name('trans_sg')->middleware(CheckHistoryAcc::class);
+
+
+    Route::get('/@{acc}/curator', 'CuratorRewardsController@showAll')->name('trans_curator')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/curator/by_month/{type}/{date}', 'CuratorRewardsController@getDataTableRewardsByMonth')->name('trans_curator_by_mont');
+
+    Route::get('/@{acc}/benefactor', 'BenefactorRewardsController@showAll')->name('trans_benefactor')->middleware(CheckHistoryAcc::class);
+    Route::get('/@{acc}/benefactor/by_month/{type}/{date}', 'BenefactorRewardsController@getDataTableRewardsByMonth')->name('trans_benefactor_by_mont');
+
+    Route::get('/@{acc}/process_tranz', 'TransAccController@showProcessTranz');
+    //Route::get('/@{acc}/{page}', 'TransAccController@inProcess');
+
+    Route::get('/@{acc}/witness_votes', 'WitnessPageController@show')->name('witness_votes')->middleware(CheckHistoryAcc::class);
+
+    Route::get('/@{acc}/rewards', 'RewardsPageController@showAll')->name('rewards_page')->middleware(CheckHistoryAcc::class);
+
+
+
+}
+
 
 
 Auth::routes();

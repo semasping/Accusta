@@ -17,11 +17,17 @@ class BchApi
         if (getenv('BCH_API') == 'golos') {
             return GolosApi::getHistoryAccountFirst($acc);
         }
+
         if (getenv('BCH_API') == 'steemit') {
             return SteemitApi::getHistoryAccountFirst($acc);
         }
+
         if (getenv('BCH_API') == 'viz') {
             return VizApi::getHistoryAccountFirst($acc);
+        }
+
+        if (getenv('BCH_API') == 'whaleshares') {
+            return WhalesharesApi::getHistoryAccountFirst($acc);
         }
     }
 
@@ -40,6 +46,10 @@ class BchApi
             return VizApi::getTransaction($acc, $type);
         }
 
+        if (getenv('BCH_API') == 'whaleshares') {
+            return WhalesharesApi::getTransaction($acc, $type);
+        }
+
     }
 
     public static function convertToSg($gests)
@@ -54,6 +64,10 @@ class BchApi
 
         if (getenv('BCH_API') == 'viz') {
             return VizApi::convertToSg($gests);
+        }
+
+        if (getenv('BCH_API') == 'whaleshares') {
+            return WhalesharesApi::convertToSg($gests);
         }
 
     }
@@ -71,6 +85,10 @@ class BchApi
         if (getenv('BCH_API') == 'viz') {
             return VizApi::getHistoryAccountLast($acc);
         }
+
+        if (getenv('BCH_API') == 'whaleshares') {
+            return WhalesharesApi::getHistoryAccountLast($acc);
+        }
     }
 
     public static function getCurrentProcessedHistoryTranzId($acc)
@@ -86,6 +104,10 @@ class BchApi
 
         if (getenv('BCH_API') == 'viz') {
             return VizApi::getCurrentProcessedHistoryTranzId($acc);
+        }
+
+        if (getenv('BCH_API') == 'whaleshares') {
+            return WhalesharesApi::getCurrentProcessedHistoryTranzId($acc);
         }
     }
 
@@ -106,7 +128,7 @@ class BchApi
         }
         $current = $collection->count();
         //dump($current, $max);
-        if ($current == ($max) + 1) {
+        if (($current == ($max))||($current == ($max) + 1)) {
             return ($max);
         } else {
             //$collection->drop();
@@ -121,11 +143,17 @@ class BchApi
         if (getenv('BCH_API') == 'golos') {
             return (new MongoDB\Client)->selectCollection(getenv('BCH_API') . '_accusta', $account);
         }
+
         if (getenv('BCH_API') == 'viz') {
             return (new MongoDB\Client)->selectCollection(getenv('BCH_API') . '_accusta', $account);
         }
+
         if (getenv('BCH_API') == 'steemit') {
             return (new MongoDB\Client)->selectCollection('accusta', $account);
+        }
+
+        if (getenv('BCH_API') == 'whaleshares') {
+            return (new MongoDB\Client)->selectCollection(getenv('BCH_API') . '_accusta', $account);
         }
     }
 
@@ -144,6 +172,10 @@ class BchApi
         if (getenv('BCH_API') == 'viz') {
             return VizApi::GetDynamicGlobalProperties();
         }
+
+        if (getenv('BCH_API') == 'whaleshares') {
+            return WhalesharesApi::GetDynamicGlobalProperties();
+        }
     }
 
 
@@ -159,6 +191,10 @@ class BchApi
 
         if (getenv('BCH_API') == 'viz') {
             return VizApi::getOpsInBlock($block_id);
+        }
+
+        if (getenv('BCH_API') == 'whaleshares') {
+            return WhalesharesApi::getOpsInBlock($block_id);
         }
     }
 
@@ -176,6 +212,10 @@ class BchApi
         if (getenv('BCH_API') == 'viz') {
             return VizApi::getContent($author,$permlink);
         }
+
+        if (getenv('BCH_API') == 'whaleshares') {
+            return WhalesharesApi::getContent($author,$permlink);
+        }
     }
 
     public static function getFullAccount($account)
@@ -191,6 +231,10 @@ class BchApi
 
         if (getenv('BCH_API') == 'viz') {
             return VizApi::getAccountFull($account);
+        }
+
+        if (getenv('BCH_API') == 'whaleshares') {
+            return WhalesharesApi::getAccountFull($account);
         }
     }
 }
