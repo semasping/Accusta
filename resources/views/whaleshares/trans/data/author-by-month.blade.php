@@ -5,9 +5,8 @@
                href="#collapse{{ $type.$k }}" aria-expanded="false" aria-controls="collapse{{ $type.$k }}">
                 <div class="slabel">
                     <span class="slabel month">{!! $m !!}</span><br>
-                    <span class="slabel gbg">| {!! $data['total_sbd'][$k] !!} SBD</span>
-                    <span class="slabel golos">| {!! $data['total_steem'][$k] !!} STEEM </span>
-                    <span class="slabel sg">| {!! $data['total'][$k] !!} SP</span>
+                    <span class="slabel golos">| {!! $data['total_steem'][$k] !!} WLS </span>
+                    <span class="slabel sg">| {!! $data['total'][$k] !!} WHALESTAKE</span>
                 </div>
             </a>
         </h4>
@@ -22,10 +21,8 @@
                 <tr>
                     <td>Author</td>
                     <td>Permlink</td>
-                    <td class="sum">SBD</td>
-                    <td class="sum">STEEM</td>
-                    <td class="sum">VESTS</td>
-                    <td class="sum">SP</td>
+                    <td class="sum">WLS</td>
+                    <td class="sum">WHALESTAKE</td>
                     <td>Timestamp</td>
                 </tr>
                 </thead>
@@ -34,8 +31,6 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <td></td>
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -59,13 +54,11 @@
             columns: [
                 {data: 'author'},
                 {data: 'permlink'},
-                {data: 'SBD'},
                 {data: 'STEEM'},
-                {data: 'VESTS'},
                 {data: 'SP'},
                 {data: 'timestamp'}
             ],
-            "order": [[6, "desc"]],
+            "order": [[4, "desc"]],
             "footerCallback": function (row, data, start, end, display) {
                 var api = this.api();
 

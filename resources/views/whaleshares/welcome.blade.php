@@ -19,7 +19,7 @@
         </div>
 
         <div class="links">
-            <a href="#">Account statistics service for Steemit Blockchain </a>
+            <a href="#">Account statistics service for Whaleshares Blockchain </a>
         </div>
 
         <div class="text">
@@ -31,7 +31,7 @@
                 <li> * Curations Rewards</li>
             </ul>
 
-            <p>Steem Power down statistics </p>
+            <p>Whaleshares Power down statistics </p>
             <p>Full history of Account wallet with filters</p>
             <p>Witness rewards</p>
 
@@ -53,7 +53,7 @@
         <div class="container-fluid">
             <div class="row links ">
                 <center>
-                    <p class="text-muted links">Developed by:<a href="https://steemit.com/@semasping">@semasping</a>. </p>
+                    <p class="text-muted links">Developed by:<a href="https://whaleshares.io/@semasping">@semasping</a>. </p>
 
                 </center>
             </div>

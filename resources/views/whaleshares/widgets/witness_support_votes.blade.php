@@ -24,7 +24,7 @@
                                         <tr>
                                             <td>{{ $vote['date'] }}</td>
                                             <td>{{ $vote['witness'] }}
-                                                <a target="_blank" href="https://steemit.com/{{ '@'.$vote['witness'] }}/transfers">
+                                                <a target="_blank" href="https://whaleshares.io/{{ '@'.$vote['witness'] }}/transfers">
                                                     <span class="glyphicon glyphicon-log-out"></span>
                                                 </a>
                                             </td>
@@ -56,7 +56,7 @@
                                         <tr>
                                             <td>{{ $vote['date'] }}</td>
                                             <td>{{ $vote['witness'] }}
-                                                <a target="_blank" href="https://steemit.com/{{ '@'.$vote['witness'] }}/transfers">
+                                                <a target="_blank" href="https://whaleshares.io/{{ '@'.$vote['witness'] }}/transfers">
                                                     <span class="glyphicon glyphicon-log-out">{{--<img class="logo" src="/steemit_icon_15.png">--}}</span>
                                                 </a>
                                             </td>
@@ -92,7 +92,7 @@
                                     <tr>
                                         <th>Date</th>
                                         <th>Voted account</th>
-                                        <th>Vesting Shares, VESTS<br> {{ $allPowPrx }}M</th>
+                                        <th>Vesting Shares, WHALESTAKE<br> {{ $allPowPrx }}M</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -100,7 +100,7 @@
                                         <tr>
                                             <td>{{ $vote['date'] }}</td>
                                             <td>{{ $vote['account'] }}
-                                                <a target="_blank" href="https://golos.io/{{ '@'.$vote['account'] }}/transfers">
+                                                <a target="_blank" href="https://whaleshares.io/{{ '@'.$vote['account'] }}/transfers">
                                                     <span class="glyphicon glyphicon-log-out"><img class="logo" src="/golos_icon_15.png"></span>
                                                 </a>
                                             </td>
@@ -131,7 +131,7 @@
                                         <tr>
                                             <td>{{ $vote['date'] }}</td>
                                             <td>{{ $vote['account'] }}
-                                                <a target="_blank" href="https://golos.io/{{ '@'.$vote['account'] }}/transfers">
+                                                <a target="_blank" href="https://whaleshares.io/{{ '@'.$vote['account'] }}/transfers">
                                                     <span class="glyphicon glyphicon-log-out"><img class="logo" src="/golos_icon_15.png"></span>
                                                 </a>
                                             </td>

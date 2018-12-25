@@ -3,7 +3,7 @@
         <div class="page-header">
             <h1>
                 Account statistics: <a target="_blank"
-                                       href="https://steemit.com/{{ '@'.$account }}">{{ '@'.$account }}</a>
+                                       href="https://whaleshares.io/{{ '@'.$account }}">{{ '@'.$account }}</a>
             </h1>
             <h3>
                 @if (!$date)
@@ -32,9 +32,8 @@
         <div>
 
             Total account earned on posts and curation:
-            <br>Steem Power: {{  \App\semas\SteemitApi::convertToSg($all_gests) }}
-            <br>SBD: {{ $all_author_rew['SBD'] }}
-            <br>STEEM: {{ $all_author_rew['STEEM'] }}
+
+            <br>WHALESTAKE: {{ $all_author_rew['STEEM'] }}
         </div>
 
     </div>
@@ -93,17 +92,17 @@
                             <br>SP: {{ \App\semas\SteemitApi::convertToSg($author->sum('VESTS')) }}
                             <br><br>
 
-                            @include('steemit.trans.data.posts')
-                            @include('steemit.trans.data.author_rewards')
+                            @include('whaleshares.trans.data.posts')
+                            @include('whaleshares.trans.data.author_rewards')
 
                             <h3>Curation rewards:</h3>
-                            STEEM POWER: {{ \App\semas\SteemitApi::convertToSg($cur->sum('VESTS')) }}
+                            WHALESTAKE: {{ \App\semas\SteemitApi::convertToSg($cur->sum('VESTS')) }}
 
-                            @include('steemit.trans.data.curator_rewards')
+                            @include('whaleshares.trans.data.curator_rewards')
 
 
                             <br><h5>Other information:</h5>
-                            @include('steemit.trans.data.transactions_out')
+                            @include('whaleshares.trans.data.transactions_out')
 
                         </div>
                     </div>

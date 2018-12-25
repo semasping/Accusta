@@ -57,7 +57,7 @@
     </div>
      @asyncWidget('witnessRewards', ['account'=>$account,'date'=>$date], $account, $date )
 
-    @include('steemit.trans.data')
+    @include('whaleshares.trans.data')
 
 
 

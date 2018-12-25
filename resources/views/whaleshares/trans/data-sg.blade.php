@@ -3,8 +3,8 @@
     <div class="row">
         <div class="page-header">
             <h1>
-                Steem Power down statistics for <a target="_blank"
-                                        href="https://steemit.com/{{ '@'.$account }}">{{ '@'.$account }}</a>
+                WHALESTAKE Power down statistics for <a target="_blank"
+                                        href="https://whaleshares.io/{{ '@'.$account }}">{{ '@'.$account }}</a>
             </h1>
             <h3>
 
@@ -47,7 +47,7 @@
                                 From: {{ Date::parse($key)->format("F Y") }} ...</a>
                             @endif
                             <br><br>Vests get: {{ $wv['withdrawn'] }}<br>
-                            Steem get:{{ $wv['deposited'] }}
+                            WLS get:{{ $wv['deposited'] }}
                         </h4>
                     </div>
                     <div id="{{ $key }}" class="panel-collapse collapse">

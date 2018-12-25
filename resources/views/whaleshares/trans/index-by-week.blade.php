@@ -55,7 +55,7 @@
             @include(getenv('BCH_API').'.form')
         </div>
     </div>
-    @include('steemit.trans.data')
+    @include('whaleshares.trans.data')
 
 
 

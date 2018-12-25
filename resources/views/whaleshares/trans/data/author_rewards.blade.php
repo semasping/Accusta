@@ -19,10 +19,9 @@
                         <tr>
                             <th class="timestamp">Date</th>
                             <th class="permlink">Permlink</th>
-                            <th class="GBG">SBD</th>
-                            <th class="GOLOS">STEEM</th>
+                            <th class="GOLOS">WLS</th>
                             <th class="GESTS">VESTS</th>
-                            <th class="SG">SP</th>
+                            <th class="SG">WHALESTAKE</th>
                         </tr>
                         </thead>
                         @foreach($author as $athr)
@@ -34,7 +33,6 @@
                             <tr>
                                 <td class="timestamp">{{  Date::parse($athr['timestamp'])->format("H:i d.m.Y ") }}</td>
                                 <td class="permlink">{{ $athr['permlink'] }}</td>
-                                <td class="GBG">{{ $athr['SBD'] }}</td>
                                 <td class="GOLOS">{{ $athr['STEEM'] }}</td>
                                 <td class="GESTS">{{ $athr['VESTS'] }}</td>
                                 <td class="SG">{{ \App\semas\SteemitApi::convertToSg($athr['VESTS']) }}
@@ -46,7 +44,6 @@
                         <tr>
                             <td></td>
                             <td></td>
-                            <td>{{  $summ_gbg}}</td>
                             <td>{{  $summ_golos}}</td>
                             <td>{{  $summ_gests}}</td>
                             <td>{{  \App\semas\SteemitApi::convertToSg($summ_gests) }}</td>

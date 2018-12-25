@@ -73,16 +73,15 @@
 
                         <span class="slabel all">Sums All rewards</span>
                         <br>
-                        <span class="slabel gbg">| {!! $dataIn['allSBD'] !!} SBD</span>
-                        <span class="slabel golos">| {!! $dataIn['allSTEEM'] !!} STEEM </span>
-                        <span class="slabel sg">| {!! $dataIn['allSP'] !!} SP</span>
+                        <span class="slabel golos">| {!! $dataIn['allSTEEM'] !!} WLS </span>
+                        <span class="slabel sg">| {!! $dataIn['allSP'] !!} WHALESTAKE</span>
 
                     </div>
                 </div>
                 <div class="panel-group" id="aIn" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataIn['month']) ?>
                     @foreach($dataIn['month'] as $k=>$m)
-                        @include('steemit.trans.data.author-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
+                        @include('whaleshares.trans.data.author-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
                     @endforeach
                 </div>
             </div>

@@ -62,7 +62,7 @@
                     <div class="panel-heading">Benefactor Rewards statistics for {{'@'.$acc}}</div>
                     <div class="panel-body">{!! $chartRewardsIn->render() !!}</div>
                     <div class="panel-footer">
-                        Sums All rewards: {!! $dataIn['allSP'] !!} Steem Power
+                        Sums All rewards: {!! $dataIn['allSP'] !!} WHALESTAKE
                         {!! link_to_route('trans_benefactor',
                                        'Export rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'type'=>'in', Request::getQueryString()],
                                        ['class' => 'btn btn-info pull-right','role'=>"button"])
@@ -73,7 +73,7 @@
                 <div class="panel-group" id="aIn" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataIn['month']) ?>
                     @foreach($dataIn['month'] as $k=>$m)
-                        @include('steemit.trans.data.benefactor-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
+                        @include('whaleshares.trans.data.benefactor-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
                     @endforeach
                 </div>
             </div>
@@ -82,7 +82,7 @@
                     <div class="panel-heading">Benefactor Rewards from your post to others accounts</div>
                     <div class="panel-body">{!! $chartRewardsOut->render() !!}</div>
                     <div class="panel-footer">
-                        Sums All rewards: {!! $dataOut['allSP'] !!} Steem Power
+                        Sums All rewards: {!! $dataOut['allSP'] !!} WHALESTAKE
                         {!! link_to_route('trans_benefactor',
                'Export rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'type'=>'out', Request::getQueryString()],
                ['class' => 'btn btn-info pull-right','role'=>"button"])
@@ -93,7 +93,7 @@
                 <div class="panel-group" id="aOut" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataOut['month']) ?>
                     @foreach($dataOut['month'] as $k=>$m)
-                        @include('steemit.trans.data.benefactor-by-month', [$k, 'data'=>$dataOut, $m, 'type'=>'Out'])
+                        @include('whaleshares.trans.data.benefactor-by-month', [$k, 'data'=>$dataOut, $m, 'type'=>'Out'])
                     @endforeach
                 </div>
             </div>

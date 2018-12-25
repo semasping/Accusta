@@ -23,7 +23,7 @@
                     @endif
                     <td>Permlink</td>
                     <td class="sum">VESTS</td>
-                    <td class="sum">SP</td>
+                    <td class="sum">WHALESTAKE</td>
                     <td>Timestamp</td>
                 </tr>
                 </thead>

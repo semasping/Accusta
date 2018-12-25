@@ -32,7 +32,6 @@ class CheckHistoryAcc
     public function handle($request, Closure $next)
     {
         if ($request->acc) {
-
             $acc = ($request->acc);
             if (!self::doCheckAcc($acc)){
                 return response(view(getenv('BCH_API').'.no-account', ['account' => $acc, 'form_action'=>$request->get('controller','AuthorRewardsController@showAll')]));

@@ -3,7 +3,7 @@
         <h4 class="panel-title">
             <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
                href="#collapse{{ $type.$k }}" aria-expanded="false" aria-controls="collapse{{ $type.$k }}">
-                <div class="">{!! $m !!}: {!! $data['total'][$k] !!} Steem Power</div>
+                <div class="">{!! $m !!}: {!! $data['total'][$k] !!} WHALESTAKE</div>
             </a>
         </h4>
     </div>
@@ -18,7 +18,7 @@
                     <td>Author</td>
                     <td>Permlink</td>
                     <td class="sum">VESTS</td>
-                    <td class="sum">SP</td>
+                    <td class="sum">WHALESTAKE</td>
                     <td>Timestamp</td>
                 </tr>
                 </thead>

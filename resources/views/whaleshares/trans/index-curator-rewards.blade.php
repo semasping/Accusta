@@ -62,7 +62,7 @@
                     <div class="panel-heading">Curator Rewards statistics for {{'@'.$acc}}</div>
                     <div class="panel-body">{!! $chartRewardsIn->render() !!}</div>
                     <div class="panel-footer">
-                        Sums All rewards: {!! $dataIn['allSP'] !!} Steem Power
+                        Sums All rewards: {!! $dataIn['allSP'] !!} WHALESTAKE
                         {!! link_to_route('trans_curator',
                    'Export Curator`s rewards to Excel (CSV)', ['account'=> $account, 'csv'=>1, 'curators'=>1, Request::getQueryString()],
                    ['class' => 'btn btn-info pull-right','role'=>"button"])
@@ -75,7 +75,7 @@
                 <div class="panel-group" id="aIn" role="tablist" aria-multiselectable="true">
                     <?php krsort($dataIn['month']) ?>
                     @foreach($dataIn['month'] as $k=>$m)
-                        @include('steemit.trans.data.curator-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
+                        @include('whaleshares.trans.data.curator-by-month', [$k, 'data'=>$dataIn, $m, 'type'=>'In'])
                     @endforeach
                 </div>
             </div>
