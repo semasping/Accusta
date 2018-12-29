@@ -1,23 +1,5 @@
 {!! Form::open(array('url' => url('_form_submit'), 'class' => 'form-inline', 'method' => 'get')) !!}
-<div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Выбрать дату</h4>
-            </div>
-            <div class="modal-body">
-                {!! Form::date('d_from', $date) !!}
-                <br>Выберите нужную вам дату в поле сверху.
-                <br>Чтобы отменить выбор даты нажмите на крестик.
-                <br>Затем "закрыть выбор" и "посмотреть транзакции"
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть выбор</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 <div class="form-group">
     {!! Form::label('Account Name: @') !!}
     {!! Form::text('acc', $account,

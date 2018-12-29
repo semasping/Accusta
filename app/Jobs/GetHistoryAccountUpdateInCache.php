@@ -6,6 +6,7 @@ use App\semas\AdminNotify;
 use App\semas\GolosApi;
 use App\semas\SteemitApi;
 use App\semas\VizApi;
+use App\semas\WhalesharesApi;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -53,6 +54,10 @@ class GetHistoryAccountUpdateInCache implements ShouldQueue
             {
                 VizApi::getHistoryAccountUpdateInDBDesc($this->acc, $this->processed);
             }
+            if ($this->api == 'whaleshares') //SteemitApi::getHistoryAccountFullInCache($this->acc);
+            {
+                WhalesharesApi::getHistoryAccountUpdateInDBDesc($this->acc, $this->processed);
+            }
         } catch (Exception $e) {
             dump($e->getTraceAsString());
             AdminNotify::send('Jobs failed: ' . print_r($e->getTraceAsString(), true));
@@ -65,6 +70,9 @@ class GetHistoryAccountUpdateInCache implements ShouldQueue
             }
             if ($this->api == 'viz') {
                 VizApi::disconnect();
+            }
+            if ($this->api == 'whaleshares') {
+                WhalesharesApi::disconnect();
             }
         }
         dump('-------done--');

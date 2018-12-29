@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         @if (!empty($voteFor))
             <ul class="nav nav-tabs">
@@ -25,7 +25,7 @@
                                             <td>{{ $vote['date'] }}</td>
                                             <td>{{ $vote['witness'] }}
                                                 <a target="_blank" href="https://whaleshares.io/{{ '@'.$vote['witness'] }}/transfers">
-                                                    <span class="glyphicon glyphicon-log-out"><img class="logo" src="/golos_icon_15.png"></span>
+                                                    <span class="glyphicon glyphicon-log-out"></span>
                                                 </a>
                                             </td>
                                             <td></td>
@@ -57,7 +57,7 @@
                                             <td>{{ $vote['date'] }}</td>
                                             <td>{{ $vote['witness'] }}
                                                 <a target="_blank" href="https://whaleshares.io/{{ '@'.$vote['witness'] }}/transfers">
-                                                    <span class="glyphicon glyphicon-log-out"><img class="logo" src="/golos_icon_15.png"></span>
+                                                    <span class="glyphicon glyphicon-log-out">{{--<img class="logo" src="/steemit_icon_15.png">--}}</span>
                                                 </a>
                                             </td>
                                             <td>{{ (string)$vote['status'] }}</td>
@@ -75,7 +75,7 @@
     </div>
 </div>
 <br>
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         @if (!empty($forWitness))
             <ul class="nav nav-tabs">
@@ -87,12 +87,12 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table" id="table_v2">
                                     <thead>
                                     <tr>
                                         <th>Date</th>
                                         <th>Voted account</th>
-                                        <th></th>
+                                        <th>Vesting Shares, WHALESTAKE<br> {{ $allPowPrx }}M</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -100,11 +100,11 @@
                                         <tr>
                                             <td>{{ $vote['date'] }}</td>
                                             <td>{{ $vote['account'] }}
-                                                <a target="_blank" href="https://golos.io/{{ '@'.$vote['account'] }}/transfers">
+                                                <a target="_blank" href="https://whaleshares.io/{{ '@'.$vote['account'] }}/transfers">
                                                     <span class="glyphicon glyphicon-log-out"><img class="logo" src="/golos_icon_15.png"></span>
                                                 </a>
                                             </td>
-                                            <td></td>
+                                            <td>{{ number_format($vote['proxy'],0,'.',' ') }}</td>
                                         </tr>
                                     @endforeach
                                     <tr>
@@ -131,7 +131,7 @@
                                         <tr>
                                             <td>{{ $vote['date'] }}</td>
                                             <td>{{ $vote['account'] }}
-                                                <a target="_blank" href="https://golos.io/{{ '@'.$vote['account'] }}/transfers">
+                                                <a target="_blank" href="https://whaleshares.io/{{ '@'.$vote['account'] }}/transfers">
                                                     <span class="glyphicon glyphicon-log-out"><img class="logo" src="/golos_icon_15.png"></span>
                                                 </a>
                                             </td>

@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use App\semas\BchApi;
+use App\Services\Charts;
 use Exception;
 use Illuminate\Http\Request;
 use Jenssegers\Date\Date;
@@ -183,125 +184,29 @@ class BenefactorRewardsController extends Controller
 
     private function getChartRewardsIn($data, $acc)
     {
-        $chartjs = app()->chartjs
-            ->name('lineChartTest')
-            ->type('line')
-            ->size(['width' => 400, 'height' => 200])
-            ->labels($data['month'])
-            ->datasets([
-                [
-                    "label" => "Steem Power",
-                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
-                    'borderColor' => "rgba(38, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => $data['total'],
-                    'yAxisID' => 'y-axis-1',
+        $labels = [
+            'dataset1' => __(getenv('BCH_API') .'.shares'),
+            'dataset2' => __(getenv('BCH_API') .'.count_rewards'),
+            'title' => __(getenv('BCH_API') .'.title_benefactor_in', ['acc', $acc]),
+            'name' => 'lineChartIn'
+        ];
 
-                ],
-                [
-                    "label" => "Count of Benefactor rewards",
-                    'backgroundColor' => "rgba(138, 185, 154, 0.31)",
-                    'borderColor' => "rgba(138, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(138, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(138, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => $data['count'],
-                    'yAxisID' => 'y-axis-2',
-                ]
-            ])
-            ->optionsRaw("{
-                            responsive: true,
-                            tooltips: {
-                                mode: 'index',
-                                intersect: false
-                            },
-                            hover: {
-                                mode: 'index',
-                                intersect: false
-                            },
-                            stacked: false,
-                            title: {
-                                display: true,
-                                text: 'Benefactor Rewards statistics for @" . $acc . "'
-                            },
-                            
-                            scales: {
-                                yAxes: [{
-                                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                                    display: true,
-                                    position: 'left',
-                                    id: 'y-axis-1',
-                                    scaleLabel: {display: true, labelString: 'SP Reward'},
-                                }, {
-                                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                                    display: true,
-                                    position: 'right',
-                                    id: 'y-axis-2',
-                                    scaleLabel: {display: true, labelString: 'Count rewards'},
-        
-                                    // grid line settings
-                                    gridLines: {
-                                        drawOnChartArea: false, // only want the grid lines for one axis to show up
-                                    },
-                                }],
-                            }
-					    }");
-        return $chartjs;
+        return Charts::getChartRewards($data,$acc,$labels);
+
     }
 
     private function getChartRewardsOut($data, $acc)
     {
+        $labels = [
+            'dataset1' => __(getenv('BCH_API') .'.shares'),
+            'dataset2' => __(getenv('BCH_API') .'.count_rewards'),
+            'title' => __(getenv('BCH_API') .'.title_benefactor_out'),
+            'name' => 'lineChartOut'
 
-        $chartjs = app()->chartjs
-            ->name('lineChartOut')
-            ->type('line')
-            ->size(['width' => 400, 'height' => 200])
-            ->labels($data['month'])
-            ->datasets([
-                [
-                    "label" => "Steem Power",
-                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
-                    'borderColor' => "rgba(38, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => $data['total'],
-                    'yAxisID' => 'y-axis-1',
+        ];
 
-                ]
-            ])
-            ->optionsRaw("{
-                            responsive: true,
-                            tooltips: {
-                                mode: 'index',
-                                intersect: false
-                            },
-                            hover: {
-                                mode: 'index',
-                                intersect: false
-                            },
-                            stacked: false,
-                            title: {
-                                display: true,
-                                text: 'Benefactor Rewards from your post to others accounts'
-                            },
-                            
-                            scales: {
-                                yAxes: [{
-                                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                                    display: true,
-                                    position: 'left',
-                                    id: 'y-axis-1',
-                                    scaleLabel: {display: true, labelString: 'SP Reward'},
-                                }],
-                            }
-					    }");
-        return $chartjs;
+        return Charts::getChartRewards($data,$acc,$labels);
+
     }
 
     public function getDataTableRewardsByMonth(Request $request, Builder $htmlBuilder)

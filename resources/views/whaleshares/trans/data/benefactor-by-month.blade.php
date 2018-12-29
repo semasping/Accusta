@@ -3,29 +3,27 @@
         <h4 class="panel-title">
             <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
                href="#collapse{{ $type.$k }}" aria-expanded="false" aria-controls="collapse{{ $type.$k }}">
-                <div class="slabel">
-                    <span class="slabel month">{!! $m !!}</span><br>
-                    <span class="slabel gbg">| {!! $data['total_sbd'][$k] !!} GBG</span>
-                    <span class="slabel golos">| {!! $data['total_steem'][$k] !!} GOLOS </span>
-                    <span class="slabel sg">| {!! $data['total'][$k] !!} СГ</span>
-                </div>
+                <div class="">{!! $m !!}: {!! $data['total'][$k] !!} Steem Power</div>
             </a>
         </h4>
     </div>
     <div id="collapse{{ $type.$k }}" class="panel-collapse collapse" role="tabpanel"
          aria-labelledby="heading{{ $type.$k }}" data-month="{{ $data['date'][$k] }}" data-type="{{ $type }}"
-         data-href="/{{ '@'.$acc }}/author/by_month/{{$type}}/{{$data['date'][$k]}}/">
+         data-href="/{{ '@'.$acc }}/benefactor/by_month/{{$type}}/{{$data['date'][$k]}}/">
         <div class="panel-body" id="body{{ $type.$data['date'][$k] }}">
 
             <table id="data{{ $type.$data['date'][$k] }}">
                 <thead>
                 <tr>
-                    <td>Автор</td>
+                    @if($type=='In')
+                        <td>From</td>
+                    @endif
+                    @if($type=='Out')
+                        <td>To</td>
+                    @endif
                     <td>Permlink</td>
-                    <td class="sum">GBG</td>
-                    <td class="sum">GOLOS</td>
-                    <td class="sum">GESTS</td>
-                    <td class="sum">СГ</td>
+                    <td class="sum">VESTS</td>
+                    <td class="sum">WHALESTAKE</td>
                     <td>Timestamp</td>
                 </tr>
                 </thead>
@@ -34,8 +32,6 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <td></td>
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -59,13 +55,11 @@
             columns: [
                 {data: 'author'},
                 {data: 'permlink'},
-                {data: 'SBD'},
-                {data: 'STEEM'},
                 {data: 'VESTS'},
                 {data: 'SP'},
                 {data: 'timestamp'}
             ],
-            "order": [[6, "desc"]],
+            "order": [[0, "desc"]],
             "footerCallback": function (row, data, start, end, display) {
                 var api = this.api();
 
@@ -79,7 +73,7 @@
                             var y = parseFloat(b) || 0;
                             return (x + y).toFixed(3);
                         }, 0);
-                    //console.log(sum); //alert(sum);
+                    console.log(sum); //alert(sum);
                     $(this.footer()).html(sum);
                 });
             }

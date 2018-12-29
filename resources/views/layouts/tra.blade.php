@@ -182,6 +182,7 @@
             @yield('content')
         </div>
         @include(getenv('BCH_API').'.new-articles-modal')
+        @include(getenv('BCH_API').'.donat-modal')
 
     </div>
 </div>

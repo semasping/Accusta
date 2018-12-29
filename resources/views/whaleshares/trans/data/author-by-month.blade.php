@@ -5,9 +5,8 @@
                href="#collapse{{ $type.$k }}" aria-expanded="false" aria-controls="collapse{{ $type.$k }}">
                 <div class="slabel">
                     <span class="slabel month">{!! $m !!}</span><br>
-                    <span class="slabel gbg">| {!! $data['total_sbd'][$k] !!} GBG</span>
-                    <span class="slabel golos">| {!! $data['total_steem'][$k] !!} GOLOS </span>
-                    <span class="slabel sg">| {!! $data['total'][$k] !!} СГ</span>
+                    <span class="slabel golos">| {!! $data['total_steem'][$k] !!} WLS </span>
+                    <span class="slabel sg">| {!! $data['total'][$k] !!} WHALESTAKE</span>
                 </div>
             </a>
         </h4>
@@ -20,12 +19,10 @@
             <table id="data{{ $type.$data['date'][$k] }}">
                 <thead>
                 <tr>
-                    <td>Автор</td>
+                    <td>Author</td>
                     <td>Permlink</td>
-                    <td class="sum">GBG</td>
-                    <td class="sum">GOLOS</td>
-                    <td class="sum">GESTS</td>
-                    <td class="sum">СГ</td>
+                    <td class="sum">WLS</td>
+                    <td class="sum">WHALESTAKE</td>
                     <td>Timestamp</td>
                 </tr>
                 </thead>
@@ -34,8 +31,6 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <td></td>
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -59,13 +54,11 @@
             columns: [
                 {data: 'author'},
                 {data: 'permlink'},
-                {data: 'SBD'},
                 {data: 'STEEM'},
-                {data: 'VESTS'},
                 {data: 'SP'},
                 {data: 'timestamp'}
             ],
-            "order": [[6, "desc"]],
+            "order": [[4, "desc"]],
             "footerCallback": function (row, data, start, end, display) {
                 var api = this.api();
 
